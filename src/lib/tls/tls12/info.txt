@@ -6,6 +6,7 @@ TLS_12 -> 20210608
 </header:public>
 
 <header:internal>
+tls_record.h
 </header:internal>
 
 <requires>
