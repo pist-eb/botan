@@ -6,7 +6,7 @@
 * Botan is released under the Simplified BSD License (see license.txt)
 */
 
-#include "tls_server_impl_12.h"
+#include "tls12/tls_server_impl_12.h"
 #include "tls_server_impl.h"
 
 #include <botan/tls_server.h>

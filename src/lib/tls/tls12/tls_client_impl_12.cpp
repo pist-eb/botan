@@ -7,11 +7,12 @@
 * Botan is released under the Simplified BSD License (see license.txt)
 */
 
+#include "tls_client_impl_12.h"
+
 #include <botan/tls_client.h>
 #include <botan/tls_messages.h>
 #include <botan/internal/tls_handshake_state.h>
 #include <botan/internal/stl_util.h>
-#include <iterator>
 #include <sstream>
 
 namespace Botan {
@@ -55,23 +56,23 @@ class Client_Handshake_State final : public Handshake_State
       std::unique_ptr<Session> resumed_session;
       bool m_is_reneg = false;
    };
-
 }
 
 /*
-* TLS Client Constructor
+* TLS 1.2 Client  Constructor
 */
-Client::Client(Callbacks& callbacks,
-               Session_Manager& session_manager,
-               Credentials_Manager& creds,
-               const Policy& policy,
-               RandomNumberGenerator& rng,
-               const Server_Information& info,
-               const Protocol_Version& offer_version,
-               const std::vector<std::string>& next_protocols,
-               size_t io_buf_sz) :
-   Channel(callbacks, session_manager, rng, policy,
-           false, offer_version.is_datagram_protocol(), io_buf_sz),
+Client_Impl_12::Client_Impl_12(Callbacks& callbacks,
+                               Session_Manager& session_manager,
+                               Credentials_Manager& creds,
+                               const Policy& policy,
+                               RandomNumberGenerator& rng,
+                               const Server_Information& info,
+                               const Protocol_Version& offer_version,
+                               const std::vector<std::string>& next_protocols,
+                               size_t io_buf_sz) :
+   Channel_Impl_12(callbacks, session_manager, rng, policy,
+                   false, offer_version.is_datagram_protocol(), io_buf_sz),
+   Client_Impl(static_cast<Channel_Impl&>(*this)),
    m_creds(creds),
    m_info(info)
    {
@@ -79,13 +80,13 @@ Client::Client(Callbacks& callbacks,
    send_client_hello(state, false, offer_version, next_protocols);
    }
 
-std::unique_ptr<Handshake_State> Client::new_handshake_state(std::unique_ptr<Handshake_IO> io)
+std::unique_ptr<Handshake_State> Client_Impl_12::new_handshake_state(std::unique_ptr<Handshake_IO> io)
    {
    return std::make_unique<Client_Handshake_State>(std::move(io), callbacks());
    }
 
 std::vector<X509_Certificate>
-Client::get_peer_cert_chain(const Handshake_State& state) const
+Client_Impl_12::get_peer_cert_chain(const Handshake_State& state) const
    {
    const Client_Handshake_State& cstate = dynamic_cast<const Client_Handshake_State&>(state);
 
@@ -100,17 +101,17 @@ Client::get_peer_cert_chain(const Handshake_State& state) const
 /*
 * Send a new client hello to renegotiate
 */
-void Client::initiate_handshake(Handshake_State& state,
-                                bool force_full_renegotiation)
+void Client_Impl_12::initiate_handshake(Handshake_State& state,
+                                        bool force_full_renegotiation)
    {
    send_client_hello(state, force_full_renegotiation,
                      policy().latest_supported_version(state.version().is_datagram_protocol()));
    }
 
-void Client::send_client_hello(Handshake_State& state_base,
-                               bool force_full_renegotiation,
-                               Protocol_Version version,
-                               const std::vector<std::string>& next_protocols)
+void Client_Impl_12::send_client_hello(Handshake_State& state_base,
+                                       bool force_full_renegotiation,
+                                       Protocol_Version version,
+                                       const std::vector<std::string>& next_protocols)
    {
    Client_Handshake_State& state = dynamic_cast<Client_Handshake_State&>(state_base);
 
@@ -191,11 +192,11 @@ bool key_usage_matches_ciphersuite(Key_Constraints usage,
 /*
 * Process a handshake message
 */
-void Client::process_handshake_msg(const Handshake_State* active_state,
-                                   Handshake_State& state_base,
-                                   Handshake_Type type,
-                                   const std::vector<uint8_t>& contents,
-                                   bool epoch0_restart)
+void Client_Impl_12::process_handshake_msg(const Handshake_State* active_state,
+      Handshake_State& state_base,
+      Handshake_Type type,
+      const std::vector<uint8_t>& contents,
+      bool epoch0_restart)
    {
    BOTAN_ASSERT_NOMSG(epoch0_restart == false); // only happens on server side
 

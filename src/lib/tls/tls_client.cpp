@@ -8,7 +8,7 @@
 */
 
 #include "tls_client_impl.h"
-#include "tls_client_impl_12.h"
+#include "tls12/tls_client_impl_12.h"
 
 #include <botan/tls_client.h>
 #include <botan/tls_messages.h>

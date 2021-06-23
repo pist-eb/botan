@@ -10,7 +10,7 @@
 #define BOTAN_TLS_SERVER_IMPL_12_H_
 
 #include "tls_channel_impl_12.h"
-#include "tls_server_impl.h"
+#include "../tls_server_impl.h"
 
 #include <botan/tls_policy.h>
 #include <botan/credentials_manager.h>
@@ -27,7 +27,7 @@ class Server_Impl_12 : public Channel_Impl_12, public Server_Impl
    {
    public:
       typedef std::function<std::string(std::vector<std::string>)> next_protocol_fn;
-      
+
       /**
       * Server initialization
       *
