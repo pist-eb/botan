@@ -1,25 +1,29 @@
 /*
-* TLS Channel
+* TLS Channel_Impl_12
 * (C) 2011,2012,2014,2015 Jack Lloyd
 *     2016 Matthias Gierlings
 *
 * Botan is released under the Simplified BSD License (see license.txt)
 */
 
-#ifndef BOTAN_TLS_CHANNEL_H_
-#define BOTAN_TLS_CHANNEL_H_
+#ifndef BOTAN_TLS_CHANNEL_IMPL_12_H_
+#define BOTAN_TLS_CHANNEL_IMPL_12_H_
+
+#include "tls_channel_impl.h"
 
 #include <botan/tls_session.h>
 #include <botan/tls_alert.h>
 #include <botan/tls_session_manager.h>
 #include <botan/tls_callbacks.h>
-#include <botan/x509cert.h>
 #include <functional>
 #include <vector>
 #include <string>
 #include <map>
+#include <memory>
 
 namespace Botan {
+
+class X509_Certificate;
 
 namespace TLS {
 
@@ -34,7 +38,7 @@ class Policy;
 /**
 * Generic interface for TLS endpoint
 */
-class BOTAN_PUBLIC_API(2,0) Channel
+class Channel_Impl_12 : public Channel_Impl
    {
    public:
       typedef std::function<void (const uint8_t[], size_t)> output_fn;
@@ -42,7 +46,6 @@ class BOTAN_PUBLIC_API(2,0) Channel
       typedef std::function<void (Alert, const uint8_t[], size_t)> alert_cb;
       typedef std::function<bool (const Session&)> handshake_cb;
       typedef std::function<void (const Handshake_Message&)> handshake_msg_cb;
-      static size_t IO_BUF_DEFAULT_SIZE;
 
       /**
       * Set up a new TLS session
@@ -58,92 +61,77 @@ class BOTAN_PUBLIC_API(2,0) Channel
       *        be preallocated for the read and write buffers. Smaller
       *        values just mean reallocations and copies are more likely.
       */
-      Channel(Callbacks& callbacks,
-              Session_Manager& session_manager,
-              RandomNumberGenerator& rng,
-              const Policy& policy,
-              bool is_server,
-              bool is_datagram,
-              size_t io_buf_sz = IO_BUF_DEFAULT_SIZE);
+      Channel_Impl_12(Callbacks& callbacks,
+                      Session_Manager& session_manager,
+                      RandomNumberGenerator& rng,
+                      const Policy& policy,
+                      bool is_server,
+                      bool is_datagram,
+                      size_t io_buf_sz = Botan::TLS::Channel::IO_BUF_DEFAULT_SIZE);
 
-      Channel(const Channel&) = delete;
+      Channel_Impl_12(const Channel_Impl_12&) = delete;
 
-      Channel& operator=(const Channel&) = delete;
+      Channel_Impl_12& operator=(const Channel_Impl_12&) = delete;
 
-      virtual ~Channel();
+      virtual ~Channel_Impl_12();
 
-      /**
-      * Inject TLS traffic received from counterparty
-      * @return a hint as the how many more bytes we need to process the
-      *         current record (this may be 0 if on a record boundary)
-      */
-      size_t received_data(const uint8_t buf[], size_t buf_size);
+      size_t received_data(const uint8_t buf[], size_t buf_size) override;
 
       /**
       * Inject TLS traffic received from counterparty
       * @return a hint as the how many more bytes we need to process the
       *         current record (this may be 0 if on a record boundary)
       */
-      size_t received_data(const std::vector<uint8_t>& buf);
+      size_t received_data(const std::vector<uint8_t>& buf) override;
 
       /**
       * Inject plaintext intended for counterparty
       * Throws an exception if is_active() is false
       */
-      void send(const uint8_t buf[], size_t buf_size);
+      void send(const uint8_t buf[], size_t buf_size) override;
 
       /**
       * Inject plaintext intended for counterparty
       * Throws an exception if is_active() is false
       */
-      void send(const std::string& val);
-
-      /**
-      * Inject plaintext intended for counterparty
-      * Throws an exception if is_active() is false
-      */
-      template<typename Alloc>
-         void send(const std::vector<unsigned char, Alloc>& val)
-         {
-         send(val.data(), val.size());
-         }
+      void send(const std::string& val) override;
 
       /**
       * Send a TLS alert message. If the alert is fatal, the internal
       * state (keys, etc) will be reset.
       * @param alert the Alert to send
       */
-      void send_alert(const Alert& alert);
+      void send_alert(const Alert& alert) override;
 
       /**
       * Send a warning alert
       */
-      void send_warning_alert(Alert::Type type) { send_alert(Alert(type, false)); }
+      void send_warning_alert(Alert::Type type) override { send_alert(Alert(type, false)); }
 
       /**
       * Send a fatal alert
       */
-      void send_fatal_alert(Alert::Type type) { send_alert(Alert(type, true)); }
+      void send_fatal_alert(Alert::Type type) override { send_alert(Alert(type, true)); }
 
       /**
       * Send a close notification alert
       */
-      void close() { send_warning_alert(Alert::CLOSE_NOTIFY); }
+      void close() override { send_warning_alert(Alert::CLOSE_NOTIFY); }
 
       /**
       * @return true iff the connection is active for sending application data
       */
-      bool is_active() const;
+      bool is_active() const override;
 
       /**
       * @return true iff the connection has been definitely closed
       */
-      bool is_closed() const;
+      bool is_closed() const override;
 
       /**
       * @return certificate chain of the peer (may be empty)
       */
-      std::vector<X509_Certificate> peer_cert_chain() const;
+      std::vector<X509_Certificate> peer_cert_chain() const override;
 
       /**
       * Key material export (RFC 5705)
@@ -154,20 +142,20 @@ class BOTAN_PUBLIC_API(2,0) Channel
       */
       SymmetricKey key_material_export(const std::string& label,
                                        const std::string& context,
-                                       size_t length) const;
+                                       size_t length) const override;
 
       /**
       * Attempt to renegotiate the session
       * @param force_full_renegotiation if true, require a full renegotiation,
       * otherwise allow session resumption
       */
-      void renegotiate(bool force_full_renegotiation = false);
+      void renegotiate(bool force_full_renegotiation = false) override;
 
       /**
       * @return true iff the counterparty supports the secure
       * renegotiation extensions.
       */
-      bool secure_renegotiation_supported() const;
+      bool secure_renegotiation_supported() const override;
 
       /**
       * Perform a handshake timeout check. This does nothing unless
@@ -175,28 +163,11 @@ class BOTAN_PUBLIC_API(2,0) Channel
       * which case we check for timeout and potentially retransmit
       * handshake packets.
       */
-      bool timeout_check();
-
-      virtual std::string application_protocol() const = 0;
+      bool timeout_check() override;
 
    protected:
 
-      virtual void process_handshake_msg(const Handshake_State* active_state,
-                                         Handshake_State& pending_state,
-                                         Handshake_Type type,
-                                         const std::vector<uint8_t>& contents,
-                                         bool epoch0_restart) = 0;
-
-      virtual void initiate_handshake(Handshake_State& state,
-                                      bool force_full_renegotiation) = 0;
-
-      virtual std::vector<X509_Certificate>
-         get_peer_cert_chain(const Handshake_State& state) const = 0;
-
-      virtual std::unique_ptr<Handshake_State>
-         new_handshake_state(std::unique_ptr<class Handshake_IO> io) = 0;
-
-      Handshake_State& create_handshake_state(Protocol_Version version);
+      Handshake_State& create_handshake_state(Protocol_Version version) override;
 
       void inspect_handshake_message(const Handshake_Message& msg);
 
@@ -250,7 +221,7 @@ class BOTAN_PUBLIC_API(2,0) Channel
 
       const Handshake_State* pending_state() const { return m_pending_state.get(); }
 
-      /* methods to handle incoming traffic through Channel::receive_data. */
+      /* methods to handle incoming traffic through Channel_Impl_12::receive_data. */
       void process_handshake_ccs(const secure_vector<uint8_t>& record,
                                  uint64_t record_sequence,
                                  Record_Type record_type,

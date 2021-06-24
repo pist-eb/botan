@@ -6,6 +6,8 @@
 * Botan is released under the Simplified BSD License (see license.txt)
 */
 
+#include "tls_server_impl_12.h"
+
 #include <botan/tls_server.h>
 #include <botan/tls_messages.h>
 #include <botan/internal/tls_handshake_state.h>
@@ -261,23 +263,22 @@ get_server_certs(const std::string& hostname,
 
 }
 
-/*
-* TLS Server Constructor
-*/
-Server::Server(Callbacks& callbacks,
-               Session_Manager& session_manager,
-               Credentials_Manager& creds,
-               const Policy& policy,
-               RandomNumberGenerator& rng,
-               bool is_datagram,
-               size_t io_buf_sz) :
-   Channel(callbacks, session_manager, rng, policy,
-           true, is_datagram, io_buf_sz),
+Server_Impl_12::Server_Impl_12(
+         Callbacks& callbacks,
+         Session_Manager& session_manager,
+         Credentials_Manager& creds,
+         const Policy& policy,
+         RandomNumberGenerator& rng,
+         bool is_datagram,
+         size_t io_buf_sz) :
+   Channel_Impl_12(callbacks, session_manager, rng, policy,
+                  true, is_datagram, io_buf_sz),
+   Server_Impl(static_cast<Channel_Impl&>(*this)),
    m_creds(creds)
    {
    }
 
-std::unique_ptr<Handshake_State> Server::new_handshake_state(std::unique_ptr<Handshake_IO> io)
+std::unique_ptr<Handshake_State> Server_Impl_12::new_handshake_state(std::unique_ptr<Handshake_IO> io)
    {
    std::unique_ptr<Handshake_State> state(new Server_Handshake_State(std::move(io), callbacks()));
    state->set_expected_next(CLIENT_HELLO);
@@ -285,7 +286,7 @@ std::unique_ptr<Handshake_State> Server::new_handshake_state(std::unique_ptr<Han
    }
 
 std::vector<X509_Certificate>
-Server::get_peer_cert_chain(const Handshake_State& state_base) const
+Server_Impl_12::get_peer_cert_chain(const Handshake_State& state_base) const
    {
    const Server_Handshake_State& state = dynamic_cast<const Server_Handshake_State&>(state_base);
    if(state.resume_peer_certs().size() > 0)
@@ -299,8 +300,8 @@ Server::get_peer_cert_chain(const Handshake_State& state_base) const
 /*
 * Send a hello request to the client
 */
-void Server::initiate_handshake(Handshake_State& state,
-                                bool force_full_renegotiation)
+void Server_Impl_12::initiate_handshake(Handshake_State& state,
+                                        bool force_full_renegotiation)
    {
    dynamic_cast<Server_Handshake_State&>(state).
        set_allow_session_resumption(!force_full_renegotiation);
@@ -386,10 +387,10 @@ Protocol_Version select_version(const Botan::TLS::Policy& policy,
 /*
 * Process a CLIENT HELLO Message
 */
-void Server::process_client_hello_msg(const Handshake_State* active_state,
-                                      Server_Handshake_State& pending_state,
-                                      const std::vector<uint8_t>& contents,
-                                      bool epoch0_restart)
+void Server_Impl_12::process_client_hello_msg(const Handshake_State* active_state,
+      Server_Handshake_State& pending_state,
+      const std::vector<uint8_t>& contents,
+      bool epoch0_restart)
    {
    BOTAN_ASSERT_IMPLICATION(epoch0_restart, active_state != nullptr, "Can't restart with a dead connection");
 
@@ -536,8 +537,8 @@ void Server::process_client_hello_msg(const Handshake_State* active_state,
       }
    }
 
-void Server::process_certificate_msg(Server_Handshake_State& pending_state,
-                                     const std::vector<uint8_t>& contents)
+void Server_Impl_12::process_certificate_msg(Server_Handshake_State& pending_state,
+      const std::vector<uint8_t>& contents)
    {
    pending_state.client_certs(new Certificate(contents, policy()));
 
@@ -548,8 +549,8 @@ void Server::process_certificate_msg(Server_Handshake_State& pending_state,
    pending_state.set_expected_next(CLIENT_KEX);
    }
 
-void Server::process_client_key_exchange_msg(Server_Handshake_State& pending_state,
-                                             const std::vector<uint8_t>& contents)
+void Server_Impl_12::process_client_key_exchange_msg(Server_Handshake_State& pending_state,
+      const std::vector<uint8_t>& contents)
    {
    if(pending_state.received_handshake_msg(CERTIFICATE) && !pending_state.client_certs()->empty())
       pending_state.set_expected_next(CERTIFICATE_VERIFY);
@@ -563,15 +564,15 @@ void Server::process_client_key_exchange_msg(Server_Handshake_State& pending_sta
    pending_state.compute_session_keys();
    }
 
-void Server::process_change_cipher_spec_msg(Server_Handshake_State& pending_state)
+void Server_Impl_12::process_change_cipher_spec_msg(Server_Handshake_State& pending_state)
    {
    pending_state.set_expected_next(FINISHED);
    change_cipher_spec_reader(SERVER);
    }
 
-void Server::process_certificate_verify_msg(Server_Handshake_State& pending_state,
-                                            Handshake_Type type,
-                                            const std::vector<uint8_t>& contents)
+void Server_Impl_12::process_certificate_verify_msg(Server_Handshake_State& pending_state,
+      Handshake_Type type,
+      const std::vector<uint8_t>& contents)
    {
    pending_state.client_verify(new Certificate_Verify(contents));
 
@@ -617,9 +618,9 @@ void Server::process_certificate_verify_msg(Server_Handshake_State& pending_stat
    pending_state.set_expected_next(HANDSHAKE_CCS);
    }
 
-void Server::process_finished_msg(Server_Handshake_State& pending_state,
-                                  Handshake_Type type,
-                                  const std::vector<uint8_t>& contents)
+void Server_Impl_12::process_finished_msg(Server_Handshake_State& pending_state,
+      Handshake_Type type,
+      const std::vector<uint8_t>& contents)
    {
    pending_state.set_expected_next(HANDSHAKE_NONE);
 
@@ -692,11 +693,11 @@ void Server::process_finished_msg(Server_Handshake_State& pending_state,
 /*
 * Process a handshake message
 */
-void Server::process_handshake_msg(const Handshake_State* active_state,
-                                   Handshake_State& state_base,
-                                   Handshake_Type type,
-                                   const std::vector<uint8_t>& contents,
-                                   bool epoch0_restart)
+void Server_Impl_12::process_handshake_msg(const Handshake_State* active_state,
+      Handshake_State& state_base,
+      Handshake_Type type,
+      const std::vector<uint8_t>& contents,
+      bool epoch0_restart)
    {
    Server_Handshake_State& state = dynamic_cast<Server_Handshake_State&>(state_base);
    state.confirm_transition_to(type);
@@ -738,9 +739,9 @@ void Server::process_handshake_msg(const Handshake_State* active_state,
       }
    }
 
-void Server::session_resume(Server_Handshake_State& pending_state,
-                            bool have_session_ticket_key,
-                            Session& session_info)
+void Server_Impl_12::session_resume(Server_Handshake_State& pending_state,
+                                    bool have_session_ticket_key,
+                                    Session& session_info)
    {
    // Only offer a resuming client a new ticket if they didn't send one this time,
    // ie, resumed via server-side resumption. TODO: also send one if expiring soon?
@@ -809,8 +810,8 @@ void Server::session_resume(Server_Handshake_State& pending_state,
    pending_state.set_expected_next(HANDSHAKE_CCS);
    }
 
-void Server::session_create(Server_Handshake_State& pending_state,
-                            bool have_session_ticket_key)
+void Server_Impl_12::session_create(Server_Handshake_State& pending_state,
+                                    bool have_session_ticket_key)
    {
    std::map<std::string, std::vector<X509_Certificate>> cert_chains;
 

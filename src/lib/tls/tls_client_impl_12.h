@@ -6,22 +6,26 @@
 * Botan is released under the Simplified BSD License (see license.txt)
 */
 
-#ifndef BOTAN_TLS_CLIENT_H_
-#define BOTAN_TLS_CLIENT_H_
+#ifndef BOTAN_TLS_CLIENT_IMPL_12_H_
+#define BOTAN_TLS_CLIENT_IMPL_12_H_
+
+#include "tls_client_impl.h"
+#include "tls_channel_impl_12.h"
 
 #include <botan/tls_channel.h>
 #include <botan/tls_policy.h>
 #include <botan/credentials_manager.h>
 #include <vector>
+#include <memory>
 
 namespace Botan {
 
 namespace TLS {
 
 /**
-* SSL/TLS Client
+* SSL/TLS Client 1.2
 */
-class BOTAN_PUBLIC_API(2,0) Client final : public Channel
+class Client_Impl_12 : public Channel_Impl_12, public Client_Impl
    {
    public:
 
@@ -50,16 +54,16 @@ class BOTAN_PUBLIC_API(2,0) Client final : public Channel
       *        be preallocated for the read and write buffers. Smaller
       *        values just mean reallocations and copies are more likely.
       */
-     Client(Callbacks& callbacks,
-            Session_Manager& session_manager,
-            Credentials_Manager& creds,
-            const Policy& policy,
-            RandomNumberGenerator& rng,
-            const Server_Information& server_info = Server_Information(),
-            const Protocol_Version& offer_version = Protocol_Version::latest_tls_version(),
-            const std::vector<std::string>& next_protocols = {},
-            size_t reserved_io_buffer_size = TLS::Client::IO_BUF_DEFAULT_SIZE
-         );
+      Client_Impl_12(Callbacks& callbacks,
+                     Session_Manager& session_manager,
+                     Credentials_Manager& creds,
+                     const Policy& policy,
+                     RandomNumberGenerator& rng,
+                     const Server_Information& server_info = Server_Information(),
+                     const Protocol_Version& offer_version = Protocol_Version::latest_tls_version(),
+                     const std::vector<std::string>& next_protocols = {},
+                     size_t reserved_io_buffer_size = TLS::Channel::IO_BUF_DEFAULT_SIZE
+          );
 
       /**
       * @return network protocol as advertised by the TLS server, if server sent the ALPN extension

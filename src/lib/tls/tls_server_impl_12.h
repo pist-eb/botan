@@ -6,10 +6,12 @@
 * Botan is released under the Simplified BSD License (see license.txt)
 */
 
-#ifndef BOTAN_TLS_SERVER_H_
-#define BOTAN_TLS_SERVER_H_
+#ifndef BOTAN_TLS_SERVER_IMPL_12_H_
+#define BOTAN_TLS_SERVER_IMPL_12_H_
 
-#include <botan/tls_channel.h>
+#include "tls_channel_impl_12.h"
+#include "tls_server_impl.h"
+
 #include <botan/tls_policy.h>
 #include <botan/credentials_manager.h>
 #include <vector>
@@ -20,14 +22,12 @@ namespace TLS {
 
 class Server_Handshake_State;
 
-/**
-* TLS Server
-*/
-class BOTAN_PUBLIC_API(2,0) Server final : public Channel
+
+class Server_Impl_12 : public Channel_Impl_12, public Server_Impl
    {
    public:
-      typedef std::function<std::string (std::vector<std::string>)> next_protocol_fn;
-
+      typedef std::function<std::string(std::vector<std::string>)> next_protocol_fn;
+      
       /**
       * Server initialization
       *
@@ -49,22 +49,22 @@ class BOTAN_PUBLIC_API(2,0) Server final : public Channel
       *        be preallocated for the read and write buffers. Smaller
       *        values just mean reallocations and copies are more likely.
       */
-      Server(Callbacks& callbacks,
-             Session_Manager& session_manager,
-             Credentials_Manager& creds,
-             const Policy& policy,
-             RandomNumberGenerator& rng,
-             bool is_datagram = false,
-             size_t reserved_io_buffer_size = TLS::Server::IO_BUF_DEFAULT_SIZE
-         );
-
+      Server_Impl_12(
+         Callbacks& callbacks,
+         Session_Manager& session_manager,
+         Credentials_Manager& creds,
+         const Policy& policy,
+         RandomNumberGenerator& rng,
+         bool is_datagram = false,
+         size_t reserved_io_buffer_size = TLS::Channel::IO_BUF_DEFAULT_SIZE);
+   private:
       /**
       * Return the protocol notification set by the client (using the
       * ALPN extension) for this connection, if any. This value is not
       * tied to the session and a later renegotiation of the same
       * session can choose a new protocol.
       */
-      std::string next_protocol() const { return m_next_protocol; }
+      std::string next_protocol() const override { return m_next_protocol; }
 
       /**
       * Return the protocol notification set by the client (using the
@@ -74,9 +74,8 @@ class BOTAN_PUBLIC_API(2,0) Server final : public Channel
       */
       std::string application_protocol() const override { return m_next_protocol; }
 
-   private:
       std::vector<X509_Certificate>
-         get_peer_cert_chain(const Handshake_State& state) const override;
+      get_peer_cert_chain(const Handshake_State& state) const override;
 
       void initiate_handshake(Handshake_State& state,
                               bool force_full_renegotiation) override;
