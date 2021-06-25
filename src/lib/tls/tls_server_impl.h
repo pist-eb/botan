@@ -2,6 +2,7 @@
 * TLS Server
 * (C) 2004-2011 Jack Lloyd
 *     2016 Matthias Gierlings
+*     2021 Elektrobit Automotive GmbH
 *
 * Botan is released under the Simplified BSD License (see license.txt)
 */
