@@ -9,6 +9,8 @@
 #ifndef BOTAN_TLS_CLIENT_HELLO_IMPL_12_H_
 #define BOTAN_TLS_CLIENT_HELLO_IMPL_12_H_
 
+#include "msg_client_hello_impl.h"
+
 #include <botan/tls_messages.h>
 #include <botan/tls_extensions.h>
 #include <botan/tls_handshake_msg.h>
@@ -39,69 +41,9 @@ std::vector<uint8_t> make_hello_random(RandomNumberGenerator& rng,
 /**
 * Client Hello Message
 */
-class BOTAN_UNSTABLE_API Client_Hello_Impl_12 final : public Handshake_Message
+class BOTAN_UNSTABLE_API Client_Hello_Impl_12 final : public Client_Hello_Impl
    {
    public:
-      Handshake_Type type() const override;
-
-      Protocol_Version version() const;
-
-      std::vector<Protocol_Version> supported_versions() const;
-
-      const std::vector<uint8_t>& random() const;
-
-      const std::vector<uint8_t>& session_id() const;
-
-      const std::vector<uint8_t>& compression_methods() const;
-
-      const std::vector<uint16_t>& ciphersuites() const;
-
-      bool offered_suite(uint16_t ciphersuite) const;
-
-      bool sent_fallback_scsv() const;
-
-      std::vector<Signature_Scheme> signature_schemes() const;
-
-      std::vector<Group_Params> supported_ecc_curves() const;
-
-      std::vector<Group_Params> supported_dh_groups() const;
-
-      bool prefers_compressed_ec_points() const;
-
-      std::string sni_hostname() const;
-
-      bool secure_renegotiation() const;
-
-      std::vector<uint8_t> renegotiation_info() const;
-
-      bool supports_session_ticket() const;
-
-      std::vector<uint8_t> session_ticket() const;
-
-      bool supports_alpn() const;
-
-      bool supports_extended_master_secret() const;
-
-      bool supports_cert_status_message() const;
-
-      bool supports_encrypt_then_mac() const;
-
-      bool sent_signature_algorithms() const;
-
-      std::vector<std::string> next_protocols() const;
-
-      std::vector<uint16_t> srtp_profiles() const;
-
-      void update_hello_cookie(const Hello_Verify_Request& hello_verify);
-
-      const std::vector<uint8_t>& cookie() const;
-
-      std::vector<uint8_t> cookie_input_data() const;
-
-      std::set<Handshake_Extension_Type> extension_types() const;
-
-      const Extensions& extensions() const;
-
       Client_Hello_Impl_12(Handshake_IO& io,
                    Handshake_Hash& hash,
                    const Policy& policy,
@@ -121,6 +63,64 @@ class BOTAN_UNSTABLE_API Client_Hello_Impl_12 final : public Handshake_Message
                    const std::vector<std::string>& next_protocols);
 
       explicit Client_Hello_Impl_12(const std::vector<uint8_t>& buf);
+
+      Protocol_Version version() const override;
+
+      std::vector<Protocol_Version> supported_versions() const override;
+
+      const std::vector<uint8_t>& random() const override;
+
+      const std::vector<uint8_t>& session_id() const override;
+
+      const std::vector<uint8_t>& compression_methods() const override;
+
+      const std::vector<uint16_t>& ciphersuites() const override;
+
+      bool offered_suite(uint16_t ciphersuite) const override;
+
+      bool sent_fallback_scsv() const override;
+
+      std::vector<Signature_Scheme> signature_schemes() const override;
+
+      std::vector<Group_Params> supported_ecc_curves() const override;
+
+      std::vector<Group_Params> supported_dh_groups() const override;
+
+      bool prefers_compressed_ec_points() const override;
+
+      std::string sni_hostname() const override;
+
+      bool secure_renegotiation() const override;
+
+      std::vector<uint8_t> renegotiation_info() const override;
+
+      bool supports_session_ticket() const override;
+
+      std::vector<uint8_t> session_ticket() const override;
+
+      bool supports_alpn() const override;
+
+      bool supports_extended_master_secret() const override;
+
+      bool supports_cert_status_message() const override;
+
+      bool supports_encrypt_then_mac() const override;
+
+      bool sent_signature_algorithms() const override;
+
+      std::vector<std::string> next_protocols() const override;
+
+      std::vector<uint16_t> srtp_profiles() const override;
+
+      void update_hello_cookie(const Hello_Verify_Request& hello_verify) override;
+
+      const std::vector<uint8_t>& cookie() const override;
+
+      std::vector<uint8_t> cookie_input_data() const override;
+
+      std::set<Handshake_Extension_Type> extension_types() const override;
+
+      const Extensions& extensions() const override;
 
    private:
       std::vector<uint8_t> serialize() const override;

@@ -20,6 +20,7 @@
 #include <vector>
 #include <string>
 #include <set>
+#include <memory>
 
 #if defined(BOTAN_HAS_CECPQ1)
   #include <botan/cecpq1.h>
@@ -36,6 +37,7 @@ class Session;
 class Handshake_IO;
 class Handshake_State;
 class Callbacks;
+class Client_Hello_Impl;
 
 std::vector<uint8_t> make_hello_random(RandomNumberGenerator& rng,
                                        const Policy& policy);
@@ -70,7 +72,7 @@ class BOTAN_UNSTABLE_API Client_Hello final : public Handshake_Message
          {
          public:
             Settings(const Protocol_Version version,
-                     const std::string& hostname = "") :
+                     const std::string& hostname = ""):
                m_new_session_version(version),
                m_hostname(hostname) {}
 
@@ -82,19 +84,19 @@ class BOTAN_UNSTABLE_API Client_Hello final : public Handshake_Message
             const std::string m_hostname;
          };
 
-      Handshake_Type type() const override { return CLIENT_HELLO; }
+      Handshake_Type type() const override;
 
-      Protocol_Version version() const { return m_version; }
+      Protocol_Version version() const;
 
       std::vector<Protocol_Version> supported_versions() const;
 
-      const std::vector<uint8_t>& random() const { return m_random; }
+      const std::vector<uint8_t>& random() const;
 
-      const std::vector<uint8_t>& session_id() const { return m_session_id; }
+      const std::vector<uint8_t>& session_id() const;
 
-      const std::vector<uint8_t>& compression_methods() const { return m_comp_methods; }
+      const std::vector<uint8_t>& compression_methods() const;
 
-      const std::vector<uint16_t>& ciphersuites() const { return m_suites; }
+      const std::vector<uint16_t>& ciphersuites() const;
 
       bool offered_suite(uint16_t ciphersuite) const;
 
@@ -132,16 +134,17 @@ class BOTAN_UNSTABLE_API Client_Hello final : public Handshake_Message
 
       std::vector<uint16_t> srtp_profiles() const;
 
+      std::vector<uint8_t> serialize() const override;
+
       void update_hello_cookie(const Hello_Verify_Request& hello_verify);
 
-      const std::vector<uint8_t>& cookie() const { return m_hello_cookie; }
+      const std::vector<uint8_t>& cookie() const;
 
       std::vector<uint8_t> cookie_input_data() const;
 
-      std::set<Handshake_Extension_Type> extension_types() const
-         { return m_extensions.extension_types(); }
+      std::set<Handshake_Extension_Type> extension_types() const;
 
-      const Extensions& extensions() const { return m_extensions; }
+      const Extensions& extensions() const;
 
       Client_Hello(Handshake_IO& io,
                    Handshake_Hash& hash,
@@ -164,17 +167,7 @@ class BOTAN_UNSTABLE_API Client_Hello final : public Handshake_Message
       explicit Client_Hello(const std::vector<uint8_t>& buf);
 
    private:
-      std::vector<uint8_t> serialize() const override;
-
-      Protocol_Version m_version;
-      std::vector<uint8_t> m_session_id;
-      std::vector<uint8_t> m_random;
-      std::vector<uint16_t> m_suites;
-      std::vector<uint8_t> m_comp_methods;
-      std::vector<uint8_t> m_hello_cookie; // DTLS only
-      std::vector<uint8_t> m_cookie_input_bits; // DTLS only
-
-      Extensions m_extensions;
+      std::unique_ptr<Client_Hello_Impl> m_impl;
    };
 
 /**
