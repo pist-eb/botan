@@ -49,30 +49,28 @@ std::vector<uint8_t> make_hello_random(RandomNumberGenerator& rng,
 class BOTAN_UNSTABLE_API Server_Hello_Impl_12 final : public Handshake_Message
    {
    public:
-      class Settings final
-         {
-         public:
-            Settings(const std::vector<uint8_t> new_session_id,
-                     Protocol_Version new_session_version,
-                     uint16_t ciphersuite,
-                     bool offer_session_ticket) :
-               m_new_session_id(new_session_id),
-               m_new_session_version(new_session_version),
-               m_ciphersuite(ciphersuite),
-               m_offer_session_ticket(offer_session_ticket) {}
+   Server_Hello_Impl_12(Handshake_IO& io,
+                        Handshake_Hash& hash,
+                        const Policy& policy,
+                        Callbacks& cb,
+                        RandomNumberGenerator& rng,
+                        const std::vector<uint8_t>& secure_reneg_info,
+                        const Client_Hello& client_hello,
+                        const Server_Hello::Settings& settings,
+                        const std::string next_protocol);
 
-            const std::vector<uint8_t>& session_id() const { return m_new_session_id; }
-            Protocol_Version protocol_version() const { return m_new_session_version; }
-            uint16_t ciphersuite() const { return m_ciphersuite; }
-            bool offer_session_ticket() const { return m_offer_session_ticket; }
+      Server_Hello_Impl_12(Handshake_IO& io,
+                           Handshake_Hash& hash,
+                           const Policy& policy,
+                           Callbacks& cb,
+                           RandomNumberGenerator& rng,
+                           const std::vector<uint8_t>& secure_reneg_info,
+                           const Client_Hello& client_hello,
+                           Session& resumed_session,
+                           bool offer_session_ticket,
+                           const std::string& next_protocol);
 
-         private:
-            const std::vector<uint8_t> m_new_session_id;
-            Protocol_Version m_new_session_version;
-            uint16_t m_ciphersuite;
-            bool m_offer_session_ticket;
-         };
-
+      explicit Server_Hello_Impl_12(const std::vector<uint8_t>& buf);
 
       Handshake_Type type() const override { return SERVER_HELLO; }
 
@@ -153,33 +151,10 @@ class BOTAN_UNSTABLE_API Server_Hello_Impl_12 final : public Handshake_Message
          }
 
       bool random_signals_downgrade() const;
-
-      Server_Hello_Impl_12(Handshake_IO& io,
-                   Handshake_Hash& hash,
-                   const Policy& policy,
-                   Callbacks& cb,
-                   RandomNumberGenerator& rng,
-                   const std::vector<uint8_t>& secure_reneg_info,
-                   const Client_Hello& client_hello,
-                   const Server_Hello_Impl_12::Settings& settings,
-                   const std::string next_protocol);
-
-      Server_Hello_Impl_12(Handshake_IO& io,
-                   Handshake_Hash& hash,
-                   const Policy& policy,
-                   Callbacks& cb,
-                   RandomNumberGenerator& rng,
-                   const std::vector<uint8_t>& secure_reneg_info,
-                   const Client_Hello& client_hello,
-                   Session& resumed_session,
-                   bool offer_session_ticket,
-                   const std::string& next_protocol);
-
-      explicit Server_Hello_Impl_12(const std::vector<uint8_t>& buf);
       
-   private:
       std::vector<uint8_t> serialize() const override;
 
+   private:
       Protocol_Version m_version;
       std::vector<uint8_t> m_session_id, m_random;
       uint16_t m_ciphersuite;

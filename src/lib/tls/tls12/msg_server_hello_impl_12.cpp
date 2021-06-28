@@ -15,7 +15,7 @@
 #include <botan/internal/tls_handshake_io.h>
 #include <botan/internal/tls_handshake_hash.h>
 #include <botan/internal/stl_util.h>
-#include "msg_server_hello_impl_12.h"
+#include <botan/internal/msg_server_hello_impl_12.h>
 namespace Botan {
 
 namespace TLS {
@@ -45,7 +45,7 @@ Server_Hello_Impl_12::Server_Hello_Impl_12(Handshake_IO& io,
                            RandomNumberGenerator& rng,
                            const std::vector<uint8_t>& reneg_info,
                            const Client_Hello& client_hello,
-                           const Server_Hello_Impl_12::Settings& server_settings,
+                           const Server_Hello::Settings& server_settings,
                            const std::string next_protocol) :
    m_version(server_settings.protocol_version()),
    m_session_id(server_settings.session_id()),
@@ -182,7 +182,7 @@ Server_Hello_Impl_12::Server_Hello_Impl_12(const std::vector<uint8_t>& buf)
 /*
 * Serialize a Server Hello message
 */
-std::vector<uint8_t> Server_Hello::serialize() const
+std::vector<uint8_t> Server_Hello_Impl_12::serialize() const
    {
    std::vector<uint8_t> buf;
 
@@ -206,32 +206,6 @@ bool Server_Hello_Impl_12::random_signals_downgrade() const
    {
    const uint64_t last8 = load_be<uint64_t>(m_random.data(), 3);
    return (last8 == DOWNGRADE_TLS11);
-   }
-
-/*
-* Create a new Server Hello Done message
-*/
-Server_Hello_Done::Server_Hello_Done(Handshake_IO& io,
-                                     Handshake_Hash& hash)
-   {
-   hash.update(io.send(*this));
-   }
-
-/*
-* Deserialize a Server Hello Done message
-*/
-Server_Hello_Done::Server_Hello_Done(const std::vector<uint8_t>& buf)
-   {
-   if(buf.size())
-      throw Decoding_Error("Server_Hello_Done: Must be empty, and is not");
-   }
-
-/*
-* Serialize a Server Hello Done message
-*/
-std::vector<uint8_t> Server_Hello_Done::serialize() const
-   {
-   return std::vector<uint8_t>();
    }
 
 }
