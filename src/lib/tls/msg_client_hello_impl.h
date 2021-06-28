@@ -40,6 +40,16 @@ class Callbacks;
 class Client_Hello_Impl : public Handshake_Message
    {
    public:
+      Client_Hello_Impl();
+
+      explicit Client_Hello_Impl(const Policy& policy,
+                        RandomNumberGenerator& rng,
+                        const Client_Hello::Settings& client_settings);
+
+      explicit Client_Hello_Impl(const Policy& policy,
+                           RandomNumberGenerator& rng,
+                           const Session& session);
+
       virtual ~Client_Hello_Impl();
 
       Handshake_Type type() const override;
@@ -99,6 +109,14 @@ class Client_Hello_Impl : public Handshake_Message
       virtual std::set<Handshake_Extension_Type> extension_types() const = 0;
 
       virtual const Extensions& extensions() const = 0;
+
+   protected:
+      Protocol_Version m_version;
+      std::vector<uint8_t> m_session_id;
+      std::vector<uint8_t> m_random;
+      std::vector<uint16_t> m_suites;
+      std::vector<uint8_t> m_comp_methods;
+      Extensions m_extensions;
    };
 
 }

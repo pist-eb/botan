@@ -14,6 +14,29 @@ namespace Botan {
 
 namespace TLS {
 
+Client_Hello_Impl::Client_Hello_Impl() = default;
+
+Client_Hello_Impl::Client_Hello_Impl(const Policy& policy,
+                        RandomNumberGenerator& rng,
+                        const Client_Hello::Settings& client_settings) :
+   m_version(client_settings.protocol_version()),
+   m_random(make_hello_random(rng, policy)),
+   m_suites(policy.ciphersuite_list(m_version)),
+   m_comp_methods(1)
+   {
+   }
+
+Client_Hello_Impl::Client_Hello_Impl(const Policy& policy,
+                           RandomNumberGenerator& rng,
+                           const Session& session) :
+   m_version(session.version()),
+   m_session_id(session.session_id()),
+   m_random(make_hello_random(rng, policy)),
+   m_suites(policy.ciphersuite_list(m_version)),
+   m_comp_methods(1)
+   {
+   }
+
 Client_Hello_Impl::~Client_Hello_Impl() {}
 
 Handshake_Type Client_Hello_Impl::type() const

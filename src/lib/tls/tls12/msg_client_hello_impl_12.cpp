@@ -62,10 +62,7 @@ Client_Hello_Impl_12::Client_Hello_Impl_12(Handshake_IO& io,
                            const std::vector<uint8_t>& reneg_info,
                            const Client_Hello::Settings& client_settings,
                            const std::vector<std::string>& next_protocols) :
-   m_version(client_settings.protocol_version()),
-   m_random(make_hello_random(rng, policy)),
-   m_suites(policy.ciphersuite_list(m_version)),
-   m_comp_methods(1)
+   Client_Hello_Impl(policy, rng, client_settings)
    {
    if(!policy.acceptable_protocol_version(m_version))
       throw Internal_Error("Offering " + m_version.to_string() +
@@ -124,11 +121,7 @@ Client_Hello_Impl_12::Client_Hello_Impl_12(Handshake_IO& io,
                            const std::vector<uint8_t>& reneg_info,
                            const Session& session,
                            const std::vector<std::string>& next_protocols) :
-   m_version(session.version()),
-   m_session_id(session.session_id()),
-   m_random(make_hello_random(rng, policy)),
-   m_suites(policy.ciphersuite_list(m_version)),
-   m_comp_methods(1)
+   Client_Hello_Impl(policy, rng, session)
    {
    if(!policy.acceptable_protocol_version(m_version))
       throw Internal_Error("Offering " + m_version.to_string() +

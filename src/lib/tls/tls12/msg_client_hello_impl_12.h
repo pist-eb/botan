@@ -124,15 +124,8 @@ class BOTAN_UNSTABLE_API Client_Hello_Impl_12 final : public Client_Hello_Impl
    private:
       std::vector<uint8_t> serialize() const override;
 
-      Protocol_Version m_version;
-      std::vector<uint8_t> m_session_id;
-      std::vector<uint8_t> m_random;
-      std::vector<uint16_t> m_suites;
-      std::vector<uint8_t> m_comp_methods;
       std::vector<uint8_t> m_hello_cookie; // DTLS only
       std::vector<uint8_t> m_cookie_input_bits; // DTLS only
-
-      Extensions m_extensions;
    };
 
 }
