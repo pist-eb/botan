@@ -28,7 +28,7 @@ class Client_Impl
    public:
       virtual ~Client_Impl() = default;
 
-      Client_Impl(Channel_Impl& impl) : m_impl{impl} {}
+      explicit Client_Impl(Channel_Impl& impl) : m_impl{impl} {}
 
       Channel_Impl& channel() { return m_impl; }
 

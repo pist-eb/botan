@@ -24,12 +24,18 @@ tls_version.h
 </header:public>
 
 <header:internal>
+tls_channel_impl.h
+tls_client_impl.h
 tls_handshake_hash.h
 tls_handshake_io.h
 tls_handshake_state.h
 tls_reader.h
+tls_server_impl.h
 tls_seq_numbers.h
 tls_session_key.h
+tls12/tls_channel_impl_12.h
+tls12/tls_client_impl_12.h
+tls12/tls_server_impl_12.h
 </header:internal>
 
 <requires>

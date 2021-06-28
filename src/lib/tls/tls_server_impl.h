@@ -28,7 +28,7 @@ class Server_Impl
    public:
       virtual ~Server_Impl() = default;
 
-      Server_Impl(Channel_Impl& impl) : m_impl{impl} {}
+      explicit Server_Impl(Channel_Impl& impl) : m_impl{impl} {}
 
       Channel_Impl& channel() { return m_impl; }
 

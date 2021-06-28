@@ -9,12 +9,11 @@
 #ifndef BOTAN_TLS_CLIENT_IMPL_12_H_
 #define BOTAN_TLS_CLIENT_IMPL_12_H_
 
-#include "../tls_client_impl.h"
-#include "tls_channel_impl_12.h"
-
 #include <botan/tls_channel.h>
 #include <botan/tls_policy.h>
 #include <botan/credentials_manager.h>
+#include <botan/internal/tls_client_impl.h>
+#include <botan/internal/tls_channel_impl_12.h>
 #include <vector>
 #include <memory>
 

@@ -9,11 +9,10 @@
 #ifndef BOTAN_TLS_SERVER_IMPL_12_H_
 #define BOTAN_TLS_SERVER_IMPL_12_H_
 
-#include "tls_channel_impl_12.h"
-#include "../tls_server_impl.h"
-
 #include <botan/tls_policy.h>
 #include <botan/credentials_manager.h>
+#include <botan/internal/tls_channel_impl_12.h>
+#include <botan/internal/tls_server_impl.h>
 #include <vector>
 
 namespace Botan {

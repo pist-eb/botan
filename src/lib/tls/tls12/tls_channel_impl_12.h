@@ -9,12 +9,11 @@
 #ifndef BOTAN_TLS_CHANNEL_IMPL_12_H_
 #define BOTAN_TLS_CHANNEL_IMPL_12_H_
 
-#include "../tls_channel_impl.h"
-
 #include <botan/tls_session.h>
 #include <botan/tls_alert.h>
 #include <botan/tls_session_manager.h>
 #include <botan/tls_callbacks.h>
+#include <botan/internal/tls_channel_impl.h>
 #include <functional>
 #include <vector>
 #include <string>
