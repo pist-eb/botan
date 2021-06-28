@@ -15,7 +15,7 @@
 #include <botan/internal/tls_handshake_io.h>
 #include <botan/internal/tls_handshake_hash.h>
 #include <botan/internal/stl_util.h>
-
+#include "msg_server_hello_impl_12.h"
 namespace Botan {
 
 namespace TLS {
@@ -38,14 +38,14 @@ make_server_hello_random(RandomNumberGenerator& rng,
 }
 
 // New session case
-Server_Hello::Server_Hello(Handshake_IO& io,
+Server_Hello_Impl_12::Server_Hello_Impl_12(Handshake_IO& io,
                            Handshake_Hash& hash,
                            const Policy& policy,
                            Callbacks& cb,
                            RandomNumberGenerator& rng,
                            const std::vector<uint8_t>& reneg_info,
                            const Client_Hello& client_hello,
-                           const Server_Hello::Settings& server_settings,
+                           const Server_Hello_Impl_12::Settings& server_settings,
                            const std::string next_protocol) :
    m_version(server_settings.protocol_version()),
    m_session_id(server_settings.session_id()),
@@ -108,7 +108,7 @@ Server_Hello::Server_Hello(Handshake_IO& io,
    }
 
 // Resuming
-Server_Hello::Server_Hello(Handshake_IO& io,
+Server_Hello_Impl_12::Server_Hello_Impl_12(Handshake_IO& io,
                            Handshake_Hash& hash,
                            const Policy& policy,
                            Callbacks& cb,
@@ -156,7 +156,7 @@ Server_Hello::Server_Hello(Handshake_IO& io,
 /*
 * Deserialize a Server Hello message
 */
-Server_Hello::Server_Hello(const std::vector<uint8_t>& buf)
+Server_Hello_Impl_12::Server_Hello_Impl_12(const std::vector<uint8_t>& buf)
    {
    if(buf.size() < 38)
       throw Decoding_Error("Server_Hello: Packet corrupted");
@@ -202,7 +202,7 @@ std::vector<uint8_t> Server_Hello::serialize() const
    return buf;
    }
 
-bool Server_Hello::random_signals_downgrade() const
+bool Server_Hello_Impl_12::random_signals_downgrade() const
    {
    const uint64_t last8 = load_be<uint64_t>(m_random.data(), 3);
    return (last8 == DOWNGRADE_TLS11);
