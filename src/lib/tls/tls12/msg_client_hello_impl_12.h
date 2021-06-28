@@ -64,6 +64,8 @@ class BOTAN_UNSTABLE_API Client_Hello_Impl_12 final : public Client_Hello_Impl
 
       explicit Client_Hello_Impl_12(const std::vector<uint8_t>& buf);
 
+      virtual ~Client_Hello_Impl_12();
+
       Protocol_Version version() const override;
 
       std::vector<Protocol_Version> supported_versions() const override;
@@ -77,8 +79,6 @@ class BOTAN_UNSTABLE_API Client_Hello_Impl_12 final : public Client_Hello_Impl
       const std::vector<uint16_t>& ciphersuites() const override;
 
       bool offered_suite(uint16_t ciphersuite) const override;
-
-      bool sent_fallback_scsv() const override;
 
       std::vector<Signature_Scheme> signature_schemes() const override;
 

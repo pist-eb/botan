@@ -15,7 +15,7 @@ namespace Botan {
 
 namespace TLS {
 
-Client_Hello_Impl::~Client_Hello_Impl() {};
+Client_Hello_Impl::~Client_Hello_Impl() {}
 
 Handshake_Type Client_Hello_Impl::type() const
    {

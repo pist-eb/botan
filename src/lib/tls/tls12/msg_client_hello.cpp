@@ -68,10 +68,18 @@ Client_Hello::Client_Hello(const std::vector<uint8_t>& buf):
    {
    }
 
+Client_Hello::~Client_Hello() = default;
+
 
 void Client_Hello::update_hello_cookie(const Hello_Verify_Request& hello_verify)
    {
-      m_impl->update_hello_cookie(hello_verify);
+   m_impl->update_hello_cookie(hello_verify);
+   }
+
+
+const std::vector<uint8_t>& Client_Hello::cookie() const
+   {
+   return m_impl->cookie();
    }
 
 /*
@@ -79,12 +87,22 @@ void Client_Hello::update_hello_cookie(const Hello_Verify_Request& hello_verify)
 */
 std::vector<uint8_t> Client_Hello::serialize() const
    {
-      return m_impl->serialize();
+   return m_impl->serialize();
    }
 
 std::vector<uint8_t> Client_Hello::cookie_input_data() const
    {
-      return m_impl->cookie_input_data();
+   return m_impl->cookie_input_data();
+   }
+
+std::set<Handshake_Extension_Type> Client_Hello::extension_types() const
+   {
+   return m_impl->extension_types();
+   }
+
+const Extensions& Client_Hello::extensions() const
+   {
+   return m_impl->extensions();
    }
 
 /*
@@ -92,104 +110,123 @@ std::vector<uint8_t> Client_Hello::cookie_input_data() const
 */
 bool Client_Hello::offered_suite(uint16_t ciphersuite) const
    {
-      return m_impl->offered_suite(ciphersuite);
+   return m_impl->offered_suite(ciphersuite);
    }
 
 std::vector<Signature_Scheme> Client_Hello::signature_schemes() const
    {
-      return m_impl->signature_schemes();
+   return m_impl->signature_schemes();
    }
 
 std::vector<Group_Params> Client_Hello::supported_ecc_curves() const
    {
-      return m_impl->supported_ecc_curves();
+   return m_impl->supported_ecc_curves();
    }
 
 std::vector<Group_Params> Client_Hello::supported_dh_groups() const
    {
-      return m_impl->supported_dh_groups();
+   return m_impl->supported_dh_groups();
    }
 
 bool Client_Hello::prefers_compressed_ec_points() const
    {
-      return m_impl->prefers_compressed_ec_points();
+   return m_impl->prefers_compressed_ec_points();
    }
 
 std::string Client_Hello::sni_hostname() const
    {
-      return m_impl->sni_hostname();
+   return m_impl->sni_hostname();
    }
 
 bool Client_Hello::secure_renegotiation() const
    {
-      return m_impl->secure_renegotiation();
+   return m_impl->secure_renegotiation();
    }
 
 std::vector<uint8_t> Client_Hello::renegotiation_info() const
    {
-      return m_impl->renegotiation_info();
+   return m_impl->renegotiation_info();
    }
 
 Handshake_Type Client_Hello::type() const
    {
-      return m_impl->type();
+   return m_impl->type();
    }
 
 Protocol_Version Client_Hello::version() const
    {
-      return m_impl->version();
+   return m_impl->version();
    }
 
 std::vector<Protocol_Version> Client_Hello::supported_versions() const
    {
-      return m_impl->supported_versions();
+   return m_impl->supported_versions();
+   }
+
+const std::vector<uint8_t>& Client_Hello::random() const
+   {
+   return m_impl->random();
+   }
+
+const std::vector<uint8_t>& Client_Hello::session_id() const
+   {
+   return m_impl->session_id();
+   }
+
+const std::vector<uint8_t>& Client_Hello::compression_methods() const
+   {
+   return m_impl->compression_methods();
+   }
+
+const std::vector<uint16_t>& Client_Hello::ciphersuites() const
+   {
+   return m_impl->ciphersuites();
    }
 
 bool Client_Hello::supports_session_ticket() const
    {
-      return m_impl->supports_session_ticket();
+   return m_impl->supports_session_ticket();
    }
 
 std::vector<uint8_t> Client_Hello::session_ticket() const
    {
-      return m_impl->session_ticket();
+   return m_impl->session_ticket();
    }
 
 bool Client_Hello::supports_alpn() const
    {
-      return m_impl->supports_alpn();
+   return m_impl->supports_alpn();
    }
 
 bool Client_Hello::supports_extended_master_secret() const
    {
-      return m_impl->supports_extended_master_secret();
+   return m_impl->supports_extended_master_secret();
    }
 
 bool Client_Hello::supports_cert_status_message() const
    {
-      return m_impl->supports_cert_status_message();
+   return m_impl->supports_cert_status_message();
    }
 
 bool Client_Hello::supports_encrypt_then_mac() const
    {
-      return m_impl->supports_encrypt_then_mac();
+   return m_impl->supports_encrypt_then_mac();
    }
 
 bool Client_Hello::sent_signature_algorithms() const
    {
-      return m_impl->sent_signature_algorithms();
+   return m_impl->sent_signature_algorithms();
    }
 
 std::vector<std::string> Client_Hello::next_protocols() const
    {
-      return m_impl->next_protocols();
+   return m_impl->next_protocols();
    }
 
 std::vector<uint16_t> Client_Hello::srtp_profiles() const
    {
-      return m_impl->srtp_profiles();
+   return m_impl->srtp_profiles();
    }
-
 
 }
 

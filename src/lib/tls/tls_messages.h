@@ -100,8 +100,6 @@ class BOTAN_UNSTABLE_API Client_Hello final : public Handshake_Message
 
       bool offered_suite(uint16_t ciphersuite) const;
 
-      bool sent_fallback_scsv() const;
-
       std::vector<Signature_Scheme> signature_schemes() const;
 
       std::vector<Group_Params> supported_ecc_curves() const;
@@ -165,6 +163,8 @@ class BOTAN_UNSTABLE_API Client_Hello final : public Handshake_Message
                    const std::vector<std::string>& next_protocols);
 
       explicit Client_Hello(const std::vector<uint8_t>& buf);
+
+      ~Client_Hello();
 
    private:
       std::unique_ptr<Client_Hello_Impl> m_impl;

@@ -58,8 +58,6 @@ class Client_Hello_Impl : public Handshake_Message
 
       virtual bool offered_suite(uint16_t ciphersuite) const = 0;
 
-      virtual bool sent_fallback_scsv() const = 0;
-
       virtual std::vector<Signature_Scheme> signature_schemes() const = 0;
 
       virtual std::vector<Group_Params> supported_ecc_curves() const = 0;

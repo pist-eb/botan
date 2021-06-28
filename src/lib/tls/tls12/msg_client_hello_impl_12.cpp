@@ -174,6 +174,8 @@ Client_Hello_Impl_12::Client_Hello_Impl_12(Handshake_IO& io,
    hash.update(io.send(*this));
    }
 
+Client_Hello_Impl_12::~Client_Hello_Impl_12() {}
+
 void Client_Hello_Impl_12::update_hello_cookie(const Hello_Verify_Request& hello_verify)
    {
    if(!m_version.is_datagram_protocol())
@@ -271,6 +273,26 @@ Client_Hello_Impl_12::Client_Hello_Impl_12(const std::vector<uint8_t>& buf)
       }
    }
 
+const std::vector<uint8_t>& Client_Hello_Impl_12::random() const
+   {
+   return m_random;
+   }
+
+const std::vector<uint8_t>& Client_Hello_Impl_12::session_id() const
+   {
+   return m_session_id;
+   }
+
+const std::vector<uint8_t>& Client_Hello_Impl_12::compression_methods() const
+   {
+   return m_comp_methods;
+   }
+
+const std::vector<uint16_t>& Client_Hello_Impl_12::ciphersuites() const
+   {
+   return m_suites;
+   }
+
 /*
 * Check if we offered this ciphersuite
 */
@@ -336,6 +358,11 @@ std::vector<uint8_t> Client_Hello_Impl_12::renegotiation_info() const
    return std::vector<uint8_t>();
    }
 
+Protocol_Version Client_Hello_Impl_12::version() const
+   {
+   return m_version;
+   }
+
 std::vector<Protocol_Version> Client_Hello_Impl_12::supported_versions() const
    {
    if(Supported_Versions* versions = m_extensions.get<Supported_Versions>())
@@ -393,6 +420,21 @@ std::vector<uint16_t> Client_Hello_Impl_12::srtp_profiles() const
       return srtp->profiles();
    return std::vector<uint16_t>();
    }
+
+const std::vector<uint8_t>& Client_Hello_Impl_12::cookie() const
+{
+return m_hello_cookie;
+}
+
+std::set<Handshake_Extension_Type> Client_Hello_Impl_12::extension_types() const
+{
+return m_extensions.extension_types();
+}
+
+const Extensions& Client_Hello_Impl_12::extensions() const
+{
+return m_extensions;
+}
 
 
 }
