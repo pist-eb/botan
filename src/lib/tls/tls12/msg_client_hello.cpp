@@ -29,6 +29,31 @@ namespace Botan {
 namespace TLS {
 
 /*
+* Create a new Hello Request message
+*/
+Hello_Request::Hello_Request(Handshake_IO& io)
+   {
+   io.send(*this);
+   }
+
+/*
+* Deserialize a Hello Request message
+*/
+Hello_Request::Hello_Request(const std::vector<uint8_t>& buf)
+   {
+   if(buf.size())
+      throw Decoding_Error("Bad Hello_Request, has non-zero size");
+   }
+
+/*
+* Serialize a Hello Request message
+*/
+std::vector<uint8_t> Hello_Request::serialize() const
+   {
+   return std::vector<uint8_t>();
+   }
+
+/*
 * Create a new Client Hello message
 */
 Client_Hello::Client_Hello(Handshake_IO& io,
