@@ -9,8 +9,6 @@
 #ifndef BOTAN_TLS_CLIENT_HELLO_IMPL_12_H_
 #define BOTAN_TLS_CLIENT_HELLO_IMPL_12_H_
 
-#include "msg_client_hello_impl.h"
-
 #include <botan/tls_messages.h>
 #include <botan/tls_extensions.h>
 #include <botan/tls_handshake_msg.h>
@@ -20,6 +18,7 @@
 #include <botan/pk_keys.h>
 #include <botan/x509cert.h>
 #include <botan/ocsp.h>
+#include <botan/internal/msg_client_hello_impl.h>
 #include <vector>
 #include <string>
 #include <set>

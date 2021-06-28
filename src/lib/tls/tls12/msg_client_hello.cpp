@@ -7,9 +7,6 @@
 * Botan is released under the Simplified BSD License (see license.txt)
 */
 
-#include "msg_client_hello_impl.h"
-#include "msg_client_hello_impl_12.h"
-
 #include <botan/tls_messages.h>
 #include <botan/tls_alert.h>
 #include <botan/tls_exceptn.h>
@@ -22,6 +19,8 @@
 #include <botan/internal/tls_handshake_io.h>
 #include <botan/internal/tls_handshake_hash.h>
 #include <botan/internal/stl_util.h>
+#include <botan/internal/msg_client_hello_impl.h>
+#include <botan/internal/msg_client_hello_impl_12.h>
 #include <chrono>
 
 namespace Botan {
