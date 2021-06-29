@@ -15,29 +15,12 @@
 #include <botan/internal/tls_handshake_io.h>
 #include <botan/internal/tls_handshake_hash.h>
 #include <botan/internal/stl_util.h>
-//TODO:
-#include "msg_server_hello_impl_12.h"
+#include <botan/internal/msg_server_hello_impl.h>
+#include <botan/internal/msg_server_hello_impl_12.h>
 
 namespace Botan {
 
 namespace TLS {
-
-namespace {
-
-const uint64_t DOWNGRADE_TLS11 = 0x444F574E47524400;
-//const uint64_t DOWNGRADE_TLS12 = 0x444F574E47524401;
-
-std::vector<uint8_t>
-make_server_hello_random(RandomNumberGenerator& rng,
-                         Protocol_Version offered_version,
-                         const Policy& policy)
-   {
-   BOTAN_UNUSED(offered_version, policy);
-   auto random = make_hello_random(rng, policy);
-   return random;
-   }
-
-}
 
 // New session case
 Server_Hello::Server_Hello(Handshake_IO& io,

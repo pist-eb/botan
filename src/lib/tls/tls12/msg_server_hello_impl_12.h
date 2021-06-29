@@ -39,7 +39,6 @@ class Session;
 class Handshake_IO;
 class Handshake_State;
 class Callbacks;
-class Client_Hello_Impl;
 
 std::vector<uint8_t> make_hello_random(RandomNumberGenerator& rng,
                                        const Policy& policy);

@@ -22,30 +22,24 @@
 #include <set>
 #include <memory>
 
-#if defined(BOTAN_HAS_CECPQ1)
-  #include <botan/cecpq1.h>
-#endif
 
 namespace Botan {
-
-class Public_Key;
-class Credentials_Manager;
 
 namespace TLS {
 
 class Client_Hello;
 class Session;
 class Handshake_IO;
-class Handshake_State;
 class Callbacks;
-class Client_Hello_Impl;
 
 /**
 * Server Hello Impl Message
 */
-class BOTAN_UNSTABLE_API Server_Hello_Impl : public Handshake_Message
+class Server_Hello_Impl : public Handshake_Message
    {
    public:
+      Server_Hello_Impl();
+
       Server_Hello_Impl(Handshake_IO& io,
                         Handshake_Hash& hash,
                         const Policy& policy,
@@ -66,8 +60,6 @@ class BOTAN_UNSTABLE_API Server_Hello_Impl : public Handshake_Message
                         Session& resumed_session,
                         bool offer_session_ticket,
                         const std::string& next_protocol);
-
-      explicit Server_Hello_Impl(const std::vector<uint8_t>& buf);
 
       virtual ~Server_Hello_Impl();
 
@@ -106,8 +98,6 @@ class BOTAN_UNSTABLE_API Server_Hello_Impl : public Handshake_Message
       virtual bool prefers_compressed_ec_points() const = 0;
 
       virtual bool random_signals_downgrade() const = 0;
-      
-      std::vector<uint8_t> serialize() const override;
 
    protected:
       Protocol_Version m_version;
