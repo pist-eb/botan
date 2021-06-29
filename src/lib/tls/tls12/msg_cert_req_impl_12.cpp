@@ -5,6 +5,7 @@
 * Botan is released under the Simplified BSD License (see license.txt)
 */
 
+#include <botan/internal/msg_cert_req_impl_12.h>
 #include <botan/tls_messages.h>
 #include <botan/tls_extensions.h>
 #include <botan/internal/tls_reader.h>
@@ -51,7 +52,7 @@ uint8_t cert_type_name_to_code(const std::string& name)
 /**
 * Create a new Certificate Request message
 */
-Certificate_Req::Certificate_Req(Handshake_IO& io,
+Certificate_Req_Impl_12::Certificate_Req_Impl_12(Handshake_IO& io,
                                  Handshake_Hash& hash,
                                  const Policy& policy,
                                  const std::vector<X509_DN>& ca_certs) :
@@ -65,7 +66,7 @@ Certificate_Req::Certificate_Req(Handshake_IO& io,
 /**
 * Deserialize a Certificate Request message
 */
-Certificate_Req::Certificate_Req(const std::vector<uint8_t>& buf)
+Certificate_Req_Impl_12::Certificate_Req_Impl_12(const std::vector<uint8_t>& buf)
    {
    if(buf.size() < 4)
       throw Decoding_Error("Certificate_Req: Bad certificate request");
@@ -110,10 +111,25 @@ Certificate_Req::Certificate_Req(const std::vector<uint8_t>& buf)
       }
    }
 
+const std::vector<std::string>& Certificate_Req_Impl_12::acceptable_cert_types() const
+   {
+   return m_cert_key_types;
+   }
+
+const std::vector<X509_DN>& Certificate_Req_Impl_12::acceptable_CAs() const
+   {
+   return m_names;
+   }
+
+const std::vector<Signature_Scheme>& Certificate_Req_Impl_12::signature_schemes() const
+   {
+   return m_schemes;
+   }
+
 /**
 * Serialize a Certificate Request message
 */
-std::vector<uint8_t> Certificate_Req::serialize() const
+std::vector<uint8_t> Certificate_Req_Impl_12::serialize() const
    {
    std::vector<uint8_t> buf;
 

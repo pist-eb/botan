@@ -26,6 +26,7 @@ tls_version.h
 <header:internal>
 msg_client_hello_impl.h
 msg_cert_verify_impl.h
+msg_cert_req_impl.h
 msg_finished_impl.h
 msg_server_hello_impl.h
 tls_channel_impl.h
@@ -39,6 +40,7 @@ tls_seq_numbers.h
 tls_session_key.h
 tls12/msg_cert_verify_impl_12.h
 tls12/msg_client_hello_impl_12.h
+tls12/msg_cert_req_impl_12.h
 tls12/msg_finished_impl_12.h
 tls12/tls_channel_impl_12.h
 tls12/tls_client_impl_12.h

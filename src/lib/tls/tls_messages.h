@@ -40,6 +40,7 @@ class Callbacks;
 class Client_Hello_Impl;
 class Server_Hello_Impl_12;
 class Certificate_Verify_Impl;
+class Certificate_Req_Impl;
 class Finished_Impl;
 
 std::vector<uint8_t> make_hello_random(RandomNumberGenerator& rng,
@@ -363,17 +364,13 @@ class BOTAN_UNSTABLE_API Certificate_Status final : public Handshake_Message
 class BOTAN_UNSTABLE_API Certificate_Req final : public Handshake_Message
    {
    public:
-      Handshake_Type type() const override { return CERTIFICATE_REQUEST; }
+      Handshake_Type type() const override;
 
-      const std::vector<std::string>& acceptable_cert_types() const
-         { return m_cert_key_types; }
+      const std::vector<std::string>& acceptable_cert_types() const;
 
-      const std::vector<X509_DN>& acceptable_CAs() const { return m_names; }
+      const std::vector<X509_DN>& acceptable_CAs() const;
 
-      const std::vector<Signature_Scheme>& signature_schemes() const
-         {
-         return m_schemes;
-         }
+      const std::vector<Signature_Scheme>& signature_schemes() const;
 
       Certificate_Req(Handshake_IO& io,
                       Handshake_Hash& hash,
@@ -381,13 +378,12 @@ class BOTAN_UNSTABLE_API Certificate_Req final : public Handshake_Message
                       const std::vector<X509_DN>& allowed_cas);
 
       Certificate_Req(const std::vector<uint8_t>& buf);
-   private:
+
+      ~Certificate_Req();
+
       std::vector<uint8_t> serialize() const override;
-
-      std::vector<X509_DN> m_names;
-      std::vector<std::string> m_cert_key_types;
-
-      std::vector<Signature_Scheme> m_schemes;
+   private:
+      std::unique_ptr<Certificate_Req_Impl> m_impl;
    };
 
 /**
