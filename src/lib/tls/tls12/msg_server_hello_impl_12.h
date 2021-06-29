@@ -72,16 +72,6 @@ class BOTAN_UNSTABLE_API Server_Hello_Impl_12 final : public Server_Hello_Impl
 
       explicit Server_Hello_Impl_12(const std::vector<uint8_t>& buf);
 
-      Handshake_Type type() const override { return SERVER_HELLO; }
-
-      const std::vector<uint8_t>& random() const override { return m_random; }
-
-      const std::vector<uint8_t>& session_id() const override { return m_session_id; }
-
-      uint16_t ciphersuite() const override { return m_ciphersuite; }
-
-      uint8_t compression_method() const override { return m_comp_method; }
-
       bool secure_renegotiation() const override
          {
          return m_extensions.has<Renegotiation_Extension>();
@@ -133,11 +123,6 @@ class BOTAN_UNSTABLE_API Server_Hello_Impl_12 final : public Server_Hello_Impl
             return alpn->single_protocol();
          return "";
          }
-
-      std::set<Handshake_Extension_Type> extension_types() const override
-         { return m_extensions.extension_types(); }
-
-      const Extensions& extensions() const override { return m_extensions; }
 
       bool prefers_compressed_ec_points() const override
          {

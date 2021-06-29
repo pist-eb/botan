@@ -76,6 +76,36 @@ Protocol_Version Server_Hello_Impl::version() const
    return m_version;
    }
 
+const std::vector<uint8_t>& Server_Hello_Impl::random() const
+   {
+   return m_random;
+   }
+
+const std::vector<uint8_t>& Server_Hello_Impl::session_id() const
+   {
+   return m_session_id;
+   }
+
+uint16_t Server_Hello_Impl::ciphersuite() const
+   {
+   return m_ciphersuite;
+   }
+
+uint8_t Server_Hello_Impl::compression_method() const
+   {
+   return m_comp_method;
+   }
+
+std::set<Handshake_Extension_Type> Server_Hello_Impl::extension_types() const
+   {
+   return m_extensions.extension_types();
+   }
+
+const Extensions& Server_Hello_Impl::extensions() const
+   {
+   return m_extensions;
+   }
+
 }
 
 }

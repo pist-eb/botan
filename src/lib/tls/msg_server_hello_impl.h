@@ -55,13 +55,13 @@ class Server_Hello_Impl : public Handshake_Message
 
       virtual Protocol_Version version() const;
 
-      virtual const std::vector<uint8_t>& random() const = 0;
+      virtual const std::vector<uint8_t>& random() const;
 
-      virtual const std::vector<uint8_t>& session_id() const = 0;
+      virtual const std::vector<uint8_t>& session_id() const;
 
-      virtual uint16_t ciphersuite() const = 0;
+      virtual uint16_t ciphersuite() const;
 
-      virtual uint8_t compression_method() const = 0;
+      virtual uint8_t compression_method() const;
 
       virtual bool secure_renegotiation() const = 0;
 
@@ -79,9 +79,9 @@ class Server_Hello_Impl : public Handshake_Message
 
       virtual std::string next_protocol() const = 0;
 
-      virtual std::set<Handshake_Extension_Type> extension_types() const = 0;
+      virtual std::set<Handshake_Extension_Type> extension_types() const;
 
-      virtual const Extensions& extensions() const = 0;
+      virtual const Extensions& extensions() const;
 
       virtual bool prefers_compressed_ec_points() const = 0;
 
