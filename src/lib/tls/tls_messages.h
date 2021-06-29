@@ -39,6 +39,7 @@ class Handshake_State;
 class Callbacks;
 class Client_Hello_Impl;
 class Server_Hello_Impl_12;
+class Certificate_Verify_Impl;
 class Finished_Impl;
 
 std::vector<uint8_t> make_hello_random(RandomNumberGenerator& rng,
@@ -414,11 +415,15 @@ class BOTAN_UNSTABLE_API Certificate_Verify final : public Handshake_Message
                          const Private_Key* key);
 
       Certificate_Verify(const std::vector<uint8_t>& buf);
+
+      ~Certificate_Verify();
    private:
       std::vector<uint8_t> serialize() const override;
 
       std::vector<uint8_t> m_signature;
       Signature_Scheme m_scheme = Signature_Scheme::NONE;
+
+      std::unique_ptr<Certificate_Verify_Impl> m_impl;
    };
 
 /**
