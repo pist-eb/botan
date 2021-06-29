@@ -1,0 +1,64 @@
+/*
+* TLS Messages
+* (C) 2004-2011,2015 Jack Lloyd
+*     2016 Matthias Gierlings
+*
+* Botan is released under the Simplified BSD License (see license.txt)
+*/
+
+#ifndef BOTAN_TLS_FINISHED_IMPL_H_
+#define BOTAN_TLS_FINISHED_IMPL_H_
+
+#include <botan/tls_extensions.h>
+#include <botan/tls_handshake_msg.h>
+#include <botan/tls_session.h>
+#include <botan/tls_policy.h>
+#include <botan/tls_ciphersuite.h>
+#include <botan/pk_keys.h>
+#include <botan/x509cert.h>
+#include <botan/ocsp.h>
+#include <vector>
+#include <string>
+#include <set>
+#include <memory>
+
+#if defined(BOTAN_HAS_CECPQ1)
+  #include <botan/cecpq1.h>
+#endif
+
+namespace Botan {
+
+namespace TLS {
+
+class Session;
+class Handshake_IO;
+class Handshake_State;
+
+
+class BOTAN_UNSTABLE_API Finished_Impl : public Handshake_Message
+   {
+   public:
+      Handshake_Type type() const override { return FINISHED; }
+
+      virtual std::vector<uint8_t> verify_data() const;
+
+      virtual bool verify(const Handshake_State& state,
+                  Connection_Side side) const;
+
+      explicit Finished_Impl(Handshake_IO& io,
+               Handshake_State& state,
+               Connection_Side side);
+
+      explicit Finished_Impl(const std::vector<uint8_t>& buf);
+
+      virtual ~Finished_Impl() = 0;
+
+      std::vector<uint8_t> serialize() const override;
+   private:
+      std::vector<uint8_t> m_verification_data;
+   };
+}
+
+}
+
+#endif

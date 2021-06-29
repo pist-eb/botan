@@ -39,6 +39,7 @@ class Handshake_State;
 class Callbacks;
 class Client_Hello_Impl;
 class Server_Hello_Impl_12;
+class Finished_Impl;
 
 std::vector<uint8_t> make_hello_random(RandomNumberGenerator& rng,
                                        const Policy& policy);
@@ -428,8 +429,7 @@ class BOTAN_UNSTABLE_API Finished final : public Handshake_Message
    public:
       Handshake_Type type() const override { return FINISHED; }
 
-      std::vector<uint8_t> verify_data() const
-         { return m_verification_data; }
+      std::vector<uint8_t> verify_data() const;
 
       bool verify(const Handshake_State& state,
                   Connection_Side side) const;
@@ -439,10 +439,11 @@ class BOTAN_UNSTABLE_API Finished final : public Handshake_Message
                Connection_Side side);
 
       explicit Finished(const std::vector<uint8_t>& buf);
+
+      ~Finished();
    private:
       std::vector<uint8_t> serialize() const override;
-
-      std::vector<uint8_t> m_verification_data;
+      std::unique_ptr<Finished_Impl> m_impl;
    };
 
 /**
