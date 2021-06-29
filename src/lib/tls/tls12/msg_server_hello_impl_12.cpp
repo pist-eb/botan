@@ -47,11 +47,8 @@ Server_Hello_Impl_12::Server_Hello_Impl_12(Handshake_IO& io,
                            const Client_Hello& client_hello,
                            const Server_Hello::Settings& server_settings,
                            const std::string next_protocol) :
-   m_version(server_settings.protocol_version()),
-   m_session_id(server_settings.session_id()),
-   m_random(make_server_hello_random(rng, m_version, policy)),
-   m_ciphersuite(server_settings.ciphersuite()),
-   m_comp_method(0)
+   Server_Hello_Impl(io, hash, policy, cb, rng, reneg_info, client_hello,
+                     server_settings, next_protocol)
    {
    if(client_hello.supports_extended_master_secret())
       m_extensions.add(new Extended_Master_Secret);
@@ -118,11 +115,8 @@ Server_Hello_Impl_12::Server_Hello_Impl_12(Handshake_IO& io,
                            Session& resumed_session,
                            bool offer_session_ticket,
                            const std::string& next_protocol) :
-   m_version(resumed_session.version()),
-   m_session_id(client_hello.session_id()),
-   m_random(make_hello_random(rng, policy)),
-   m_ciphersuite(resumed_session.ciphersuite_code()),
-   m_comp_method(0)
+   Server_Hello_Impl(io, hash, policy, cb, rng, reneg_info, client_hello,
+                     resumed_session, offer_session_ticket, next_protocol)
    {
    if(client_hello.supports_extended_master_secret())
       m_extensions.add(new Extended_Master_Secret);
@@ -156,7 +150,8 @@ Server_Hello_Impl_12::Server_Hello_Impl_12(Handshake_IO& io,
 /*
 * Deserialize a Server Hello message
 */
-Server_Hello_Impl_12::Server_Hello_Impl_12(const std::vector<uint8_t>& buf)
+Server_Hello_Impl_12::Server_Hello_Impl_12(const std::vector<uint8_t>& buf) :
+   Server_Hello_Impl(buf)
    {
    if(buf.size() < 38)
       throw Decoding_Error("Server_Hello: Packet corrupted");

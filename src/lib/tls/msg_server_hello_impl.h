@@ -6,8 +6,8 @@
 * Botan is released under the Simplified BSD License (see license.txt)
 */
 
-#ifndef BOTAN_TLS_SERVER_HELLO_IMPL_12_H_
-#define BOTAN_TLS_SERVER_HELLO_IMPL_12_H_
+#ifndef BOTAN_TLS_SERVER_HELLO_IMPL_H_
+#define BOTAN_TLS_SERVER_HELLO_IMPL_H_
 
 #include <botan/tls_extensions.h>
 #include <botan/tls_handshake_msg.h>
@@ -40,16 +40,13 @@ class Handshake_State;
 class Callbacks;
 class Client_Hello_Impl;
 
-std::vector<uint8_t> make_hello_random(RandomNumberGenerator& rng,
-                                       const Policy& policy);
-
 /**
-* Server Hello Message
+* Server Hello Impl Message
 */
-class BOTAN_UNSTABLE_API Server_Hello_Impl_12 final : public Handshake_Message
+class BOTAN_UNSTABLE_API Server_Hello_Impl : public Handshake_Message
    {
    public:
-   Server_Hello_Impl_12(Handshake_IO& io,
+      Server_Hello_Impl(Handshake_IO& io,
                         Handshake_Hash& hash,
                         const Policy& policy,
                         Callbacks& cb,
@@ -59,102 +56,60 @@ class BOTAN_UNSTABLE_API Server_Hello_Impl_12 final : public Handshake_Message
                         const Server_Hello::Settings& settings,
                         const std::string next_protocol);
 
-      Server_Hello_Impl_12(Handshake_IO& io,
-                           Handshake_Hash& hash,
-                           const Policy& policy,
-                           Callbacks& cb,
-                           RandomNumberGenerator& rng,
-                           const std::vector<uint8_t>& secure_reneg_info,
-                           const Client_Hello& client_hello,
-                           Session& resumed_session,
-                           bool offer_session_ticket,
-                           const std::string& next_protocol);
+      Server_Hello_Impl(Handshake_IO& io,
+                        Handshake_Hash& hash,
+                        const Policy& policy,
+                        Callbacks& cb,
+                        RandomNumberGenerator& rng,
+                        const std::vector<uint8_t>& secure_reneg_info,
+                        const Client_Hello& client_hello,
+                        Session& resumed_session,
+                        bool offer_session_ticket,
+                        const std::string& next_protocol);
 
-      explicit Server_Hello_Impl_12(const std::vector<uint8_t>& buf);
+      explicit Server_Hello_Impl(const std::vector<uint8_t>& buf);
 
-      Handshake_Type type() const override { return SERVER_HELLO; }
+      virtual ~Server_Hello_Impl();
 
-      Protocol_Version version() const { return m_version; }
+      Handshake_Type type() const override;
 
-      const std::vector<uint8_t>& random() const { return m_random; }
+      virtual Protocol_Version version() const = 0;
 
-      const std::vector<uint8_t>& session_id() const { return m_session_id; }
+      virtual const std::vector<uint8_t>& random() const = 0;
 
-      uint16_t ciphersuite() const { return m_ciphersuite; }
+      virtual const std::vector<uint8_t>& session_id() const = 0;
 
-      uint8_t compression_method() const { return m_comp_method; }
+      virtual uint16_t ciphersuite() const = 0;
 
-      bool secure_renegotiation() const
-         {
-         return m_extensions.has<Renegotiation_Extension>();
-         }
+      virtual uint8_t compression_method() const = 0;
 
-      std::vector<uint8_t> renegotiation_info() const
-         {
-         if(Renegotiation_Extension* reneg = m_extensions.get<Renegotiation_Extension>())
-            return reneg->renegotiation_info();
-         return std::vector<uint8_t>();
-         }
+      virtual bool secure_renegotiation() const = 0;
 
-      bool supports_extended_master_secret() const
-         {
-         return m_extensions.has<Extended_Master_Secret>();
-         }
+      virtual std::vector<uint8_t> renegotiation_info() const = 0;
 
-      bool supports_encrypt_then_mac() const
-         {
-         return m_extensions.has<Encrypt_then_MAC>();
-         }
+      virtual bool supports_extended_master_secret() const = 0;
 
-      bool supports_certificate_status_message() const
-         {
-         return m_extensions.has<Certificate_Status_Request>();
-         }
+      virtual bool supports_encrypt_then_mac() const = 0;
 
-      bool supports_session_ticket() const
-         {
-         return m_extensions.has<Session_Ticket>();
-         }
+      virtual bool supports_certificate_status_message() const = 0;
 
-      uint16_t srtp_profile() const
-         {
-         if(auto srtp = m_extensions.get<SRTP_Protection_Profiles>())
-            {
-            auto prof = srtp->profiles();
-            if(prof.size() != 1 || prof[0] == 0)
-               throw Decoding_Error("Server sent malformed DTLS-SRTP extension");
-            return prof[0];
-            }
+      virtual bool supports_session_ticket() const = 0;
 
-         return 0;
-         }
+      virtual uint16_t srtp_profile() const = 0;
 
-      std::string next_protocol() const
-         {
-         if(auto alpn = m_extensions.get<Application_Layer_Protocol_Notification>())
-            return alpn->single_protocol();
-         return "";
-         }
+      virtual std::string next_protocol() const = 0;
 
-      std::set<Handshake_Extension_Type> extension_types() const
-         { return m_extensions.extension_types(); }
+      virtual std::set<Handshake_Extension_Type> extension_types() const = 0;
 
-      const Extensions& extensions() const { return m_extensions; }
+      virtual const Extensions& extensions() const = 0;
 
-      bool prefers_compressed_ec_points() const
-         {
-         if(auto ecc_formats = m_extensions.get<Supported_Point_Formats>())
-            {
-            return ecc_formats->prefers_compressed();
-            }
-         return false;
-         }
+      virtual bool prefers_compressed_ec_points() const = 0;
 
-      bool random_signals_downgrade() const;
+      virtual bool random_signals_downgrade() const = 0;
       
       std::vector<uint8_t> serialize() const override;
 
-   private:
+   protected:
       Protocol_Version m_version;
       std::vector<uint8_t> m_session_id, m_random;
       uint16_t m_ciphersuite;
@@ -167,4 +122,4 @@ class BOTAN_UNSTABLE_API Server_Hello_Impl_12 final : public Handshake_Message
 
 }
 
-#endif //BOTAN_TLS_SERVER_HELLO_IMPL_12_H_
+#endif //BOTAN_TLS_SERVER_HELLO_IMPL_H_

@@ -15,7 +15,8 @@
 #include <botan/internal/tls_handshake_io.h>
 #include <botan/internal/tls_handshake_hash.h>
 #include <botan/internal/stl_util.h>
-#include <botan/internal/msg_server_hello_impl_12.h>
+#include <botan/internal/msg_server_hello_impl.h>
+
 namespace Botan {
 
 namespace TLS {
@@ -38,7 +39,7 @@ make_server_hello_random(RandomNumberGenerator& rng,
 }
 
 // New session case
-Server_Hello_Impl_12::Server_Hello_Impl_12(Handshake_IO& io,
+Server_Hello_Impl::Server_Hello_Impl(Handshake_IO& io,
                            Handshake_Hash& hash,
                            const Policy& policy,
                            Callbacks& cb,
@@ -108,16 +109,16 @@ Server_Hello_Impl_12::Server_Hello_Impl_12(Handshake_IO& io,
    }
 
 // Resuming
-Server_Hello_Impl_12::Server_Hello_Impl_12(Handshake_IO& io,
-                           Handshake_Hash& hash,
-                           const Policy& policy,
-                           Callbacks& cb,
-                           RandomNumberGenerator& rng,
-                           const std::vector<uint8_t>& reneg_info,
-                           const Client_Hello& client_hello,
-                           Session& resumed_session,
-                           bool offer_session_ticket,
-                           const std::string& next_protocol) :
+Server_Hello_Impl::Server_Hello_Impl(Handshake_IO& io,
+                                     Handshake_Hash& hash,
+                                     const Policy& policy,
+                                     Callbacks& cb,
+                                     RandomNumberGenerator& rng,
+                                     const std::vector<uint8_t>& reneg_info,
+                                     const Client_Hello& client_hello,
+                                     Session& resumed_session,
+                                     bool offer_session_ticket,
+                                     const std::string& next_protocol) :
    m_version(resumed_session.version()),
    m_session_id(client_hello.session_id()),
    m_random(make_hello_random(rng, policy)),
@@ -156,7 +157,7 @@ Server_Hello_Impl_12::Server_Hello_Impl_12(Handshake_IO& io,
 /*
 * Deserialize a Server Hello message
 */
-Server_Hello_Impl_12::Server_Hello_Impl_12(const std::vector<uint8_t>& buf)
+Server_Hello_Impl::Server_Hello_Impl(const std::vector<uint8_t>& buf)
    {
    if(buf.size() < 38)
       throw Decoding_Error("Server_Hello: Packet corrupted");
@@ -179,10 +180,17 @@ Server_Hello_Impl_12::Server_Hello_Impl_12(const std::vector<uint8_t>& buf)
    m_extensions.deserialize(reader, Connection_Side::SERVER);
    }
 
+Server_Hello_Impl::~Server_Hello_Impl() = default;
+
+Handshake_Type Server_Hello_Impl::type() const 
+   {
+   return SERVER_HELLO;
+   }
+
 /*
 * Serialize a Server Hello message
 */
-std::vector<uint8_t> Server_Hello_Impl_12::serialize() const
+std::vector<uint8_t> Server_Hello_Impl::serialize() const
    {
    std::vector<uint8_t> buf;
 
@@ -202,7 +210,7 @@ std::vector<uint8_t> Server_Hello_Impl_12::serialize() const
    return buf;
    }
 
-bool Server_Hello_Impl_12::random_signals_downgrade() const
+bool Server_Hello_Impl::random_signals_downgrade() const
    {
    const uint64_t last8 = load_be<uint64_t>(m_random.data(), 3);
    return (last8 == DOWNGRADE_TLS11);

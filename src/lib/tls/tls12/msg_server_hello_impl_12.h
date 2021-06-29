@@ -14,6 +14,7 @@
 #include <botan/tls_session.h>
 #include <botan/tls_policy.h>
 #include <botan/tls_ciphersuite.h>
+#include <botan/internal/msg_server_hello_impl.h>
 #include <botan/pk_keys.h>
 #include <botan/x509cert.h>
 #include <botan/ocsp.h>
@@ -46,18 +47,18 @@ std::vector<uint8_t> make_hello_random(RandomNumberGenerator& rng,
 /**
 * Server Hello Message
 */
-class BOTAN_UNSTABLE_API Server_Hello_Impl_12 final : public Handshake_Message
+class BOTAN_UNSTABLE_API Server_Hello_Impl_12 final : public Server_Hello_Impl
    {
    public:
-   Server_Hello_Impl_12(Handshake_IO& io,
-                        Handshake_Hash& hash,
-                        const Policy& policy,
-                        Callbacks& cb,
-                        RandomNumberGenerator& rng,
-                        const std::vector<uint8_t>& secure_reneg_info,
-                        const Client_Hello& client_hello,
-                        const Server_Hello::Settings& settings,
-                        const std::string next_protocol);
+      Server_Hello_Impl_12(Handshake_IO& io,
+                           Handshake_Hash& hash,
+                           const Policy& policy,
+                           Callbacks& cb,
+                           RandomNumberGenerator& rng,
+                           const std::vector<uint8_t>& secure_reneg_info,
+                           const Client_Hello& client_hello,
+                           const Server_Hello::Settings& settings,
+                           const std::string next_protocol);
 
       Server_Hello_Impl_12(Handshake_IO& io,
                            Handshake_Hash& hash,
@@ -153,14 +154,6 @@ class BOTAN_UNSTABLE_API Server_Hello_Impl_12 final : public Handshake_Message
       bool random_signals_downgrade() const;
       
       std::vector<uint8_t> serialize() const override;
-
-   private:
-      Protocol_Version m_version;
-      std::vector<uint8_t> m_session_id, m_random;
-      uint16_t m_ciphersuite;
-      uint8_t m_comp_method;
-
-      Extensions m_extensions;
    };
 
 }
