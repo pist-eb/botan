@@ -21,6 +21,8 @@ namespace Botan {
 
 namespace TLS {
 
+class Client_Hello;
+
 namespace {
 
 std::vector<uint8_t>
@@ -38,15 +40,9 @@ make_server_hello_random(RandomNumberGenerator& rng,
 Server_Hello_Impl::Server_Hello_Impl() = default;
 
 // New session case
-Server_Hello_Impl::Server_Hello_Impl(Handshake_IO& io,
-                           Handshake_Hash& hash,
-                           const Policy& policy,
-                           Callbacks& cb,
-                           RandomNumberGenerator& rng,
-                           const std::vector<uint8_t>& reneg_info,
-                           const Client_Hello& client_hello,
-                           const Server_Hello::Settings& server_settings,
-                           const std::string next_protocol) :
+Server_Hello_Impl::Server_Hello_Impl(const Policy& policy,
+                                     RandomNumberGenerator& rng,
+                                     const Server_Hello::Settings& server_settings) :
    m_version(server_settings.protocol_version()),
    m_session_id(server_settings.session_id()),
    m_random(make_server_hello_random(rng, m_version, policy)),
@@ -56,16 +52,10 @@ Server_Hello_Impl::Server_Hello_Impl(Handshake_IO& io,
    }
 
 // Resuming
-Server_Hello_Impl::Server_Hello_Impl(Handshake_IO& io,
-                                     Handshake_Hash& hash,
-                                     const Policy& policy,
-                                     Callbacks& cb,
+Server_Hello_Impl::Server_Hello_Impl(const Policy& policy,
                                      RandomNumberGenerator& rng,
-                                     const std::vector<uint8_t>& reneg_info,
                                      const Client_Hello& client_hello,
-                                     Session& resumed_session,
-                                     bool offer_session_ticket,
-                                     const std::string& next_protocol) :
+                                     Session& resumed_session) :
    m_version(resumed_session.version()),
    m_session_id(client_hello.session_id()),
    m_random(make_hello_random(rng, policy)),

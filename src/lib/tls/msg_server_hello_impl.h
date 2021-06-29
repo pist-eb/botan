@@ -40,26 +40,14 @@ class Server_Hello_Impl : public Handshake_Message
    public:
       Server_Hello_Impl();
 
-      Server_Hello_Impl(Handshake_IO& io,
-                        Handshake_Hash& hash,
-                        const Policy& policy,
-                        Callbacks& cb,
+      Server_Hello_Impl(const Policy& policy,
                         RandomNumberGenerator& rng,
-                        const std::vector<uint8_t>& secure_reneg_info,
-                        const Client_Hello& client_hello,
-                        const Server_Hello::Settings& settings,
-                        const std::string next_protocol);
+                        const Server_Hello::Settings& settings);
 
-      Server_Hello_Impl(Handshake_IO& io,
-                        Handshake_Hash& hash,
-                        const Policy& policy,
-                        Callbacks& cb,
+      Server_Hello_Impl(const Policy& policy,
                         RandomNumberGenerator& rng,
-                        const std::vector<uint8_t>& secure_reneg_info,
                         const Client_Hello& client_hello,
-                        Session& resumed_session,
-                        bool offer_session_ticket,
-                        const std::string& next_protocol);
+                        Session& resumed_session);
 
       virtual ~Server_Hello_Impl();
 

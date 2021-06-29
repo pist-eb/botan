@@ -29,16 +29,15 @@ const uint64_t DOWNGRADE_TLS11 = 0x444F574E47524400;
 
 // New session case
 Server_Hello_Impl_12::Server_Hello_Impl_12(Handshake_IO& io,
-                           Handshake_Hash& hash,
-                           const Policy& policy,
-                           Callbacks& cb,
-                           RandomNumberGenerator& rng,
-                           const std::vector<uint8_t>& reneg_info,
-                           const Client_Hello& client_hello,
-                           const Server_Hello::Settings& server_settings,
-                           const std::string next_protocol) :
-   Server_Hello_Impl(io, hash, policy, cb, rng, reneg_info, client_hello,
-                     server_settings, next_protocol)
+                                           Handshake_Hash& hash,
+                                           const Policy& policy,
+                                           Callbacks& cb,
+                                           RandomNumberGenerator& rng,
+                                           const std::vector<uint8_t>& reneg_info,
+                                           const Client_Hello& client_hello,
+                                           const Server_Hello::Settings& server_settings,
+                                           const std::string next_protocol) :
+   Server_Hello_Impl(policy, rng, server_settings)
    {
    if(client_hello.supports_extended_master_secret())
       m_extensions.add(new Extended_Master_Secret);
@@ -96,17 +95,16 @@ Server_Hello_Impl_12::Server_Hello_Impl_12(Handshake_IO& io,
 
 // Resuming
 Server_Hello_Impl_12::Server_Hello_Impl_12(Handshake_IO& io,
-                           Handshake_Hash& hash,
-                           const Policy& policy,
-                           Callbacks& cb,
-                           RandomNumberGenerator& rng,
-                           const std::vector<uint8_t>& reneg_info,
-                           const Client_Hello& client_hello,
-                           Session& resumed_session,
-                           bool offer_session_ticket,
-                           const std::string& next_protocol) :
-   Server_Hello_Impl(io, hash, policy, cb, rng, reneg_info, client_hello,
-                     resumed_session, offer_session_ticket, next_protocol)
+                                           Handshake_Hash& hash,
+                                           const Policy& policy,
+                                           Callbacks& cb,
+                                           RandomNumberGenerator& rng,
+                                           const std::vector<uint8_t>& reneg_info,
+                                           const Client_Hello& client_hello,
+                                           Session& resumed_session,
+                                           bool offer_session_ticket,
+                                           const std::string& next_protocol) :
+   Server_Hello_Impl(policy, rng, client_hello, resumed_session)
    {
    if(client_hello.supports_extended_master_secret())
       m_extensions.add(new Extended_Master_Secret);
