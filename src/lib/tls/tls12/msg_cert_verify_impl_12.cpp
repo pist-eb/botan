@@ -6,11 +6,13 @@
 * Botan is released under the Simplified BSD License (see license.txt)
 */
 
+#include <botan/internal/msg_cert_verify_impl_12.h>
 #include <botan/tls_messages.h>
 #include <botan/tls_extensions.h>
 #include <botan/internal/tls_reader.h>
 #include <botan/internal/tls_handshake_io.h>
 #include <botan/internal/tls_handshake_state.h>
+
 
 namespace Botan {
 
@@ -19,7 +21,7 @@ namespace TLS {
 /*
 * Create a new Certificate Verify message
 */
-Certificate_Verify::Certificate_Verify(Handshake_IO& io,
+Certificate_Verify_Impl_12::Certificate_Verify_Impl_12(Handshake_IO& io,
                                        Handshake_State& state,
                                        const Policy& policy,
                                        RandomNumberGenerator& rng,
@@ -40,7 +42,7 @@ Certificate_Verify::Certificate_Verify(Handshake_IO& io,
 /*
 * Deserialize a Certificate Verify message
 */
-Certificate_Verify::Certificate_Verify(const std::vector<uint8_t>& buf)
+Certificate_Verify_Impl_12::Certificate_Verify_Impl_12(const std::vector<uint8_t>& buf)
    {
    TLS_Data_Reader reader("CertificateVerify", buf);
 
@@ -52,7 +54,7 @@ Certificate_Verify::Certificate_Verify(const std::vector<uint8_t>& buf)
 /*
 * Serialize a Certificate Verify message
 */
-std::vector<uint8_t> Certificate_Verify::serialize() const
+std::vector<uint8_t> Certificate_Verify_Impl_12::serialize() const
    {
    std::vector<uint8_t> buf;
 
@@ -77,7 +79,7 @@ std::vector<uint8_t> Certificate_Verify::serialize() const
 /*
 * Verify a Certificate Verify message
 */
-bool Certificate_Verify::verify(const X509_Certificate& cert,
+bool Certificate_Verify_Impl_12::verify(const X509_Certificate& cert,
                                 const Handshake_State& state,
                                 const Policy& policy) const
    {
