@@ -53,7 +53,7 @@ class Server_Hello_Impl : public Handshake_Message
 
       Handshake_Type type() const override;
 
-      virtual Protocol_Version version() const = 0;
+      virtual Protocol_Version version() const;
 
       virtual const std::vector<uint8_t>& random() const = 0;
 

@@ -71,6 +71,11 @@ Handshake_Type Server_Hello_Impl::type() const
    return SERVER_HELLO;
    }
 
+Protocol_Version Server_Hello_Impl::version() const
+   {
+   return m_version;
+   }
+
 }
 
 }

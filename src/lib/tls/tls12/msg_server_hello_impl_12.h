@@ -74,8 +74,6 @@ class BOTAN_UNSTABLE_API Server_Hello_Impl_12 final : public Server_Hello_Impl
 
       Handshake_Type type() const override { return SERVER_HELLO; }
 
-      Protocol_Version version() const override { return m_version; }
-
       const std::vector<uint8_t>& random() const override { return m_random; }
 
       const std::vector<uint8_t>& session_id() const override { return m_session_id; }
