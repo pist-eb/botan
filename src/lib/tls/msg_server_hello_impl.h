@@ -42,12 +42,15 @@ class Server_Hello_Impl : public Handshake_Message
 
       Server_Hello_Impl(const Policy& policy,
                         RandomNumberGenerator& rng,
-                        const Server_Hello::Settings& settings);
+                        const Client_Hello& client_hello,
+                        const Server_Hello::Settings& settings,
+                        const std::string next_protocol);
 
       Server_Hello_Impl(const Policy& policy,
                         RandomNumberGenerator& rng,
                         const Client_Hello& client_hello,
-                        Session& resumed_session);
+                        Session& resumed_session,
+                        const std::string next_protocol);
 
       virtual ~Server_Hello_Impl();
 

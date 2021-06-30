@@ -37,15 +37,8 @@ Server_Hello_Impl_12::Server_Hello_Impl_12(Handshake_IO& io,
                                            const Client_Hello& client_hello,
                                            const Server_Hello::Settings& server_settings,
                                            const std::string next_protocol) :
-   Server_Hello_Impl(policy, rng, server_settings)
+   Server_Hello_Impl(policy, rng, client_hello, server_settings, next_protocol)
    {
-   if(client_hello.supports_extended_master_secret())
-      m_extensions.add(new Extended_Master_Secret);
-
-   // Sending the extension back does not commit us to sending a stapled response
-   if(client_hello.supports_cert_status_message() && policy.support_cert_status_message())
-      m_extensions.add(new Certificate_Status_Request);
-
    Ciphersuite c = Ciphersuite::by_id(m_ciphersuite);
 
    if(c.cbc_ciphersuite() && client_hello.supports_encrypt_then_mac() && policy.negotiate_encrypt_then_mac())
@@ -63,9 +56,6 @@ Server_Hello_Impl_12::Server_Hello_Impl_12(Handshake_IO& io,
 
    if(client_hello.supports_session_ticket() && server_settings.offer_session_ticket())
       m_extensions.add(new Session_Ticket());
-
-   if(!next_protocol.empty() && client_hello.supports_alpn())
-      m_extensions.add(new Application_Layer_Protocol_Notification(next_protocol));
 
    if(m_version.is_datagram_protocol())
       {
@@ -104,11 +94,8 @@ Server_Hello_Impl_12::Server_Hello_Impl_12(Handshake_IO& io,
                                            Session& resumed_session,
                                            bool offer_session_ticket,
                                            const std::string& next_protocol) :
-   Server_Hello_Impl(policy, rng, client_hello, resumed_session)
+   Server_Hello_Impl(policy, rng, client_hello, resumed_session, next_protocol)
    {
-   if(client_hello.supports_extended_master_secret())
-      m_extensions.add(new Extended_Master_Secret);
-
    if(client_hello.supports_encrypt_then_mac() && policy.negotiate_encrypt_then_mac())
       {
       Ciphersuite c = resumed_session.ciphersuite();
@@ -126,9 +113,6 @@ Server_Hello_Impl_12::Server_Hello_Impl_12(Handshake_IO& io,
 
    if(client_hello.supports_session_ticket() && offer_session_ticket)
       m_extensions.add(new Session_Ticket());
-
-   if(!next_protocol.empty() && client_hello.supports_alpn())
-      m_extensions.add(new Application_Layer_Protocol_Notification(next_protocol));
 
    cb.tls_modify_extensions(m_extensions, SERVER);
 

@@ -42,26 +42,53 @@ Server_Hello_Impl::Server_Hello_Impl() = default;
 // New session case
 Server_Hello_Impl::Server_Hello_Impl(const Policy& policy,
                                      RandomNumberGenerator& rng,
-                                     const Server_Hello::Settings& server_settings) :
+                                     const Client_Hello& client_hello,
+                                     const Server_Hello::Settings& server_settings,
+                                     const std::string next_protocol) :
    m_version(server_settings.protocol_version()),
    m_session_id(server_settings.session_id()),
    m_random(make_server_hello_random(rng, m_version, policy)),
    m_ciphersuite(server_settings.ciphersuite()),
    m_comp_method(0)
    {
+   if(client_hello.supports_extended_master_secret())
+      {
+      m_extensions.add(new Extended_Master_Secret);
+      }
+
+   // Sending the extension back does not commit us to sending a stapled response
+   if(client_hello.supports_cert_status_message() && policy.support_cert_status_message())
+      {
+      m_extensions.add(new Certificate_Status_Request);
+      }
+
+   if(!next_protocol.empty() && client_hello.supports_alpn())
+      {
+      m_extensions.add(new Application_Layer_Protocol_Notification(next_protocol));
+      }
    }
 
 // Resuming
 Server_Hello_Impl::Server_Hello_Impl(const Policy& policy,
                                      RandomNumberGenerator& rng,
                                      const Client_Hello& client_hello,
-                                     Session& resumed_session) :
+                                     Session& resumed_session,
+                                     const std::string next_protocol) :
    m_version(resumed_session.version()),
    m_session_id(client_hello.session_id()),
    m_random(make_hello_random(rng, policy)),
    m_ciphersuite(resumed_session.ciphersuite_code()),
    m_comp_method(0)
    {
+   if(client_hello.supports_extended_master_secret())
+      {
+      m_extensions.add(new Extended_Master_Secret);
+      }
+
+   if(!next_protocol.empty() && client_hello.supports_alpn())
+      {
+      m_extensions.add(new Application_Layer_Protocol_Notification(next_protocol));
+      }
    }
 
 Server_Hello_Impl::~Server_Hello_Impl() = default;
