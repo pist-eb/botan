@@ -9,14 +9,8 @@
 #ifndef BOTAN_MSG_CERTIFICATE_IMPL_H_
 #define BOTAN_MSG_CERTIFICATE_IMPL_H_
 
-#include <botan/tls_extensions.h>
 #include <botan/tls_handshake_msg.h>
-#include <botan/tls_session.h>
-#include <botan/tls_policy.h>
-#include <botan/tls_ciphersuite.h>
-#include <botan/pk_keys.h>
 #include <botan/x509cert.h>
-#include <botan/ocsp.h>
 #include <vector>
 
 #if defined(BOTAN_HAS_CECPQ1)

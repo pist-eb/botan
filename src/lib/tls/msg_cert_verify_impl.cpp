@@ -7,6 +7,7 @@
 */
 
 #include <botan/internal/msg_cert_verify_impl.h>
+#include <botan/pk_keys.h>
 #include <botan/tls_messages.h>
 #include <botan/tls_extensions.h>
 #include <botan/internal/tls_reader.h>

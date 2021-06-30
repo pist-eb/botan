@@ -7,8 +7,10 @@
 * Botan is released under the Simplified BSD License (see license.txt)
 */
 
-#include <botan/tls_magic.h>
 #include <botan/internal/msg_client_hello_impl.h>
+#include <botan/tls_policy.h>
+#include <botan/tls_magic.h>
+#include <botan/tls_session.h>
 
 namespace Botan {
 

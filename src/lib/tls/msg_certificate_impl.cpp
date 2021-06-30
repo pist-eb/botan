@@ -6,15 +6,7 @@
 */
 
 #include <botan/internal/msg_certificate_impl.h>
-#include <botan/tls_messages.h>
-#include <botan/tls_extensions.h>
-#include <botan/tls_exceptn.h>
-#include <botan/tls_alert.h>
-#include <botan/internal/tls_reader.h>
-#include <botan/internal/tls_handshake_io.h>
-#include <botan/internal/tls_handshake_hash.h>
-#include <botan/internal/loadstor.h>
-#include <botan/data_src.h>
+#include <botan/tls_magic.h>
 
 namespace Botan {
 

@@ -11,7 +11,6 @@
 
 #include <botan/tls_handshake_msg.h>
 #include <botan/tls_algos.h>
-#include <botan/pk_keys.h>
 #include <vector>
 
 #if defined(BOTAN_HAS_CECPQ1)

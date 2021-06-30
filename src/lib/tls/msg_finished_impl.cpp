@@ -10,7 +10,6 @@
 #include <botan/kdf.h>
 #include <botan/internal/tls_handshake_io.h>
 #include <botan/internal/tls_handshake_state.h>
-#include <iostream>
 
 
 namespace Botan {

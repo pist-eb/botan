@@ -12,12 +12,6 @@
 #include <botan/tls_messages.h>
 #include <botan/tls_extensions.h>
 #include <botan/tls_handshake_msg.h>
-#include <botan/tls_session.h>
-#include <botan/tls_policy.h>
-#include <botan/tls_ciphersuite.h>
-#include <botan/pk_keys.h>
-#include <botan/x509cert.h>
-#include <botan/ocsp.h>
 #include <vector>
 #include <string>
 #include <set>
@@ -27,12 +21,14 @@
 #endif
 
 namespace Botan {
+
 namespace TLS {
 
 class Session;
 class Handshake_IO;
 class Handshake_State;
 class Callbacks;
+class Policy;
 
 /**
 * Client Hello Message Impl
