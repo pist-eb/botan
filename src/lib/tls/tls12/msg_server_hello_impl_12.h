@@ -71,19 +71,9 @@ class BOTAN_UNSTABLE_API Server_Hello_Impl_12 final : public Server_Hello_Impl
          return std::vector<uint8_t>();
          }
 
-      bool supports_extended_master_secret() const override
-         {
-         return m_extensions.has<Extended_Master_Secret>();
-         }
-
       bool supports_encrypt_then_mac() const override
          {
          return m_extensions.has<Encrypt_then_MAC>();
-         }
-
-      bool supports_certificate_status_message() const override
-         {
-         return m_extensions.has<Certificate_Status_Request>();
          }
 
       bool supports_session_ticket() const override
@@ -102,13 +92,6 @@ class BOTAN_UNSTABLE_API Server_Hello_Impl_12 final : public Server_Hello_Impl
             }
 
          return 0;
-         }
-
-      std::string next_protocol() const override
-         {
-         if(auto alpn = m_extensions.get<Application_Layer_Protocol_Notification>())
-            return alpn->single_protocol();
-         return "";
          }
 
       bool prefers_compressed_ec_points() const override

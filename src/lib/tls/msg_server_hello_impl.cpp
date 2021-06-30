@@ -125,6 +125,23 @@ uint8_t Server_Hello_Impl::compression_method() const
    return m_comp_method;
    }
 
+bool Server_Hello_Impl::supports_extended_master_secret() const
+   {
+   return m_extensions.has<Extended_Master_Secret>();
+   }
+
+bool Server_Hello_Impl::supports_certificate_status_message() const
+   {
+   return m_extensions.has<Certificate_Status_Request>();
+   }
+
+std::string Server_Hello_Impl::next_protocol() const
+   {
+   if(auto alpn = m_extensions.get<Application_Layer_Protocol_Notification>())
+      return alpn->single_protocol();
+   return "";
+   }
+
 std::set<Handshake_Extension_Type> Server_Hello_Impl::extension_types() const
    {
    return m_extensions.extension_types();

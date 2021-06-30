@@ -62,17 +62,17 @@ class Server_Hello_Impl : public Handshake_Message
 
       virtual std::vector<uint8_t> renegotiation_info() const = 0;
 
-      virtual bool supports_extended_master_secret() const = 0;
+      virtual bool supports_extended_master_secret() const;
 
       virtual bool supports_encrypt_then_mac() const = 0;
 
-      virtual bool supports_certificate_status_message() const = 0;
+      virtual bool supports_certificate_status_message() const;
 
       virtual bool supports_session_ticket() const = 0;
 
       virtual uint16_t srtp_profile() const = 0;
 
-      virtual std::string next_protocol() const = 0;
+      virtual std::string next_protocol() const;
 
       virtual std::set<Handshake_Extension_Type> extension_types() const;
 
