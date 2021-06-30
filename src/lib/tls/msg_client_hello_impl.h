@@ -6,8 +6,8 @@
 * Botan is released under the Simplified BSD License (see license.txt)
 */
 
-#ifndef BOTAN_TLS_CLIENT_HELLO_IMPL_H_
-#define BOTAN_TLS_CLIENT_HELLO_IMPL_H_
+#ifndef BOTAN_MSG_CLIENT_HELLO_IMPL_H_
+#define BOTAN_MSG_CLIENT_HELLO_IMPL_H_
 
 #include <botan/tls_messages.h>
 #include <botan/tls_extensions.h>

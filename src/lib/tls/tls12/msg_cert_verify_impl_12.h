@@ -6,8 +6,8 @@
 * Botan is released under the Simplified BSD License (see license.txt)
 */
 
-#ifndef BOTAN_TLS_CERT_VERIFY_IMPL_12_H_
-#define BOTAN_TLS_CERT_VERIFY_IMPL_12_H_
+#ifndef BOTAN_MSG_CERT_VERIFY_IMPL_12_H_
+#define BOTAN_MSG_CERT_VERIFY_IMPL_12_H_
 
 #include <botan/internal/msg_cert_verify_impl.h>
 #include <vector>

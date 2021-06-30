@@ -6,8 +6,8 @@
 * Botan is released under the Simplified BSD License (see license.txt)
 */
 
-#ifndef BOTAN_TLS_SERVER_HELLO_IMPL_12_H_
-#define BOTAN_TLS_SERVER_HELLO_IMPL_12_H_
+#ifndef BOTAN_MSG_SERVER_HELLO_IMPL_12_H_
+#define BOTAN_MSG_SERVER_HELLO_IMPL_12_H_
 
 #include <botan/tls_extensions.h>
 #include <botan/tls_handshake_msg.h>
@@ -134,7 +134,7 @@ class BOTAN_UNSTABLE_API Server_Hello_Impl_12 final : public Server_Hello_Impl
          }
 
       bool random_signals_downgrade() const override;
-      
+
       std::vector<uint8_t> serialize() const override;
    };
 
