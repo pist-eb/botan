@@ -22,7 +22,7 @@ Finished_Impl_12::Finished_Impl_12(Handshake_IO& io,
    }
 
 /*
-* Deserialize a Finished message
+* Create a new Finished message
 */
 Finished_Impl_12::Finished_Impl_12(const std::vector<uint8_t>& buf) : Finished_Impl(buf)
    {}

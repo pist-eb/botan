@@ -10,6 +10,8 @@
 #include <botan/tls_messages.h>
 #include <botan/tls_extensions.h>
 #include <botan/tls_callbacks.h>
+#include <botan/tls_session.h>
+#include <botan/tls_policy.h>
 #include <botan/internal/tls_reader.h>
 #include <botan/internal/tls_session_key.h>
 #include <botan/internal/tls_handshake_io.h>

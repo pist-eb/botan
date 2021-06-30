@@ -10,18 +10,9 @@
 #define BOTAN_MSG_SERVER_HELLO_IMPL_12_H_
 
 #include <botan/tls_extensions.h>
-#include <botan/tls_handshake_msg.h>
-#include <botan/tls_session.h>
-#include <botan/tls_policy.h>
-#include <botan/tls_ciphersuite.h>
 #include <botan/internal/msg_server_hello_impl.h>
-#include <botan/pk_keys.h>
-#include <botan/x509cert.h>
-#include <botan/ocsp.h>
 #include <vector>
 #include <string>
-#include <set>
-#include <memory>
 
 #if defined(BOTAN_HAS_CECPQ1)
   #include <botan/cecpq1.h>
@@ -29,16 +20,12 @@
 
 namespace Botan {
 
-class Public_Key;
-class Credentials_Manager;
-
 namespace TLS {
 
 class Client_Hello;
 class Session;
 class Handshake_IO;
-class Handshake_State;
-class Callbacks;
+class Policy;
 
 std::vector<uint8_t> make_hello_random(RandomNumberGenerator& rng,
                                        const Policy& policy);
