@@ -1,6 +1,7 @@
 /*
 * Certificate Request Message
 * (C) 2004-2006,2012 Jack Lloyd
+*     2021 Elektrobit Automotive GmbH
 *
 * Botan is released under the Simplified BSD License (see license.txt)
 */
