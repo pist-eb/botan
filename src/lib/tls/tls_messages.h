@@ -39,7 +39,7 @@ class Handshake_IO;
 class Handshake_State;
 class Callbacks;
 class Client_Hello_Impl;
-class Server_Hello_Impl_12;
+class Server_Hello_Impl;
 class Certificate_Verify_Impl;
 class Certificate_Req_Impl;
 class Finished_Impl;
@@ -269,7 +269,7 @@ class BOTAN_UNSTABLE_API Server_Hello final : public Handshake_Message
    private:
       std::vector<uint8_t> serialize() const override;
 
-      std::unique_ptr<Server_Hello_Impl_12> m_impl;
+      std::unique_ptr<Server_Hello_Impl> m_impl;
    };
 
 /**
