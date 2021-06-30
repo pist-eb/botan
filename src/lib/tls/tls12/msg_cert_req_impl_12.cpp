@@ -8,6 +8,7 @@
 #include <botan/internal/msg_cert_req_impl_12.h>
 #include <botan/tls_messages.h>
 #include <botan/tls_extensions.h>
+#include <botan/tls_policy.h>
 #include <botan/internal/tls_reader.h>
 #include <botan/internal/tls_handshake_io.h>
 #include <botan/internal/tls_handshake_hash.h>

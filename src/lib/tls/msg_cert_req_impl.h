@@ -10,7 +10,9 @@
 #define BOTAN_MSG_CERT_REQ_IMPL_H_
 
 #include <botan/tls_handshake_msg.h>
+#include <botan/tls_algos.h>
 #include <botan/x509cert.h>
+
 #include <vector>
 #include <string>
 
