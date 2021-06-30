@@ -17,6 +17,7 @@
 #include <botan/pk_keys.h>
 #include <botan/x509cert.h>
 #include <botan/ocsp.h>
+#include <botan/internal/msg_certificate_impl.h>
 #include <vector>
 #include <string>
 #include <set>
@@ -311,21 +312,22 @@ class BOTAN_UNSTABLE_API Client_Key_Exchange final : public Handshake_Message
 class BOTAN_UNSTABLE_API Certificate final : public Handshake_Message
    {
    public:
-      Handshake_Type type() const override { return CERTIFICATE; }
-      const std::vector<X509_Certificate>& cert_chain() const { return m_certs; }
+      Handshake_Type type() const override;
+      const std::vector<X509_Certificate>& cert_chain() const;
 
-      size_t count() const { return m_certs.size(); }
-      bool empty() const { return m_certs.empty(); }
+      size_t count() const;
+      bool empty() const;
 
-      Certificate(Handshake_IO& io,
+      explicit Certificate(Handshake_IO& io,
                   Handshake_Hash& hash,
                   const std::vector<X509_Certificate>& certs);
 
       explicit Certificate(const std::vector<uint8_t>& buf, const Policy &policy);
-   private:
+
       std::vector<uint8_t> serialize() const override;
 
-      std::vector<X509_Certificate> m_certs;
+   private:
+      std::unique_ptr<Certificate_Impl> m_impl;
    };
 
 /**

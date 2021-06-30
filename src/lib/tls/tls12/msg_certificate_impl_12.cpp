@@ -5,6 +5,7 @@
 * Botan is released under the Simplified BSD License (see license.txt)
 */
 
+#include <botan/internal/msg_certificate_impl_12.h>
 #include <botan/tls_messages.h>
 #include <botan/tls_extensions.h>
 #include <botan/tls_exceptn.h>
@@ -19,10 +20,25 @@ namespace Botan {
 
 namespace TLS {
 
+const std::vector<X509_Certificate>& Certificate_Impl_12::cert_chain() const
+   {
+   return m_certs;
+   }
+
+size_t Certificate_Impl_12::count() const
+   {
+   return m_certs.size();
+   }
+
+bool Certificate_Impl_12::empty() const
+   {
+   return m_certs.empty();
+   }
+
 /**
 * Create a new Certificate message
 */
-Certificate::Certificate(Handshake_IO& io,
+Certificate_Impl_12::Certificate_Impl_12(Handshake_IO& io,
                          Handshake_Hash& hash,
                          const std::vector<X509_Certificate>& cert_list) :
    m_certs(cert_list)
@@ -33,7 +49,7 @@ Certificate::Certificate(Handshake_IO& io,
 /**
 * Deserialize a Certificate message
 */
-Certificate::Certificate(const std::vector<uint8_t>& buf, const Policy& policy)
+Certificate_Impl_12::Certificate_Impl_12(const std::vector<uint8_t>& buf, const Policy& policy)
    {
    if(buf.size() < 3)
       throw Decoding_Error("Certificate: Message malformed");
@@ -82,7 +98,7 @@ Certificate::Certificate(const std::vector<uint8_t>& buf, const Policy& policy)
 /**
 * Serialize a Certificate message
 */
-std::vector<uint8_t> Certificate::serialize() const
+std::vector<uint8_t> Certificate_Impl_12::serialize() const
    {
    std::vector<uint8_t> buf(3);
 
