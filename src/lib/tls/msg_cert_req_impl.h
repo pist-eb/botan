@@ -57,9 +57,9 @@ class BOTAN_UNSTABLE_API Certificate_Req_Impl : public Handshake_Message
 
       virtual const std::vector<Signature_Scheme>& signature_schemes() const = 0;
 
-      Certificate_Req_Impl();
+      explicit Certificate_Req_Impl();
 
-      virtual ~Certificate_Req_Impl();
+      virtual ~Certificate_Req_Impl() = 0;
    };
 }
 

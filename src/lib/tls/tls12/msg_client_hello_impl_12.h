@@ -43,7 +43,7 @@ std::vector<uint8_t> make_hello_random(RandomNumberGenerator& rng,
 class BOTAN_UNSTABLE_API Client_Hello_Impl_12 final : public Client_Hello_Impl
    {
    public:
-      Client_Hello_Impl_12(Handshake_IO& io,
+      explicit Client_Hello_Impl_12(Handshake_IO& io,
                    Handshake_Hash& hash,
                    const Policy& policy,
                    Callbacks& cb,
@@ -52,7 +52,7 @@ class BOTAN_UNSTABLE_API Client_Hello_Impl_12 final : public Client_Hello_Impl
                    const Client_Hello::Settings& client_settings,
                    const std::vector<std::string>& next_protocols);
 
-      Client_Hello_Impl_12(Handshake_IO& io,
+      explicit Client_Hello_Impl_12(Handshake_IO& io,
                    Handshake_Hash& hash,
                    const Policy& policy,
                    Callbacks& cb,
@@ -62,8 +62,6 @@ class BOTAN_UNSTABLE_API Client_Hello_Impl_12 final : public Client_Hello_Impl
                    const std::vector<std::string>& next_protocols);
 
       explicit Client_Hello_Impl_12(const std::vector<uint8_t>& buf);
-
-      virtual ~Client_Hello_Impl_12();
 
       Protocol_Version version() const override;
 

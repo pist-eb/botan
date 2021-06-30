@@ -30,7 +30,7 @@ class Handshake_State;
 class BOTAN_UNSTABLE_API Finished_Impl_12 final : public Finished_Impl
    {
    public:
-      Finished_Impl_12(Handshake_IO& io,
+      explicit Finished_Impl_12(Handshake_IO& io,
                Handshake_State& state,
                Connection_Side side);
 

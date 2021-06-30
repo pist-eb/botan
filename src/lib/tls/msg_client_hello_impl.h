@@ -50,7 +50,7 @@ class Client_Hello_Impl : public Handshake_Message
                            RandomNumberGenerator& rng,
                            const Session& session);
 
-      virtual ~Client_Hello_Impl();
+      virtual ~Client_Hello_Impl() = 0;
 
       Handshake_Type type() const override;
 

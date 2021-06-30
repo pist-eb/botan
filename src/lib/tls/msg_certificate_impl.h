@@ -40,6 +40,8 @@ class BOTAN_UNSTABLE_API Certificate_Impl : public Handshake_Message
       virtual size_t count() const = 0;
       virtual bool empty() const = 0;
 
+      explicit Certificate_Impl();
+
       virtual ~Certificate_Impl() = 0;
    };
 

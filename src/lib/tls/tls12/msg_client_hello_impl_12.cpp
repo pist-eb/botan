@@ -166,8 +166,6 @@ Client_Hello_Impl_12::Client_Hello_Impl_12(Handshake_IO& io,
    hash.update(io.send(*this));
    }
 
-Client_Hello_Impl_12::~Client_Hello_Impl_12() {}
-
 void Client_Hello_Impl_12::update_hello_cookie(const Hello_Verify_Request& hello_verify)
    {
    if(!m_version.is_datagram_protocol())

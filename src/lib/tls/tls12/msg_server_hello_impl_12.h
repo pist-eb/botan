@@ -49,7 +49,7 @@ std::vector<uint8_t> make_hello_random(RandomNumberGenerator& rng,
 class BOTAN_UNSTABLE_API Server_Hello_Impl_12 final : public Server_Hello_Impl
    {
    public:
-      Server_Hello_Impl_12(Handshake_IO& io,
+      explicit Server_Hello_Impl_12(Handshake_IO& io,
                            Handshake_Hash& hash,
                            const Policy& policy,
                            Callbacks& cb,
@@ -59,7 +59,7 @@ class BOTAN_UNSTABLE_API Server_Hello_Impl_12 final : public Server_Hello_Impl
                            const Server_Hello::Settings& settings,
                            const std::string next_protocol);
 
-      Server_Hello_Impl_12(Handshake_IO& io,
+      explicit Server_Hello_Impl_12(Handshake_IO& io,
                            Handshake_Hash& hash,
                            const Policy& policy,
                            Callbacks& cb,

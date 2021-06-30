@@ -38,21 +38,21 @@ class Callbacks;
 class Server_Hello_Impl : public Handshake_Message
    {
    public:
-      Server_Hello_Impl();
+      explicit Server_Hello_Impl();
 
-      Server_Hello_Impl(const Policy& policy,
+      explicit Server_Hello_Impl(const Policy& policy,
                         RandomNumberGenerator& rng,
                         const Client_Hello& client_hello,
                         const Server_Hello::Settings& settings,
                         const std::string next_protocol);
 
-      Server_Hello_Impl(const Policy& policy,
+      explicit Server_Hello_Impl(const Policy& policy,
                         RandomNumberGenerator& rng,
                         const Client_Hello& client_hello,
                         Session& resumed_session,
                         const std::string next_protocol);
 
-      virtual ~Server_Hello_Impl();
+      virtual ~Server_Hello_Impl() = 0;
 
       Handshake_Type type() const override;
 

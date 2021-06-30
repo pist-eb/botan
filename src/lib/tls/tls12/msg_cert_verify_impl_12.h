@@ -33,7 +33,7 @@ class Policy;
 class BOTAN_UNSTABLE_API Certificate_Verify_Impl_12 final : public Certificate_Verify_Impl
    {
    public:
-      Certificate_Verify_Impl_12(Handshake_IO& io,
+      explicit Certificate_Verify_Impl_12(Handshake_IO& io,
                          Handshake_State& state,
                          const Policy& policy,
                          RandomNumberGenerator& rng,

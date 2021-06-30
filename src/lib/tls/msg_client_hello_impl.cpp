@@ -37,7 +37,7 @@ Client_Hello_Impl::Client_Hello_Impl(const Policy& policy,
    {
    }
 
-Client_Hello_Impl::~Client_Hello_Impl() {}
+Client_Hello_Impl::~Client_Hello_Impl() = default;
 
 Handshake_Type Client_Hello_Impl::type() const
    {

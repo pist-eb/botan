@@ -57,12 +57,12 @@ class BOTAN_UNSTABLE_API Certificate_Req_Impl_12 final : public Certificate_Req_
 
       const std::vector<Signature_Scheme>& signature_schemes() const override;
 
-      Certificate_Req_Impl_12(Handshake_IO& io,
+      explicit Certificate_Req_Impl_12(Handshake_IO& io,
                       Handshake_Hash& hash,
                       const Policy& policy,
                       const std::vector<X509_DN>& allowed_cas);
 
-      Certificate_Req_Impl_12(const std::vector<uint8_t>& buf);
+      explicit Certificate_Req_Impl_12(const std::vector<uint8_t>& buf);
 
       std::vector<uint8_t> serialize() const override;
 
