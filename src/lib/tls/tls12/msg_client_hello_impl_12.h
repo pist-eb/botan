@@ -56,17 +56,7 @@ class BOTAN_UNSTABLE_API Client_Hello_Impl_12 final : public Client_Hello_Impl
 
       explicit Client_Hello_Impl_12(const std::vector<uint8_t>& buf);
 
-      Protocol_Version version() const override;
-
       std::vector<Protocol_Version> supported_versions() const override;
-
-      const std::vector<uint8_t>& random() const override;
-
-      const std::vector<uint8_t>& session_id() const override;
-
-      const std::vector<uint8_t>& compression_methods() const override;
-
-      const std::vector<uint16_t>& ciphersuites() const override;
 
       bool offered_suite(uint16_t ciphersuite) const override;
 
@@ -107,10 +97,6 @@ class BOTAN_UNSTABLE_API Client_Hello_Impl_12 final : public Client_Hello_Impl
       const std::vector<uint8_t>& cookie() const override;
 
       std::vector<uint8_t> cookie_input_data() const override;
-
-      std::set<Handshake_Extension_Type> extension_types() const override;
-
-      const Extensions& extensions() const override;
 
    private:
       std::vector<uint8_t> serialize() const override;

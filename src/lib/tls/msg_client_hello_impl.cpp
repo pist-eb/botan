@@ -47,6 +47,43 @@ Handshake_Type Client_Hello_Impl::type() const
    return CLIENT_HELLO;
    }
 
+Protocol_Version Client_Hello_Impl::version() const
+   {
+   return m_version;
+   }
+
+const std::vector<uint8_t>& Client_Hello_Impl::random() const
+   {
+   return m_random;
+   }
+
+const std::vector<uint8_t>& Client_Hello_Impl::session_id() const
+   {
+   return m_session_id;
+   }
+
+const std::vector<uint8_t>& Client_Hello_Impl::compression_methods() const
+   {
+   return m_comp_methods;
+   }
+
+const std::vector<uint16_t>& Client_Hello_Impl::ciphersuites() const
+   {
+   return m_suites;
+   }
+
+std::set<Handshake_Extension_Type> Client_Hello_Impl::extension_types() const
+{
+return m_extensions.extension_types();
+}
+
+const Extensions& Client_Hello_Impl::extensions() const
+{
+return m_extensions;
+}
+
+
+
 }
 
 }
