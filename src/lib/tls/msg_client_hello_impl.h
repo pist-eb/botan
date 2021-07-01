@@ -51,17 +51,17 @@ class Client_Hello_Impl : public Handshake_Message
 
       Handshake_Type type() const override;
 
-      virtual Protocol_Version version() const = 0;
+      Protocol_Version version() const;
 
       virtual std::vector<Protocol_Version> supported_versions() const = 0;
 
-      virtual const std::vector<uint8_t>& random() const = 0;
+      const std::vector<uint8_t>& random() const;
 
-      virtual const std::vector<uint8_t>& session_id() const = 0;
+      const std::vector<uint8_t>& session_id() const;
 
-      virtual const std::vector<uint8_t>& compression_methods() const = 0;
+      const std::vector<uint8_t>& compression_methods() const;
 
-      virtual const std::vector<uint16_t>& ciphersuites() const = 0;
+      const std::vector<uint16_t>& ciphersuites() const;
 
       virtual bool offered_suite(uint16_t ciphersuite) const = 0;
 
@@ -103,9 +103,9 @@ class Client_Hello_Impl : public Handshake_Message
 
       virtual std::vector<uint8_t> cookie_input_data() const = 0;
 
-      virtual std::set<Handshake_Extension_Type> extension_types() const = 0;
+      std::set<Handshake_Extension_Type> extension_types() const;
 
-      virtual const Extensions& extensions() const = 0;
+      const Extensions& extensions() const;
 
    protected:
       Protocol_Version m_version;
