@@ -1,5 +1,5 @@
 /*
-* TLS Server Hello and Server Hello Done
+* TLS Server Hello Impl
 * (C) 2004-2011,2015,2016,2019 Jack Lloyd
 *     2016 Matthias Gierlings
 *     2017 Harry Reimann, Rohde & Schwarz Cybersecurity
@@ -8,17 +8,8 @@
 * Botan is released under the Simplified BSD License (see license.txt)
 */
 
-#include <botan/tls_messages.h>
-#include <botan/tls_extensions.h>
-#include <botan/tls_callbacks.h>
-#include <botan/tls_policy.h>
-#include <botan/tls_session.h>
-#include <botan/internal/tls_reader.h>
-#include <botan/internal/tls_session_key.h>
-#include <botan/internal/tls_handshake_io.h>
-#include <botan/internal/tls_handshake_hash.h>
-#include <botan/internal/stl_util.h>
 #include <botan/internal/msg_server_hello_impl.h>
+
 
 namespace Botan {
 
@@ -139,7 +130,9 @@ bool Server_Hello_Impl::supports_certificate_status_message() const
 std::string Server_Hello_Impl::next_protocol() const
    {
    if(auto alpn = m_extensions.get<Application_Layer_Protocol_Notification>())
+      {
       return alpn->single_protocol();
+      }
    return "";
    }
 

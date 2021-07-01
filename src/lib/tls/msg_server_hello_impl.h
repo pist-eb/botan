@@ -1,5 +1,5 @@
 /*
-* TLS Messages
+* TLS Server Hello Impl
 * (C) 2004-2011,2015 Jack Lloyd
 *     2016 Matthias Gierlings
 *     2021 Elektrobit Automotive GmbH
@@ -10,14 +10,14 @@
 #ifndef BOTAN_MSG_SERVER_HELLO_IMPL_H_
 #define BOTAN_MSG_SERVER_HELLO_IMPL_H_
 
-#include <botan/tls_extensions.h>
+#include <botan/tls_messages.h>
 #include <botan/tls_handshake_msg.h>
 #include <vector>
 #include <string>
-#include <set>
-
 
 namespace Botan {
+
+class RandomNumberGenerator;
 
 namespace TLS {
 

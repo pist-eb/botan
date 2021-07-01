@@ -1,5 +1,5 @@
 /*
-* TLS Messages
+* TLS Server Hello Impl for (D)TLS 1.2
 * (C) 2004-2011,2015 Jack Lloyd
 *     2016 Matthias Gierlings
 *
@@ -9,22 +9,21 @@
 #ifndef BOTAN_MSG_SERVER_HELLO_IMPL_12_H_
 #define BOTAN_MSG_SERVER_HELLO_IMPL_12_H_
 
-#include <botan/tls_extensions.h>
 #include <botan/internal/msg_server_hello_impl.h>
 #include <vector>
 #include <string>
 
-#if defined(BOTAN_HAS_CECPQ1)
-  #include <botan/cecpq1.h>
-#endif
-
 namespace Botan {
+
+class RandomNumberGenerator;
 
 namespace TLS {
 
 class Client_Hello;
 class Session;
 class Handshake_IO;
+class Handshake_Hash;
+class Callbacks;
 class Policy;
 
 std::vector<uint8_t> make_hello_random(RandomNumberGenerator& rng,

@@ -1,5 +1,5 @@
 /*
-* TLS Server Hello and Server Hello Done
+* TLS Server Hello Impl for (D)TLS 1.2
 * (C) 2004-2011,2015,2016,2019 Jack Lloyd
 *     2016 Matthias Gierlings
 *     2017 Harry Reimann, Rohde & Schwarz Cybersecurity
@@ -7,17 +7,12 @@
 * Botan is released under the Simplified BSD License (see license.txt)
 */
 
-#include <botan/tls_messages.h>
-#include <botan/tls_extensions.h>
 #include <botan/tls_callbacks.h>
-#include <botan/tls_session.h>
-#include <botan/tls_policy.h>
 #include <botan/internal/tls_reader.h>
-#include <botan/internal/tls_session_key.h>
 #include <botan/internal/tls_handshake_io.h>
 #include <botan/internal/tls_handshake_hash.h>
-#include <botan/internal/stl_util.h>
 #include <botan/internal/msg_server_hello_impl_12.h>
+
 namespace Botan {
 
 namespace TLS {
@@ -54,10 +49,14 @@ Server_Hello_Impl_12::Server_Hello_Impl_12(Handshake_IO& io,
       }
 
    if(client_hello.secure_renegotiation())
+      {
       m_extensions.add(new Renegotiation_Extension(reneg_info));
+      }
 
    if(client_hello.supports_session_ticket() && server_settings.offer_session_ticket())
+      {
       m_extensions.add(new Session_Ticket());
+      }
 
    if(m_version.is_datagram_protocol())
       {
@@ -76,7 +75,9 @@ Server_Hello_Impl_12::Server_Hello_Impl_12(Handshake_IO& io,
                }
 
          if(shared)
+            {
             m_extensions.add(new SRTP_Protection_Profiles(shared));
+            }
          }
       }
 
@@ -102,7 +103,9 @@ Server_Hello_Impl_12::Server_Hello_Impl_12(Handshake_IO& io,
       {
       Ciphersuite c = resumed_session.ciphersuite();
       if(c.cbc_ciphersuite())
+         {
          m_extensions.add(new Encrypt_then_MAC);
+         }
       }
 
    if(resumed_session.ciphersuite().ecc_ciphersuite() && client_hello.extension_types().count(TLSEXT_EC_POINT_FORMATS))
@@ -111,10 +114,14 @@ Server_Hello_Impl_12::Server_Hello_Impl_12(Handshake_IO& io,
       }
 
    if(client_hello.secure_renegotiation())
+      {
       m_extensions.add(new Renegotiation_Extension(reneg_info));
+      }
 
    if(client_hello.supports_session_ticket() && offer_session_ticket)
+      {
       m_extensions.add(new Session_Ticket());
+      }
 
    cb.tls_modify_extensions(m_extensions, SERVER);
 
@@ -128,7 +135,9 @@ Server_Hello_Impl_12::Server_Hello_Impl_12(const std::vector<uint8_t>& buf) :
    Server_Hello_Impl()
    {
    if(buf.size() < 38)
+      {
       throw Decoding_Error("Server_Hello: Packet corrupted");
+      }
 
    TLS_Data_Reader reader("ServerHello", buf);
 
