@@ -137,7 +137,8 @@ void Client_Impl_12::send_client_hello(Handshake_State& state_base,
          if(policy().acceptable_ciphersuite(session_info->ciphersuite()) && session_version_ok)
             {
             state.client_hello(
-               new Client_Hello(state.handshake_io(),
+               new Client_Hello(Protocol_Version::TLS_V12,
+                                state.handshake_io(),
                                 state.hash(),
                                 policy(),
                                 callbacks(),
@@ -155,6 +156,7 @@ void Client_Impl_12::send_client_hello(Handshake_State& state_base,
       {
       Client_Hello::Settings client_settings(version, m_info.hostname());
       state.client_hello(new Client_Hello(
+         Protocol_Version::TLS_V12,
          state.handshake_io(),
          state.hash(),
          policy(),
@@ -440,7 +442,7 @@ void Client_Impl_12::process_handshake_msg(const Handshake_State* active_state,
       }
    else if(type == CERTIFICATE)
       {
-      state.server_certs(new Certificate(contents, policy()));
+      state.server_certs(new Certificate(Protocol_Version::TLS_V12, contents, policy()));
 
       const std::vector<X509_Certificate>& server_certs =
          state.server_certs()->cert_chain();
@@ -558,7 +560,7 @@ void Client_Impl_12::process_handshake_msg(const Handshake_State* active_state,
    else if(type == CERTIFICATE_REQUEST)
       {
       state.set_expected_next(SERVER_HELLO_DONE);
-      state.cert_req(new Certificate_Req(contents));
+      state.cert_req(new Certificate_Req(Protocol_Version::TLS_V12, contents));
       }
    else if(type == SERVER_HELLO_DONE)
       {
@@ -615,7 +617,8 @@ void Client_Impl_12::process_handshake_msg(const Handshake_State* active_state,
                                     "tls-client",
                                     m_info.hostname());
 
-         state.client_certs(new Certificate(state.handshake_io(),
+         state.client_certs(new Certificate(Protocol_Version::TLS_V12,
+                                            state.handshake_io(),
                                             state.hash(),
                                             client_certs));
          }
@@ -641,7 +644,8 @@ void Client_Impl_12::process_handshake_msg(const Handshake_State* active_state,
                                     m_info.hostname());
 
          state.client_verify(
-            new Certificate_Verify(state.handshake_io(),
+            new Certificate_Verify(Protocol_Version::TLS_V12,
+                                   state.handshake_io(),
                                    state,
                                    policy(),
                                    rng(),
@@ -653,7 +657,7 @@ void Client_Impl_12::process_handshake_msg(const Handshake_State* active_state,
 
       change_cipher_spec_writer(CLIENT);
 
-      state.client_finished(new Finished(state.handshake_io(), state, CLIENT));
+      state.client_finished(new Finished(Protocol_Version::TLS_V12, state.handshake_io(), state, CLIENT));
 
       if(state.server_hello()->supports_session_ticket())
          state.set_expected_next(NEW_SESSION_TICKET);
@@ -678,7 +682,7 @@ void Client_Impl_12::process_handshake_msg(const Handshake_State* active_state,
          throw TLS_Exception(Alert::UNEXPECTED_MESSAGE,
                              "Have data remaining in buffer after Finished");
 
-      state.server_finished(new Finished(contents));
+      state.server_finished(new Finished(Protocol_Version::TLS_V12, contents));
 
       if(!state.server_finished()->verify(state, SERVER))
          throw TLS_Exception(Alert::DECRYPT_ERROR,
@@ -691,7 +695,7 @@ void Client_Impl_12::process_handshake_msg(const Handshake_State* active_state,
          // session resume case
          state.handshake_io().send(Change_Cipher_Spec());
          change_cipher_spec_writer(CLIENT);
-         state.client_finished(new Finished(state.handshake_io(), state, CLIENT));
+         state.client_finished(new Finished(Protocol_Version::TLS_V12, state.handshake_io(), state, CLIENT));
          }
 
       std::vector<uint8_t> session_id = state.server_hello()->session_id();

@@ -11,6 +11,9 @@
 #include <botan/internal/tls_handshake_io.h>
 #include <botan/internal/tls_handshake_state.h>
 #include <botan/internal/msg_finished_impl_12.h>
+#include <botan/internal/msg_finished_impl.h>
+#include <botan/internal/tls_message_factory.h>
+#include <botan/tls_version.h>
 
 namespace Botan {
 
@@ -19,10 +22,13 @@ namespace TLS {
 /*
 * Create a new Finished message
 */
-Finished::Finished(Handshake_IO& io,
+Finished::Finished(const Protocol_Version& protocol_version,
+                   Handshake_IO& io,
                    Handshake_State& state,
                    Connection_Side side) :
-   m_impl(std::make_unique<Finished_Impl_12>(io, state, side))
+   m_impl( protocol_version == Protocol_Version::TLS_V13
+      ? TLS_Message_Factory::create<Finished_Impl, Protocol_Version::TLS_V13>(io, state, side)
+      : TLS_Message_Factory::create<Finished_Impl, Protocol_Version::TLS_V12>(io, state, side))
    {
    }
 
@@ -37,8 +43,10 @@ std::vector<uint8_t> Finished::serialize() const
 /*
 * Deserialize a Finished message
 */
-Finished::Finished(const std::vector<uint8_t>& buf) :
-   m_impl(std::make_unique<Finished_Impl_12>(buf))
+Finished::Finished(const Protocol_Version& protocol_version, const std::vector<uint8_t>& buf):
+   m_impl( protocol_version == Protocol_Version::TLS_V13
+      ? TLS_Message_Factory::create<Finished_Impl, Protocol_Version::TLS_V13>(buf)
+      : TLS_Message_Factory::create<Finished_Impl, Protocol_Version::TLS_V12>(buf))
    {
    }
 

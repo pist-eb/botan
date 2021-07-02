@@ -6,11 +6,14 @@
 * Botan is released under the Simplified BSD License (see license.txt)
 */
 
+
 #include <botan/tls_server.h>
 #include <botan/tls_messages.h>
+#include <botan/tls_version.h>
 #include <botan/internal/tls_handshake_state.h>
 #include <botan/internal/stl_util.h>
 #include <botan/internal/tls_server_impl_12.h>
+#include <botan/internal/tls_message_factory.h>
 #include <botan/tls_magic.h>
 
 namespace Botan {
@@ -448,6 +451,14 @@ void Server_Impl_12::process_client_hello_msg(const Handshake_State* active_stat
 
    pending_state.set_version(negotiated_version);
 
+   // msgFactory.setVersion(negotiated_version)
+   // auto msg = msgeFactory.createMsg(2/*Handshake_Type:ServerHello*/)
+
+   // auto p = TLS_Message_Factory<Server_Hello>::create();
+
+
+
+
    const auto compression_methods = pending_state.client_hello()->compression_methods();
    if(!value_exists(compression_methods, uint8_t(0)))
       throw TLS_Exception(Alert::ILLEGAL_PARAMETER, "Client did not offer NULL compression");
@@ -538,7 +549,7 @@ void Server_Impl_12::process_client_hello_msg(const Handshake_State* active_stat
 void Server_Impl_12::process_certificate_msg(Server_Handshake_State& pending_state,
       const std::vector<uint8_t>& contents)
    {
-   pending_state.client_certs(new Certificate(contents, policy()));
+   pending_state.client_certs(new Certificate(Protocol_Version::TLS_V12, contents, policy()));
 
    // CERTIFICATE_REQUIRED would make more sense but BoGo expects handshake failure alert
    if(pending_state.client_certs()->empty() && policy().require_client_certificate_authentication())
@@ -572,7 +583,7 @@ void Server_Impl_12::process_certificate_verify_msg(Server_Handshake_State& pend
       Handshake_Type type,
       const std::vector<uint8_t>& contents)
    {
-   pending_state.client_verify(new Certificate_Verify(contents));
+   pending_state.client_verify(new Certificate_Verify(Protocol_Version::TLS_V12, contents));
 
    const std::vector<X509_Certificate>& client_certs =
       pending_state.client_certs()->cert_chain();
@@ -626,7 +637,7 @@ void Server_Impl_12::process_finished_msg(Server_Handshake_State& pending_state,
       throw TLS_Exception(Alert::UNEXPECTED_MESSAGE,
                           "Have data remaining in buffer after Finished");
 
-   pending_state.client_finished(new Finished(contents));
+   pending_state.client_finished(new Finished(Protocol_Version::TLS_V12, contents));
 
    if(!pending_state.client_finished()->verify(pending_state, CLIENT))
       throw TLS_Exception(Alert::DECRYPT_ERROR,
@@ -682,7 +693,7 @@ void Server_Impl_12::process_finished_msg(Server_Handshake_State& pending_state,
 
       change_cipher_spec_writer(SERVER);
 
-      pending_state.server_finished(new Finished(pending_state.handshake_io(), pending_state, SERVER));
+      pending_state.server_finished(new Finished(Protocol_Version::TLS_V12, pending_state.handshake_io(), pending_state, SERVER));
       }
 
    activate_session();
@@ -750,6 +761,7 @@ void Server_Impl_12::session_resume(Server_Handshake_State& pending_state,
        have_session_ticket_key);
 
    pending_state.server_hello(new Server_Hello(
+                                 Protocol_Version::TLS_V12,
                                  pending_state.handshake_io(),
                                  pending_state.hash(),
                                  policy(),
@@ -804,7 +816,7 @@ void Server_Impl_12::session_resume(Server_Handshake_State& pending_state,
 
    change_cipher_spec_writer(SERVER);
 
-   pending_state.server_finished(new Finished(pending_state.handshake_io(), pending_state, SERVER));
+   pending_state.server_finished(new Finished(Protocol_Version::TLS_V12, pending_state.handshake_io(), pending_state, SERVER));
    pending_state.set_expected_next(HANDSHAKE_CCS);
    }
 
@@ -843,6 +855,7 @@ void Server_Impl_12::session_create(Server_Handshake_State& pending_state,
       have_session_ticket_key);
 
    pending_state.server_hello(new Server_Hello(
+                                 Protocol_Version::TLS_V12,
                                  pending_state.handshake_io(),
                                  pending_state.hash(),
                                  policy(),
@@ -867,7 +880,8 @@ void Server_Impl_12::session_create(Server_Handshake_State& pending_state,
       BOTAN_ASSERT(!cert_chains[algo_used].empty(),
                      "Attempting to send empty certificate chain");
 
-      pending_state.server_certs(new Certificate(pending_state.handshake_io(),
+      pending_state.server_certs(new Certificate(Protocol_Version::TLS_V12,
+                                                 pending_state.handshake_io(),
                                                  pending_state.hash(),
                                                  cert_chains[algo_used]));
 
@@ -924,7 +938,8 @@ void Server_Impl_12::session_create(Server_Handshake_State& pending_state,
    if(request_cert && pending_state.ciphersuite().signature_used())
       {
       pending_state.cert_req(
-         new Certificate_Req(pending_state.handshake_io(),
+         new Certificate_Req(Protocol_Version::TLS_V12,
+                             pending_state.handshake_io(),
                              pending_state.hash(),
                              policy(),
                              client_auth_CAs));

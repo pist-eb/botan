@@ -43,6 +43,7 @@ class Certificate_Verify_Impl;
 class Certificate_Req_Impl;
 class Certificate_Impl;
 class Finished_Impl;
+class Protocol_Version;
 
 std::vector<uint8_t> make_hello_random(RandomNumberGenerator& rng,
                                        const Policy& policy);
@@ -149,23 +150,25 @@ class BOTAN_UNSTABLE_API Client_Hello final : public Handshake_Message
 
       const Extensions& extensions() const;
 
-      explicit Client_Hello(Handshake_IO& io,
-                            Handshake_Hash& hash,
-                            const Policy& policy,
-                            Callbacks& cb,
-                            RandomNumberGenerator& rng,
-                            const std::vector<uint8_t>& reneg_info,
-                            const Client_Hello::Settings& client_settings,
-                            const std::vector<std::string>& next_protocols);
+      Client_Hello(const Protocol_Version& protocol_version,
+                   Handshake_IO& io,
+                   Handshake_Hash& hash,
+                   const Policy& policy,
+                   Callbacks& cb,
+                   RandomNumberGenerator& rng,
+                   const std::vector<uint8_t>& reneg_info,
+                   const Client_Hello::Settings& client_settings,
+                   const std::vector<std::string>& next_protocols);
 
-      explicit Client_Hello(Handshake_IO& io,
-                            Handshake_Hash& hash,
-                            const Policy& policy,
-                            Callbacks& cb,
-                            RandomNumberGenerator& rng,
-                            const std::vector<uint8_t>& reneg_info,
-                            const Session& resumed_session,
-                            const std::vector<std::string>& next_protocols);
+      Client_Hello(const Protocol_Version& protocol_version,
+                   Handshake_IO& io,
+                   Handshake_Hash& hash,
+                   const Policy& policy,
+                   Callbacks& cb,
+                   RandomNumberGenerator& rng,
+                   const std::vector<uint8_t>& reneg_info,
+                   const Session& resumed_session,
+                   const std::vector<std::string>& next_protocols);
 
       explicit Client_Hello(const std::vector<uint8_t>& buf);
 
@@ -241,26 +244,28 @@ class BOTAN_UNSTABLE_API Server_Hello final : public Handshake_Message
 
       bool random_signals_downgrade() const;
 
-      explicit Server_Hello(Handshake_IO& io,
-                            Handshake_Hash& hash,
-                            const Policy& policy,
-                            Callbacks& cb,
-                            RandomNumberGenerator& rng,
-                            const std::vector<uint8_t>& secure_reneg_info,
-                            const Client_Hello& client_hello,
-                            const Server_Hello::Settings& settings,
-                            const std::string next_protocol);
+      Server_Hello(const Protocol_Version& protocol_version,
+                   Handshake_IO& io,
+                   Handshake_Hash& hash,
+                   const Policy& policy,
+                   Callbacks& cb,
+                   RandomNumberGenerator& rng,
+                   const std::vector<uint8_t>& secure_reneg_info,
+                   const Client_Hello& client_hello,
+                   const Server_Hello::Settings& settings,
+                   const std::string next_protocol);
 
-      explicit Server_Hello(Handshake_IO& io,
-                            Handshake_Hash& hash,
-                            const Policy& policy,
-                            Callbacks& cb,
-                            RandomNumberGenerator& rng,
-                            const std::vector<uint8_t>& secure_reneg_info,
-                            const Client_Hello& client_hello,
-                            Session& resumed_session,
-                            bool offer_session_ticket,
-                            const std::string& next_protocol);
+      Server_Hello(const Protocol_Version& protocol_version,
+                   Handshake_IO& io,
+                   Handshake_Hash& hash,
+                   const Policy& policy,
+                   Callbacks& cb,
+                   RandomNumberGenerator& rng,
+                   const std::vector<uint8_t>& secure_reneg_info,
+                   const Client_Hello& client_hello,
+                   Session& resumed_session,
+                   bool offer_session_ticket,
+                   const std::string& next_protocol);
 
       explicit Server_Hello(const std::vector<uint8_t>& buf);
 
@@ -318,11 +323,13 @@ class BOTAN_UNSTABLE_API Certificate final : public Handshake_Message
       size_t count() const;
       bool empty() const;
 
-      explicit Certificate(Handshake_IO& io,
-                  Handshake_Hash& hash,
-                  const std::vector<X509_Certificate>& certs);
+      explicit Certificate(const Protocol_Version& protocol_version,
+                           Handshake_IO& io,
+                           Handshake_Hash& hash,
+                           const std::vector<X509_Certificate>& certs);
 
-      explicit Certificate(const std::vector<uint8_t>& buf, const Policy &policy);
+      explicit Certificate(const Protocol_Version& protocol_version,
+                           const std::vector<uint8_t>& buf, const Policy &policy);
 
       ~Certificate();
 
@@ -376,12 +383,13 @@ class BOTAN_UNSTABLE_API Certificate_Req final : public Handshake_Message
 
       const std::vector<Signature_Scheme>& signature_schemes() const;
 
-      explicit Certificate_Req(Handshake_IO& io,
-                               Handshake_Hash& hash,
-                               const Policy& policy,
-                               const std::vector<X509_DN>& allowed_cas);
+      Certificate_Req(const Protocol_Version& protocol_version,
+                      Handshake_IO& io,
+                      Handshake_Hash& hash,
+                      const Policy& policy,
+                      const std::vector<X509_DN>& allowed_cas);
 
-      explicit Certificate_Req(const std::vector<uint8_t>& buf);
+      Certificate_Req(const Protocol_Version& protocol_version, const std::vector<uint8_t>& buf);
 
       ~Certificate_Req();
 
@@ -408,14 +416,15 @@ class BOTAN_UNSTABLE_API Certificate_Verify final : public Handshake_Message
                   const Handshake_State& state,
                   const Policy& policy) const;
 
-      explicit Certificate_Verify(Handshake_IO& io,
-                                  Handshake_State& state,
-                                  const Policy& policy,
-                                  RandomNumberGenerator& rng,
-                                  const Private_Key* key);
+      Certificate_Verify(const Protocol_Version& protocol_version,
+                         Handshake_IO& io,
+                         Handshake_State& state,
+                         const Policy& policy,
+                         RandomNumberGenerator& rng,
+                         const Private_Key* key);
 
-      explicit Certificate_Verify(const std::vector<uint8_t>& buf);
-
+      Certificate_Verify(const Protocol_Version& protocol_version,
+                         const std::vector<uint8_t>& buf);
       ~Certificate_Verify();
    private:
       std::vector<uint8_t> serialize() const override;
@@ -439,17 +448,19 @@ class BOTAN_UNSTABLE_API Finished final : public Handshake_Message
       bool verify(const Handshake_State& state,
                   Connection_Side side) const;
 
-      explicit Finished(Handshake_IO& io,
+      explicit Finished(const Protocol_Version& protocol_version,
+                        Handshake_IO& io,
                         Handshake_State& state,
                         Connection_Side side);
 
-      explicit Finished(const std::vector<uint8_t>& buf);
+      explicit Finished(const Protocol_Version& protocol_version, const std::vector<uint8_t>& buf);
 
       ~Finished();
    private:
       std::vector<uint8_t> serialize() const override;
       std::unique_ptr<Finished_Impl> m_impl;
    };
+
 
 /**
 * Hello Request Message

@@ -11,7 +11,9 @@
 #include <botan/internal/tls_reader.h>
 #include <botan/internal/tls_handshake_io.h>
 #include <botan/internal/tls_handshake_hash.h>
+#include <botan/internal/tls_message_factory.h>
 #include <botan/internal/msg_cert_req_impl_12.h>
+#include <botan/internal/msg_cert_req_impl.h>
 #include <botan/der_enc.h>
 #include <botan/ber_dec.h>
 
@@ -42,19 +44,24 @@ const std::vector<Signature_Scheme>& Certificate_Req::signature_schemes() const
 /**
 * Create a new Certificate Request message
 */
-Certificate_Req::Certificate_Req(Handshake_IO& io,
+Certificate_Req::Certificate_Req(const Protocol_Version& protocol_version,
+                                 Handshake_IO& io,
                                  Handshake_Hash& hash,
                                  const Policy& policy,
                                  const std::vector<X509_DN>& ca_certs) :
-   m_impl(std::make_unique<Certificate_Req_Impl_12>(io, hash, policy, ca_certs))
+   m_impl( protocol_version == Protocol_Version::TLS_V13
+      ? TLS_Message_Factory::create<Certificate_Req_Impl, Protocol_Version::TLS_V13>()
+      : TLS_Message_Factory::create<Certificate_Req_Impl, Protocol_Version::TLS_V12>(io, hash, policy, ca_certs))
    {
    }
 
 /**
 * Deserialize a Certificate Request message
 */
-Certificate_Req::Certificate_Req(const std::vector<uint8_t>& buf) :
-   m_impl(std::make_unique<Certificate_Req_Impl_12>(buf))
+Certificate_Req::Certificate_Req(const Protocol_Version& protocol_version, const std::vector<uint8_t>& buf) :
+   m_impl( protocol_version == Protocol_Version::TLS_V13
+      ? TLS_Message_Factory::create<Certificate_Req_Impl, Protocol_Version::TLS_V13>()
+      : TLS_Message_Factory::create<Certificate_Req_Impl, Protocol_Version::TLS_V12>(buf))
    {
    }
 

@@ -6,11 +6,13 @@
 * Botan is released under the Simplified BSD License (see license.txt)
 */
 
+#include <botan/internal/msg_certificate_impl_12.h>
 #include <botan/tls_messages.h>
 #include <botan/internal/tls_handshake_io.h>
 #include <botan/internal/tls_handshake_hash.h>
-#include <botan/x509cert.h>
-#include <botan/internal/msg_certificate_impl_12.h>
+#include <botan/internal/tls_message_factory.h>
+#include <botan/internal/loadstor.h>
+#include <botan/data_src.h>
 
 namespace Botan {
 
@@ -39,18 +41,24 @@ bool Certificate::empty() const
 /**
 * Create a new Certificate message
 */
-Certificate::Certificate(Handshake_IO& io,
+Certificate::Certificate(const Protocol_Version& protocol_version,
+                         Handshake_IO& io,
                          Handshake_Hash& hash,
                          const std::vector<X509_Certificate>& cert_list) :
-   m_impl(std::make_unique<Certificate_Impl_12>(io, hash, cert_list))
+   m_impl( protocol_version == Protocol_Version::TLS_V13
+      ? TLS_Message_Factory::create<Certificate_Impl, Protocol_Version::TLS_V13>()
+      : TLS_Message_Factory::create<Certificate_Impl, Protocol_Version::TLS_V12>(io, hash, cert_list))
    {
    }
 
 /**
 * Deserialize a Certificate message
 */
-Certificate::Certificate(const std::vector<uint8_t>& buf, const Policy& policy) :
-   m_impl(std::make_unique<Certificate_Impl_12>(buf, policy))
+Certificate::Certificate(const Protocol_Version& protocol_version,
+                         const std::vector<uint8_t>& buf, const Policy& policy) :
+   m_impl( protocol_version == Protocol_Version::TLS_V13
+      ? TLS_Message_Factory::create<Certificate_Impl, Protocol_Version::TLS_V13>()
+      : TLS_Message_Factory::create<Certificate_Impl, Protocol_Version::TLS_V12>(buf, policy))
    {
    }
 

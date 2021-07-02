@@ -8,9 +8,12 @@
 * Botan is released under the Simplified BSD License (see license.txt)
 */
 
+
 #include <botan/tls_messages.h>
 #include <botan/tls_callbacks.h>
 #include <botan/rng.h>
+#include <botan/hash.h>
+#include <botan/tls_version.h>
 
 #include <botan/internal/tls_reader.h>
 #include <botan/internal/tls_session_key.h>
@@ -19,7 +22,8 @@
 #include <botan/internal/stl_util.h>
 #include <botan/internal/msg_client_hello_impl.h>
 #include <botan/internal/msg_client_hello_impl_12.h>
-#include <chrono>
+#include <botan/internal/msg_client_hello_impl_13.h>
+#include <botan/internal/tls_message_factory.h>
 
 namespace Botan {
 
@@ -53,7 +57,8 @@ std::vector<uint8_t> Hello_Request::serialize() const
 /*
 * Create a new Client Hello message
 */
-Client_Hello::Client_Hello(Handshake_IO& io,
+Client_Hello::Client_Hello(const Protocol_Version& protocol_version,
+                           Handshake_IO& io,
                            Handshake_Hash& hash,
                            const Policy& policy,
                            Callbacks& cb,
@@ -61,15 +66,17 @@ Client_Hello::Client_Hello(Handshake_IO& io,
                            const std::vector<uint8_t>& reneg_info,
                            const Client_Hello::Settings& client_settings,
                            const std::vector<std::string>& next_protocols) :
-   m_impl(std::make_unique<Client_Hello_Impl_12>(
-      io, hash, policy, cb, rng, reneg_info, client_settings, next_protocols))
+   m_impl(protocol_version == Protocol_Version::TLS_V13
+      ? TLS_Message_Factory::create<Client_Hello_Impl, Protocol_Version::TLS_V13>()
+      : TLS_Message_Factory::create<Client_Hello_Impl, Protocol_Version::TLS_V12>(io, hash, policy, cb, rng, reneg_info, client_settings, next_protocols))
    {
    }
 
 /*
 * Create a new Client Hello message (session resumption case)
 */
-Client_Hello::Client_Hello(Handshake_IO& io,
+Client_Hello::Client_Hello(const Protocol_Version& protocol_version,
+                           Handshake_IO& io,
                            Handshake_Hash& hash,
                            const Policy& policy,
                            Callbacks& cb,
@@ -77,17 +84,22 @@ Client_Hello::Client_Hello(Handshake_IO& io,
                            const std::vector<uint8_t>& reneg_info,
                            const Session& session,
                            const std::vector<std::string>& next_protocols) :
-   m_impl(std::make_unique<Client_Hello_Impl_12>(
-      io, hash, policy, cb, rng, reneg_info, session, next_protocols))
+   m_impl(protocol_version == Protocol_Version::TLS_V13
+      ? TLS_Message_Factory::create<Client_Hello_Impl, Protocol_Version::TLS_V13>()
+      : TLS_Message_Factory::create<Client_Hello_Impl, Protocol_Version::TLS_V12>(io, hash, policy, cb, rng,          reneg_info, session, next_protocols))
    {
    }
 
 /*
 * Read a counterparty client hello
 */
-Client_Hello::Client_Hello(const std::vector<uint8_t>& buf):
-   m_impl(std::make_unique<Client_Hello_Impl_12>(buf))
+Client_Hello::Client_Hello(const std::vector<uint8_t>& buf)
    {
+      auto supported_versions = Client_Hello_Impl(buf).supported_versions();
+
+      m_impl = value_exists(supported_versions, Protocol_Version(Protocol_Version::TLS_V13))
+             ? TLS_Message_Factory::create<Client_Hello_Impl, Protocol_Version::TLS_V13>(buf)
+             : TLS_Message_Factory::create<Client_Hello_Impl, Protocol_Version::TLS_V12>(buf);
    }
 
 Client_Hello::~Client_Hello() = default;

@@ -45,43 +45,49 @@ class Server_Hello_Impl : public Handshake_Message
                                  Session& resumed_session,
                                  const std::string next_protocol);
 
-      virtual ~Server_Hello_Impl() = 0;
+      explicit Server_Hello_Impl(const std::vector<uint8_t>& buf);
+
+      virtual ~Server_Hello_Impl();
 
       Handshake_Type type() const override;
 
-      virtual Protocol_Version version() const;
+      Protocol_Version version() const;
 
-      virtual const std::vector<uint8_t>& random() const;
+      const std::vector<uint8_t>& random() const;
 
-      virtual const std::vector<uint8_t>& session_id() const;
+      const std::vector<uint8_t>& session_id() const;
 
-      virtual uint16_t ciphersuite() const;
+      uint16_t ciphersuite() const;
 
-      virtual uint8_t compression_method() const;
+      uint8_t compression_method() const;
 
-      virtual bool secure_renegotiation() const = 0;
+      virtual bool secure_renegotiation() const;
 
-      virtual std::vector<uint8_t> renegotiation_info() const = 0;
+      virtual std::vector<uint8_t> renegotiation_info() const;
 
       virtual bool supports_extended_master_secret() const;
 
-      virtual bool supports_encrypt_then_mac() const = 0;
+      virtual bool supports_encrypt_then_mac() const;
 
       virtual bool supports_certificate_status_message() const;
 
-      virtual bool supports_session_ticket() const = 0;
+      virtual bool supports_session_ticket() const;
 
-      virtual uint16_t srtp_profile() const = 0;
+      virtual uint16_t srtp_profile() const;
 
       virtual std::string next_protocol() const;
 
       virtual std::set<Handshake_Extension_Type> extension_types() const;
 
-      virtual const Extensions& extensions() const;
+      const Extensions& extensions() const;
 
-      virtual bool prefers_compressed_ec_points() const = 0;
+      virtual bool prefers_compressed_ec_points() const;
 
-      virtual bool random_signals_downgrade() const = 0;
+      virtual bool random_signals_downgrade() const;
+
+      std::vector<uint8_t> serialize() const override;
+
+      std::vector<Protocol_Version> supported_versions() const;
 
    protected:
       Protocol_Version m_version;
