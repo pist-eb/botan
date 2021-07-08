@@ -54,9 +54,9 @@ uint8_t cert_type_name_to_code(const std::string& name)
 * Create a new Certificate Request message
 */
 Certificate_Req_Impl_12::Certificate_Req_Impl_12(Handshake_IO& io,
-                                 Handshake_Hash& hash,
-                                 const Policy& policy,
-                                 const std::vector<X509_DN>& ca_certs) :
+                                                 Handshake_Hash& hash,
+                                                 const Policy& policy,
+                                                 const std::vector<X509_DN>& ca_certs) :
    m_names(ca_certs),
    m_cert_key_types({ "RSA", "ECDSA", "DSA" })
    {

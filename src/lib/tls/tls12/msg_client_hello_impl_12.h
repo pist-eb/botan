@@ -37,22 +37,22 @@ class Client_Hello_Impl_12 final : public Client_Hello_Impl
    {
    public:
       explicit Client_Hello_Impl_12(Handshake_IO& io,
-                   Handshake_Hash& hash,
-                   const Policy& policy,
-                   Callbacks& cb,
-                   RandomNumberGenerator& rng,
-                   const std::vector<uint8_t>& reneg_info,
-                   const Client_Hello::Settings& client_settings,
-                   const std::vector<std::string>& next_protocols);
+                                    Handshake_Hash& hash,
+                                    const Policy& policy,
+                                    Callbacks& cb,
+                                    RandomNumberGenerator& rng,
+                                    const std::vector<uint8_t>& reneg_info,
+                                    const Client_Hello::Settings& client_settings,
+                                    const std::vector<std::string>& next_protocols);
 
       explicit Client_Hello_Impl_12(Handshake_IO& io,
-                   Handshake_Hash& hash,
-                   const Policy& policy,
-                   Callbacks& cb,
-                   RandomNumberGenerator& rng,
-                   const std::vector<uint8_t>& reneg_info,
-                   const Session& resumed_session,
-                   const std::vector<std::string>& next_protocols);
+                                    Handshake_Hash& hash,
+                                    const Policy& policy,
+                                    Callbacks& cb,
+                                    RandomNumberGenerator& rng,
+                                    const std::vector<uint8_t>& reneg_info,
+                                    const Session& resumed_session,
+                                    const std::vector<std::string>& next_protocols);
 
       explicit Client_Hello_Impl_12(const std::vector<uint8_t>& buf);
 

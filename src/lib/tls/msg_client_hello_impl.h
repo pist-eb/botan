@@ -40,12 +40,12 @@ class Client_Hello_Impl : public Handshake_Message
       Client_Hello_Impl();
 
       explicit Client_Hello_Impl(const Policy& policy,
-                        RandomNumberGenerator& rng,
-                        const Client_Hello::Settings& client_settings);
+                                 RandomNumberGenerator& rng,
+                                 const Client_Hello::Settings& client_settings);
 
       explicit Client_Hello_Impl(const Policy& policy,
-                           RandomNumberGenerator& rng,
-                           const Session& session);
+                                 RandomNumberGenerator& rng,
+                                 const Session& session);
 
       virtual ~Client_Hello_Impl() = 0;
 

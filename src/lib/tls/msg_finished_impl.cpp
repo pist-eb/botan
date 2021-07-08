@@ -53,8 +53,9 @@ std::vector<uint8_t> finished_compute_verify(const Handshake_State& state,
 * Create a new Finished message
 */
 Finished_Impl::Finished_Impl(Handshake_IO& io,
-                   Handshake_State& state,
-                   Connection_Side side) : m_verification_data(finished_compute_verify( state, side ))
+                             Handshake_State& state,
+                             Connection_Side side) :
+   m_verification_data(finished_compute_verify( state, side ))
    {
    state.hash().update(io.send(*this));
    }
@@ -84,7 +85,7 @@ std::vector<uint8_t> Finished_Impl::verify_data() const
 * Verify a Finished message
 */
 bool Finished_Impl::verify(const Handshake_State& state,
-                      Connection_Side side) const
+                           Connection_Side side) const
    {
    std::vector<uint8_t> computed_verify = finished_compute_verify(state, side);
 

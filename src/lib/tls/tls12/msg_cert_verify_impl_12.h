@@ -34,10 +34,10 @@ class Certificate_Verify_Impl_12 final : public Certificate_Verify_Impl
    {
    public:
       explicit Certificate_Verify_Impl_12(Handshake_IO& io,
-                         Handshake_State& state,
-                         const Policy& policy,
-                         RandomNumberGenerator& rng,
-                         const Private_Key* key);
+                                          Handshake_State& state,
+                                          const Policy& policy,
+                                          RandomNumberGenerator& rng,
+                                          const Private_Key* key);
 
       explicit Certificate_Verify_Impl_12(const std::vector<uint8_t>& buf);
 

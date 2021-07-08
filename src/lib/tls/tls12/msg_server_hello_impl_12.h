@@ -36,25 +36,25 @@ class Server_Hello_Impl_12 final : public Server_Hello_Impl
    {
    public:
       explicit Server_Hello_Impl_12(Handshake_IO& io,
-                           Handshake_Hash& hash,
-                           const Policy& policy,
-                           Callbacks& cb,
-                           RandomNumberGenerator& rng,
-                           const std::vector<uint8_t>& secure_reneg_info,
-                           const Client_Hello& client_hello,
-                           const Server_Hello::Settings& settings,
-                           const std::string next_protocol);
+                                    Handshake_Hash& hash,
+                                    const Policy& policy,
+                                    Callbacks& cb,
+                                    RandomNumberGenerator& rng,
+                                    const std::vector<uint8_t>& secure_reneg_info,
+                                    const Client_Hello& client_hello,
+                                    const Server_Hello::Settings& settings,
+                                    const std::string next_protocol);
 
       explicit Server_Hello_Impl_12(Handshake_IO& io,
-                           Handshake_Hash& hash,
-                           const Policy& policy,
-                           Callbacks& cb,
-                           RandomNumberGenerator& rng,
-                           const std::vector<uint8_t>& secure_reneg_info,
-                           const Client_Hello& client_hello,
-                           Session& resumed_session,
-                           bool offer_session_ticket,
-                           const std::string& next_protocol);
+                                    Handshake_Hash& hash,
+                                    const Policy& policy,
+                                    Callbacks& cb,
+                                    RandomNumberGenerator& rng,
+                                    const std::vector<uint8_t>& secure_reneg_info,
+                                    const Client_Hello& client_hello,
+                                    Session& resumed_session,
+                                    bool offer_session_ticket,
+                                    const std::string& next_protocol);
 
       explicit Server_Hello_Impl_12(const std::vector<uint8_t>& buf);
 

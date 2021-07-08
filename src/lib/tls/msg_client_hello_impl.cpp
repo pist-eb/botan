@@ -20,8 +20,8 @@ namespace TLS {
 Client_Hello_Impl::Client_Hello_Impl() = default;
 
 Client_Hello_Impl::Client_Hello_Impl(const Policy& policy,
-                        RandomNumberGenerator& rng,
-                        const Client_Hello::Settings& client_settings) :
+                                     RandomNumberGenerator& rng,
+                                     const Client_Hello::Settings& client_settings) :
    m_version(client_settings.protocol_version()),
    m_random(make_hello_random(rng, policy)),
    m_suites(policy.ciphersuite_list(m_version)),
@@ -30,8 +30,8 @@ Client_Hello_Impl::Client_Hello_Impl(const Policy& policy,
    }
 
 Client_Hello_Impl::Client_Hello_Impl(const Policy& policy,
-                           RandomNumberGenerator& rng,
-                           const Session& session) :
+                                     RandomNumberGenerator& rng,
+                                     const Session& session) :
    m_version(session.version()),
    m_session_id(session.session_id()),
    m_random(make_hello_random(rng, policy)),

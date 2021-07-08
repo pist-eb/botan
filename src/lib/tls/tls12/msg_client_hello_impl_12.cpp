@@ -57,13 +57,13 @@ std::vector<uint8_t> make_hello_random(RandomNumberGenerator& rng,
 * Create a new Client Hello message
 */
 Client_Hello_Impl_12::Client_Hello_Impl_12(Handshake_IO& io,
-                           Handshake_Hash& hash,
-                           const Policy& policy,
-                           Callbacks& cb,
-                           RandomNumberGenerator& rng,
-                           const std::vector<uint8_t>& reneg_info,
-                           const Client_Hello::Settings& client_settings,
-                           const std::vector<std::string>& next_protocols) :
+                                           Handshake_Hash& hash,
+                                           const Policy& policy,
+                                           Callbacks& cb,
+                                           RandomNumberGenerator& rng,
+                                           const std::vector<uint8_t>& reneg_info,
+                                           const Client_Hello::Settings& client_settings,
+                                           const std::vector<std::string>& next_protocols) :
    Client_Hello_Impl(policy, rng, client_settings)
    {
    if(!policy.acceptable_protocol_version(m_version))
@@ -116,13 +116,13 @@ Client_Hello_Impl_12::Client_Hello_Impl_12(Handshake_IO& io,
 * Create a new Client Hello message (session resumption case)
 */
 Client_Hello_Impl_12::Client_Hello_Impl_12(Handshake_IO& io,
-                           Handshake_Hash& hash,
-                           const Policy& policy,
-                           Callbacks& cb,
-                           RandomNumberGenerator& rng,
-                           const std::vector<uint8_t>& reneg_info,
-                           const Session& session,
-                           const std::vector<std::string>& next_protocols) :
+                                           Handshake_Hash& hash,
+                                           const Policy& policy,
+                                           Callbacks& cb,
+                                           RandomNumberGenerator& rng,
+                                           const std::vector<uint8_t>& reneg_info,
+                                           const Session& session,
+                                           const std::vector<std::string>& next_protocols) :
    Client_Hello_Impl(policy, rng, session)
    {
    if(!policy.acceptable_protocol_version(m_version))

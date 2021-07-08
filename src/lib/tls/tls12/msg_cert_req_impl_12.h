@@ -40,9 +40,9 @@ class Certificate_Req_Impl_12 final : public Certificate_Req_Impl
       const std::vector<Signature_Scheme>& signature_schemes() const override;
 
       explicit Certificate_Req_Impl_12(Handshake_IO& io,
-                      Handshake_Hash& hash,
-                      const Policy& policy,
-                      const std::vector<X509_DN>& allowed_cas);
+                                       Handshake_Hash& hash,
+                                       const Policy& policy,
+                                       const std::vector<X509_DN>& allowed_cas);
 
       explicit Certificate_Req_Impl_12(const std::vector<uint8_t>& buf);
 

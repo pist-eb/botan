@@ -31,8 +31,8 @@ class Finished_Impl_12 final : public Finished_Impl
    {
    public:
       explicit Finished_Impl_12(Handshake_IO& io,
-               Handshake_State& state,
-               Connection_Side side);
+                                Handshake_State& state,
+                                Connection_Side side);
 
       explicit Finished_Impl_12(const std::vector<uint8_t>& buf);
    };

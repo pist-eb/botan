@@ -20,10 +20,10 @@ namespace TLS {
 * Create a new Certificate Verify message
 */
 Certificate_Verify_Impl_12::Certificate_Verify_Impl_12(Handshake_IO& io,
-                                       Handshake_State& state,
-                                       const Policy& policy,
-                                       RandomNumberGenerator& rng,
-                                       const Private_Key* priv_key) :
+                                                       Handshake_State& state,
+                                                       const Policy& policy,
+                                                       RandomNumberGenerator& rng,
+                                                       const Private_Key* priv_key) :
    Certificate_Verify_Impl(io, state, policy, rng, priv_key)
    {
    }

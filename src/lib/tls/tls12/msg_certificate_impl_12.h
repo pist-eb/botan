@@ -42,8 +42,8 @@ class Certificate_Impl_12 final : public Certificate_Impl
       bool empty() const override;
 
       explicit Certificate_Impl_12(Handshake_IO& io,
-                  Handshake_Hash& hash,
-                  const std::vector<X509_Certificate>& certs);
+                                   Handshake_Hash& hash,
+                                   const std::vector<X509_Certificate>& certs);
 
       explicit Certificate_Impl_12(const std::vector<uint8_t>& buf, const Policy &policy);
 

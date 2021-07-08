@@ -15,8 +15,8 @@ namespace TLS {
 * Create a new Finished message
 */
 Finished_Impl_12::Finished_Impl_12(Handshake_IO& io,
-                   Handshake_State& state,
-                   Connection_Side side) :
+                                   Handshake_State& state,
+                                   Connection_Side side) :
    Finished_Impl(io, state, side)
    {
    }

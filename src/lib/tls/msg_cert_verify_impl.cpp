@@ -29,10 +29,10 @@ Handshake_Type Certificate_Verify_Impl::type() const
 * Create a new Certificate Verify message
 */
 Certificate_Verify_Impl::Certificate_Verify_Impl(Handshake_IO& io,
-                                       Handshake_State& state,
-                                       const Policy& policy,
-                                       RandomNumberGenerator& rng,
-                                       const Private_Key* priv_key)
+                                                 Handshake_State& state,
+                                                 const Policy& policy,
+                                                 RandomNumberGenerator& rng,
+                                                 const Private_Key* priv_key)
    {
    BOTAN_ASSERT_NONNULL(priv_key);
 
@@ -89,8 +89,8 @@ std::vector<uint8_t> Certificate_Verify_Impl::serialize() const
 * Verify a Certificate Verify message
 */
 bool Certificate_Verify_Impl::verify(const X509_Certificate& cert,
-                                const Handshake_State& state,
-                                const Policy& policy) const
+                                     const Handshake_State& state,
+                                     const Policy& policy) const
    {
    std::unique_ptr<Public_Key> key(cert.subject_public_key());
 

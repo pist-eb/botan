@@ -262,14 +262,13 @@ get_server_certs(const std::string& hostname,
 
 }
 
-Server_Impl_12::Server_Impl_12(
-         Callbacks& callbacks,
-         Session_Manager& session_manager,
-         Credentials_Manager& creds,
-         const Policy& policy,
-         RandomNumberGenerator& rng,
-         bool is_datagram,
-         size_t io_buf_sz) :
+Server_Impl_12::Server_Impl_12(Callbacks& callbacks,
+                               Session_Manager& session_manager,
+                               Credentials_Manager& creds,
+                               const Policy& policy,
+                               RandomNumberGenerator& rng,
+                               bool is_datagram,
+                               size_t io_buf_sz) :
    Channel_Impl_12(callbacks, session_manager, rng, policy,
                   true, is_datagram, io_buf_sz),
    Server_Impl(static_cast<Channel_Impl&>(*this)),
