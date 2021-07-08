@@ -27,7 +27,7 @@ namespace Botan {
 namespace TLS {
 
 /**
-* Certificate Request Message
+* Interface of pimpl for Certificate Request Message
 */
 class Certificate_Req_Impl : public Handshake_Message
    {

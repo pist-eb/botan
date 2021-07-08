@@ -23,6 +23,9 @@ class Handshake_State;
 class Handshake_IO;
 class Channel_Impl;
 
+/**
+* Interface of pimpl for Client
+*/
 class Client_Impl
    {
    public:

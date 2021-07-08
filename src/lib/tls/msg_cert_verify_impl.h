@@ -31,7 +31,7 @@ class Handshake_State;
 class Policy;
 
 /**
-* Certificate Verify Message
+* Interface of pimpl for Certificate Verify Message
 */
 class Certificate_Verify_Impl : public Handshake_Message
    {

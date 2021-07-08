@@ -25,6 +25,9 @@ class Handshake_IO;
 class Handshake_State;
 
 
+/**
+* Interface of pimpl for Finished Message
+*/
 class Finished_Impl : public Handshake_Message
    {
    public:

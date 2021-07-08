@@ -32,7 +32,7 @@ class Callbacks;
 class Policy;
 
 /**
-* Client Hello Message Impl
+* Interface of pimpl for Client Hello Message
 */
 class Client_Hello_Impl : public Handshake_Message
    {

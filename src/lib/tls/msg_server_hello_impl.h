@@ -26,7 +26,7 @@ class Policy;
 class Session;
 
 /**
-* Server Hello Impl Message
+* Interface of pimpl for Server Hello Impl Message
 */
 class Server_Hello_Impl : public Handshake_Message
    {
