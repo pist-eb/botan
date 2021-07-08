@@ -48,14 +48,13 @@ class Server_Impl_12 : public Channel_Impl_12, public Server_Impl
       *        be preallocated for the read and write buffers. Smaller
       *        values just mean reallocations and copies are more likely.
       */
-      Server_Impl_12(
-         Callbacks& callbacks,
-         Session_Manager& session_manager,
-         Credentials_Manager& creds,
-         const Policy& policy,
-         RandomNumberGenerator& rng,
-         bool is_datagram = false,
-         size_t reserved_io_buffer_size = TLS::Channel::IO_BUF_DEFAULT_SIZE);
+      explicit Server_Impl_12(Callbacks& callbacks,
+                              Session_Manager& session_manager,
+                              Credentials_Manager& creds,
+                              const Policy& policy,
+                              RandomNumberGenerator& rng,
+                              bool is_datagram = false,
+                              size_t reserved_io_buffer_size = TLS::Channel::IO_BUF_DEFAULT_SIZE);
    private:
       /**
       * Return the protocol notification set by the client (using the

@@ -60,9 +60,9 @@ class BOTAN_UNSTABLE_API Hello_Verify_Request final : public Handshake_Message
 
       explicit Hello_Verify_Request(const std::vector<uint8_t>& buf);
 
-      Hello_Verify_Request(const std::vector<uint8_t>& client_hello_bits,
-                           const std::string& client_identity,
-                           const SymmetricKey& secret_key);
+      explicit Hello_Verify_Request(const std::vector<uint8_t>& client_hello_bits,
+                                    const std::string& client_identity,
+                                    const SymmetricKey& secret_key);
    private:
       std::vector<uint8_t> m_cookie;
    };
@@ -149,23 +149,23 @@ class BOTAN_UNSTABLE_API Client_Hello final : public Handshake_Message
 
       const Extensions& extensions() const;
 
-      Client_Hello(Handshake_IO& io,
-                   Handshake_Hash& hash,
-                   const Policy& policy,
-                   Callbacks& cb,
-                   RandomNumberGenerator& rng,
-                   const std::vector<uint8_t>& reneg_info,
-                   const Client_Hello::Settings& client_settings,
-                   const std::vector<std::string>& next_protocols);
+      explicit Client_Hello(Handshake_IO& io,
+                            Handshake_Hash& hash,
+                            const Policy& policy,
+                            Callbacks& cb,
+                            RandomNumberGenerator& rng,
+                            const std::vector<uint8_t>& reneg_info,
+                            const Client_Hello::Settings& client_settings,
+                            const std::vector<std::string>& next_protocols);
 
-      Client_Hello(Handshake_IO& io,
-                   Handshake_Hash& hash,
-                   const Policy& policy,
-                   Callbacks& cb,
-                   RandomNumberGenerator& rng,
-                   const std::vector<uint8_t>& reneg_info,
-                   const Session& resumed_session,
-                   const std::vector<std::string>& next_protocols);
+      explicit Client_Hello(Handshake_IO& io,
+                            Handshake_Hash& hash,
+                            const Policy& policy,
+                            Callbacks& cb,
+                            RandomNumberGenerator& rng,
+                            const std::vector<uint8_t>& reneg_info,
+                            const Session& resumed_session,
+                            const std::vector<std::string>& next_protocols);
 
       explicit Client_Hello(const std::vector<uint8_t>& buf);
 
@@ -241,26 +241,26 @@ class BOTAN_UNSTABLE_API Server_Hello final : public Handshake_Message
 
       bool random_signals_downgrade() const;
 
-      Server_Hello(Handshake_IO& io,
-                   Handshake_Hash& hash,
-                   const Policy& policy,
-                   Callbacks& cb,
-                   RandomNumberGenerator& rng,
-                   const std::vector<uint8_t>& secure_reneg_info,
-                   const Client_Hello& client_hello,
-                   const Server_Hello::Settings& settings,
-                   const std::string next_protocol);
+      explicit Server_Hello(Handshake_IO& io,
+                            Handshake_Hash& hash,
+                            const Policy& policy,
+                            Callbacks& cb,
+                            RandomNumberGenerator& rng,
+                            const std::vector<uint8_t>& secure_reneg_info,
+                            const Client_Hello& client_hello,
+                            const Server_Hello::Settings& settings,
+                            const std::string next_protocol);
 
-      Server_Hello(Handshake_IO& io,
-                   Handshake_Hash& hash,
-                   const Policy& policy,
-                   Callbacks& cb,
-                   RandomNumberGenerator& rng,
-                   const std::vector<uint8_t>& secure_reneg_info,
-                   const Client_Hello& client_hello,
-                   Session& resumed_session,
-                   bool offer_session_ticket,
-                   const std::string& next_protocol);
+      explicit Server_Hello(Handshake_IO& io,
+                            Handshake_Hash& hash,
+                            const Policy& policy,
+                            Callbacks& cb,
+                            RandomNumberGenerator& rng,
+                            const std::vector<uint8_t>& secure_reneg_info,
+                            const Client_Hello& client_hello,
+                            Session& resumed_session,
+                            bool offer_session_ticket,
+                            const std::string& next_protocol);
 
       explicit Server_Hello(const std::vector<uint8_t>& buf);
 
@@ -283,20 +283,20 @@ class BOTAN_UNSTABLE_API Client_Key_Exchange final : public Handshake_Message
       const secure_vector<uint8_t>& pre_master_secret() const
          { return m_pre_master; }
 
-      Client_Key_Exchange(Handshake_IO& io,
-                          Handshake_State& state,
-                          const Policy& policy,
-                          Credentials_Manager& creds,
-                          const Public_Key* server_public_key,
-                          const std::string& hostname,
-                          RandomNumberGenerator& rng);
+      explicit Client_Key_Exchange(Handshake_IO& io,
+                                   Handshake_State& state,
+                                   const Policy& policy,
+                                   Credentials_Manager& creds,
+                                   const Public_Key* server_public_key,
+                                   const std::string& hostname,
+                                   RandomNumberGenerator& rng);
 
-      Client_Key_Exchange(const std::vector<uint8_t>& buf,
-                          const Handshake_State& state,
-                          const Private_Key* server_rsa_kex_key,
-                          Credentials_Manager& creds,
-                          const Policy& policy,
-                          RandomNumberGenerator& rng);
+      explicit Client_Key_Exchange(const std::vector<uint8_t>& buf,
+                                   const Handshake_State& state,
+                                   const Private_Key* server_rsa_kex_key,
+                                   Credentials_Manager& creds,
+                                   const Policy& policy,
+                                   RandomNumberGenerator& rng);
 
    private:
       std::vector<uint8_t> serialize() const override
@@ -342,18 +342,18 @@ class BOTAN_UNSTABLE_API Certificate_Status final : public Handshake_Message
 
       const std::vector<uint8_t>& response() const { return m_response; }
 
-      Certificate_Status(const std::vector<uint8_t>& buf);
+      explicit Certificate_Status(const std::vector<uint8_t>& buf);
 
-      Certificate_Status(Handshake_IO& io,
-                         Handshake_Hash& hash,
-                         std::shared_ptr<const OCSP::Response> response);
+      explicit Certificate_Status(Handshake_IO& io,
+                                  Handshake_Hash& hash,
+                                  std::shared_ptr<const OCSP::Response> response);
 
       /*
        * Create a Certificate_Status message using an already DER encoded OCSP response.
        */
-      Certificate_Status(Handshake_IO& io,
-                         Handshake_Hash& hash,
-                         std::vector<uint8_t> const& raw_response_bytes );
+      explicit Certificate_Status(Handshake_IO& io,
+                                  Handshake_Hash& hash,
+                                  std::vector<uint8_t> const& raw_response_bytes );
 
    private:
       std::vector<uint8_t> serialize() const override;
@@ -374,12 +374,12 @@ class BOTAN_UNSTABLE_API Certificate_Req final : public Handshake_Message
 
       const std::vector<Signature_Scheme>& signature_schemes() const;
 
-      Certificate_Req(Handshake_IO& io,
-                      Handshake_Hash& hash,
-                      const Policy& policy,
-                      const std::vector<X509_DN>& allowed_cas);
+      explicit Certificate_Req(Handshake_IO& io,
+                               Handshake_Hash& hash,
+                               const Policy& policy,
+                               const std::vector<X509_DN>& allowed_cas);
 
-      Certificate_Req(const std::vector<uint8_t>& buf);
+      explicit Certificate_Req(const std::vector<uint8_t>& buf);
 
       ~Certificate_Req();
 
@@ -406,13 +406,13 @@ class BOTAN_UNSTABLE_API Certificate_Verify final : public Handshake_Message
                   const Handshake_State& state,
                   const Policy& policy) const;
 
-      Certificate_Verify(Handshake_IO& io,
-                         Handshake_State& state,
-                         const Policy& policy,
-                         RandomNumberGenerator& rng,
-                         const Private_Key* key);
+      explicit Certificate_Verify(Handshake_IO& io,
+                                  Handshake_State& state,
+                                  const Policy& policy,
+                                  RandomNumberGenerator& rng,
+                                  const Private_Key* key);
 
-      Certificate_Verify(const std::vector<uint8_t>& buf);
+      explicit Certificate_Verify(const std::vector<uint8_t>& buf);
 
       ~Certificate_Verify();
    private:
@@ -437,9 +437,9 @@ class BOTAN_UNSTABLE_API Finished final : public Handshake_Message
       bool verify(const Handshake_State& state,
                   Connection_Side side) const;
 
-      Finished(Handshake_IO& io,
-               Handshake_State& state,
-               Connection_Side side);
+      explicit Finished(Handshake_IO& io,
+                        Handshake_State& state,
+                        Connection_Side side);
 
       explicit Finished(const std::vector<uint8_t>& buf);
 
@@ -489,17 +489,17 @@ class BOTAN_UNSTABLE_API Server_Key_Exchange final : public Handshake_Message
          }
 #endif
 
-      Server_Key_Exchange(Handshake_IO& io,
-                          Handshake_State& state,
-                          const Policy& policy,
-                          Credentials_Manager& creds,
-                          RandomNumberGenerator& rng,
-                          const Private_Key* signing_key = nullptr);
+      explicit Server_Key_Exchange(Handshake_IO& io,
+                                   Handshake_State& state,
+                                   const Policy& policy,
+                                   Credentials_Manager& creds,
+                                   RandomNumberGenerator& rng,
+                                   const Private_Key* signing_key = nullptr);
 
-      Server_Key_Exchange(const std::vector<uint8_t>& buf,
-                          Kex_Algo kex_alg,
-                          Auth_Method sig_alg,
-                          Protocol_Version version);
+      explicit Server_Key_Exchange(const std::vector<uint8_t>& buf,
+                                   Kex_Algo kex_alg,
+                                   Auth_Method sig_alg,
+                                   Protocol_Version version);
 
       ~Server_Key_Exchange() = default;
    private:
@@ -525,7 +525,7 @@ class BOTAN_UNSTABLE_API Server_Hello_Done final : public Handshake_Message
    public:
       Handshake_Type type() const override { return SERVER_HELLO_DONE; }
 
-      Server_Hello_Done(Handshake_IO& io, Handshake_Hash& hash);
+      explicit Server_Hello_Done(Handshake_IO& io, Handshake_Hash& hash);
       explicit Server_Hello_Done(const std::vector<uint8_t>& buf);
    private:
       std::vector<uint8_t> serialize() const override;
@@ -542,13 +542,13 @@ class BOTAN_UNSTABLE_API New_Session_Ticket final : public Handshake_Message
       uint32_t ticket_lifetime_hint() const { return m_ticket_lifetime_hint; }
       const std::vector<uint8_t>& ticket() const { return m_ticket; }
 
-      New_Session_Ticket(Handshake_IO& io,
-                         Handshake_Hash& hash,
-                         const std::vector<uint8_t>& ticket,
-                         uint32_t lifetime);
+      explicit New_Session_Ticket(Handshake_IO& io,
+                                  Handshake_Hash& hash,
+                                  const std::vector<uint8_t>& ticket,
+                                  uint32_t lifetime);
 
-      New_Session_Ticket(Handshake_IO& io,
-                         Handshake_Hash& hash);
+      explicit New_Session_Ticket(Handshake_IO& io,
+                                  Handshake_Hash& hash);
 
       explicit New_Session_Ticket(const std::vector<uint8_t>& buf);
    private:

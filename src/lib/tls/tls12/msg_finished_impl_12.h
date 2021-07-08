@@ -27,7 +27,7 @@ class Handshake_State;
 /**
 * Finished Message
 */
-class BOTAN_UNSTABLE_API Finished_Impl_12 final : public Finished_Impl
+class Finished_Impl_12 final : public Finished_Impl
    {
    public:
       explicit Finished_Impl_12(Handshake_IO& io,

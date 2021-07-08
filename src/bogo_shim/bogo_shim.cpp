@@ -1529,7 +1529,7 @@ int main(int /*argc*/, char* argv[])
 
       for(size_t i = 0; i != resume_count+1; ++i)
          {
-         Shim_Socket socket("::1", port);
+         Shim_Socket socket("localhost", port);
 
          shim_log("Connection " + std::to_string(i+1) + "/" + std::to_string(resume_count+1));
 
@@ -1547,7 +1547,7 @@ int main(int /*argc*/, char* argv[])
             Botan::TLS::Protocol_Version offer_version = policy.latest_supported_version(is_datagram);
             shim_log("Offering " + offer_version.to_string());
 
-            std::string host_name = args->get_string_opt_or_else("host-name", "::1");
+            std::string host_name = args->get_string_opt_or_else("host-name", "localhost");
             if(args->test_name().find("UnsolicitedServerNameAck") == 0)
                host_name = ""; // avoid sending SNI for this test
 

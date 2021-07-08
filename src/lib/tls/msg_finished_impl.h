@@ -25,7 +25,7 @@ class Handshake_IO;
 class Handshake_State;
 
 
-class BOTAN_UNSTABLE_API Finished_Impl : public Handshake_Message
+class Finished_Impl : public Handshake_Message
    {
    public:
       Handshake_Type type() const override { return FINISHED; }

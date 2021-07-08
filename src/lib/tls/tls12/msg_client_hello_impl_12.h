@@ -33,7 +33,7 @@ std::vector<uint8_t> make_hello_random(RandomNumberGenerator& rng,
 /**
 * Client Hello Message
 */
-class BOTAN_UNSTABLE_API Client_Hello_Impl_12 final : public Client_Hello_Impl
+class Client_Hello_Impl_12 final : public Client_Hello_Impl
    {
    public:
       explicit Client_Hello_Impl_12(Handshake_IO& io,

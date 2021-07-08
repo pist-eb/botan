@@ -29,7 +29,7 @@ namespace TLS {
 /**
 * Certificate Request Message
 */
-class BOTAN_UNSTABLE_API Certificate_Req_Impl : public Handshake_Message
+class Certificate_Req_Impl : public Handshake_Message
    {
    public:
       Handshake_Type type() const override;

@@ -60,15 +60,15 @@ class Channel_Impl_12 : public Channel_Impl
       *        be preallocated for the read and write buffers. Smaller
       *        values just mean reallocations and copies are more likely.
       */
-      Channel_Impl_12(Callbacks& callbacks,
-                      Session_Manager& session_manager,
-                      RandomNumberGenerator& rng,
-                      const Policy& policy,
-                      bool is_server,
-                      bool is_datagram,
-                      size_t io_buf_sz = Botan::TLS::Channel::IO_BUF_DEFAULT_SIZE);
+      explicit Channel_Impl_12(Callbacks& callbacks,
+                               Session_Manager& session_manager,
+                               RandomNumberGenerator& rng,
+                               const Policy& policy,
+                               bool is_server,
+                               bool is_datagram,
+                               size_t io_buf_sz = Botan::TLS::Channel::IO_BUF_DEFAULT_SIZE);
 
-      Channel_Impl_12(const Channel_Impl_12&) = delete;
+      explicit Channel_Impl_12(const Channel_Impl_12&) = delete;
 
       Channel_Impl_12& operator=(const Channel_Impl_12&) = delete;
 

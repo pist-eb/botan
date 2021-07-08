@@ -33,7 +33,7 @@ class Handshake_IO;
 /**
 * Certificate Message
    */
-class BOTAN_UNSTABLE_API Certificate_Impl_12 final : public Certificate_Impl
+class Certificate_Impl_12 final : public Certificate_Impl
    {
    public:
       const std::vector<X509_Certificate>& cert_chain() const override;

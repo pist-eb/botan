@@ -30,7 +30,7 @@ class Policy;
 /**
 * Certificate Verify Message
 */
-class BOTAN_UNSTABLE_API Certificate_Verify_Impl_12 final : public Certificate_Verify_Impl
+class Certificate_Verify_Impl_12 final : public Certificate_Verify_Impl
    {
    public:
       explicit Certificate_Verify_Impl_12(Handshake_IO& io,

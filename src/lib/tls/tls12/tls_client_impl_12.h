@@ -53,15 +53,15 @@ class Client_Impl_12 : public Channel_Impl_12, public Client_Impl
       *        be preallocated for the read and write buffers. Smaller
       *        values just mean reallocations and copies are more likely.
       */
-      Client_Impl_12(Callbacks& callbacks,
-                     Session_Manager& session_manager,
-                     Credentials_Manager& creds,
-                     const Policy& policy,
-                     RandomNumberGenerator& rng,
-                     const Server_Information& server_info = Server_Information(),
-                     const Protocol_Version& offer_version = Protocol_Version::latest_tls_version(),
-                     const std::vector<std::string>& next_protocols = {},
-                     size_t reserved_io_buffer_size = TLS::Channel::IO_BUF_DEFAULT_SIZE
+      explicit Client_Impl_12(Callbacks& callbacks,
+                              Session_Manager& session_manager,
+                              Credentials_Manager& creds,
+                              const Policy& policy,
+                              RandomNumberGenerator& rng,
+                              const Server_Information& server_info = Server_Information(),
+                              const Protocol_Version& offer_version = Protocol_Version::latest_tls_version(),
+                              const std::vector<std::string>& next_protocols = {},
+                              size_t reserved_io_buffer_size = TLS::Channel::IO_BUF_DEFAULT_SIZE
           );
 
       /**

@@ -32,7 +32,7 @@ std::vector<uint8_t> make_hello_random(RandomNumberGenerator& rng,
 /**
 * Server Hello Message
 */
-class BOTAN_UNSTABLE_API Server_Hello_Impl_12 final : public Server_Hello_Impl
+class Server_Hello_Impl_12 final : public Server_Hello_Impl
    {
    public:
       explicit Server_Hello_Impl_12(Handshake_IO& io,

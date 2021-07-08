@@ -30,7 +30,7 @@ class Policy;
 /**
 * Certificate Request Message
 */
-class BOTAN_UNSTABLE_API Certificate_Req_Impl_12 final : public Certificate_Req_Impl
+class Certificate_Req_Impl_12 final : public Certificate_Req_Impl
    {
    public:
       const std::vector<std::string>& acceptable_cert_types() const override;
