@@ -28,7 +28,7 @@ class Handshake_Hash;
 class Policy;
 
 /**
-* Certificate Request Message
+* Certificate Request Message TLSv1.2 implementation
 */
 class Certificate_Req_Impl_12 final : public Certificate_Req_Impl
    {

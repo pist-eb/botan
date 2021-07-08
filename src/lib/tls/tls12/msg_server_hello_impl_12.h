@@ -30,7 +30,7 @@ std::vector<uint8_t> make_hello_random(RandomNumberGenerator& rng,
                                        const Policy& policy);
 
 /**
-* Server Hello Message
+* Server Hello Message TLSv1.2 implementation
 */
 class Server_Hello_Impl_12 final : public Server_Hello_Impl
    {

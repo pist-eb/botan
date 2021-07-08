@@ -31,7 +31,7 @@ class Callbacks;
 std::vector<uint8_t> make_hello_random(RandomNumberGenerator& rng,
                                        const Policy& policy);
 /**
-* Client Hello Message
+* Client Hello Message TLSv1.2 implementation
 */
 class Client_Hello_Impl_12 final : public Client_Hello_Impl
    {

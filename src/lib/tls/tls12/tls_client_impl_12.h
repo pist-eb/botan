@@ -22,7 +22,7 @@ namespace Botan {
 namespace TLS {
 
 /**
-* SSL/TLS Client 1.2
+* SSL/TLS Client 1.2 implementation
 */
 class Client_Impl_12 : public Channel_Impl_12, public Client_Impl
    {

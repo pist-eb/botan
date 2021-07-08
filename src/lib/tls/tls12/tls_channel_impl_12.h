@@ -35,7 +35,7 @@ class Server_Hello;
 class Policy;
 
 /**
-* Generic interface for TLS endpoint
+* Generic interface for TLSv.12 endpoint
 */
 class Channel_Impl_12 : public Channel_Impl
    {

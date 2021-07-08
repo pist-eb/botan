@@ -31,8 +31,8 @@ namespace TLS {
 class Handshake_IO;
 
 /**
-* Certificate Message
-   */
+* Certificate Message TLSv1.2 implementation
+*/
 class Certificate_Impl_12 final : public Certificate_Impl
    {
    public:

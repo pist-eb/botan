@@ -28,7 +28,7 @@ class Handshake_State;
 class Policy;
 
 /**
-* Certificate Verify Message
+* Certificate Verify Message TLSv1.2 implementation
 */
 class Certificate_Verify_Impl_12 final : public Certificate_Verify_Impl
    {

@@ -25,7 +25,7 @@ class Handshake_IO;
 class Handshake_State;
 
 /**
-* Finished Message
+* Finished Message TLSv1.2 implementation
 */
 class Finished_Impl_12 final : public Finished_Impl
    {
