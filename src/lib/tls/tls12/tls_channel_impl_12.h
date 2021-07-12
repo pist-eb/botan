@@ -1,5 +1,5 @@
 /*
-* TLS Channel_Impl_12
+* TLS Channel - implementation for TLS 1.2
 * (C) 2011,2012,2014,2015 Jack Lloyd
 *     2016 Matthias Gierlings
 *

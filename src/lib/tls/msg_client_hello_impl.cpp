@@ -73,15 +73,14 @@ const std::vector<uint16_t>& Client_Hello_Impl::ciphersuites() const
    }
 
 std::set<Handshake_Extension_Type> Client_Hello_Impl::extension_types() const
-{
-return m_extensions.extension_types();
-}
+   {
+   return m_extensions.extension_types();
+   }
 
 const Extensions& Client_Hello_Impl::extensions() const
-{
-return m_extensions;
-}
-
+   {
+   return m_extensions;
+   }
 
 
 }

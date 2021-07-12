@@ -17,7 +17,6 @@
 #include <botan/pk_keys.h>
 #include <botan/x509cert.h>
 #include <botan/ocsp.h>
-#include <botan/internal/msg_certificate_impl.h>
 #include <vector>
 #include <string>
 #include <set>
@@ -42,6 +41,7 @@ class Client_Hello_Impl;
 class Server_Hello_Impl;
 class Certificate_Verify_Impl;
 class Certificate_Req_Impl;
+class Certificate_Impl;
 class Finished_Impl;
 
 std::vector<uint8_t> make_hello_random(RandomNumberGenerator& rng,
@@ -323,6 +323,8 @@ class BOTAN_UNSTABLE_API Certificate final : public Handshake_Message
                   const std::vector<X509_Certificate>& certs);
 
       explicit Certificate(const std::vector<uint8_t>& buf, const Policy &policy);
+
+      ~Certificate();
 
       std::vector<uint8_t> serialize() const override;
 

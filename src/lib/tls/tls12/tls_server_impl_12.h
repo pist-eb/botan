@@ -1,5 +1,5 @@
 /*
-* TLS Server
+* TLS Server - implementation for TLS 1.2
 * (C) 2004-2011 Jack Lloyd
 *     2016 Matthias Gierlings
 *

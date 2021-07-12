@@ -1,5 +1,5 @@
 /*
-* TLS Server Hello Impl for (D)TLS 1.2
+* TLS Server Hello Message - implementation for (D)TLS 1.2
 * (C) 2004-2011,2015 Jack Lloyd
 *     2016 Matthias Gierlings
 *

@@ -6,16 +6,14 @@
 * Botan is released under the Simplified BSD License (see license.txt)
 */
 
-#include <botan/internal/msg_certificate_impl_12.h>
 #include <botan/tls_messages.h>
-#include <botan/tls_extensions.h>
-#include <botan/tls_exceptn.h>
-#include <botan/tls_alert.h>
-#include <botan/internal/tls_reader.h>
+// #include <botan/internal/tls_reader.h>
 #include <botan/internal/tls_handshake_io.h>
 #include <botan/internal/tls_handshake_hash.h>
-#include <botan/internal/loadstor.h>
-#include <botan/data_src.h>
+// #include <botan/internal/loadstor.h>
+// #include <botan/data_src.h>
+#include <botan/x509cert.h>
+#include <botan/internal/msg_certificate_impl_12.h>
 
 namespace Botan {
 
@@ -58,6 +56,8 @@ Certificate::Certificate(const std::vector<uint8_t>& buf, const Policy& policy) 
    m_impl(std::make_unique<Certificate_Impl_12>(buf, policy))
    {
    }
+
+Certificate::~Certificate() = default;
 
 /**
 * Serialize a Certificate message

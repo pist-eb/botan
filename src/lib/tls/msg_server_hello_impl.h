@@ -1,5 +1,5 @@
 /*
-* TLS Server Hello Impl
+* TLS Server Hello Message interface
 * (C) 2004-2011,2015 Jack Lloyd
 *     2016 Matthias Gierlings
 *     2021 Elektrobit Automotive GmbH
