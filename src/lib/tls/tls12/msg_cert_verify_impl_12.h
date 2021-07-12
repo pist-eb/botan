@@ -12,10 +12,6 @@
 #include <botan/internal/msg_cert_verify_impl.h>
 #include <vector>
 
-#if defined(BOTAN_HAS_CECPQ1)
-  #include <botan/cecpq1.h>
-#endif
-
 namespace Botan {
 
 class RandomNumberGenerator;

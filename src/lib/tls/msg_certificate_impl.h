@@ -14,10 +14,6 @@
 #include <botan/x509cert.h>
 #include <vector>
 
-#if defined(BOTAN_HAS_CECPQ1)
-  #include <botan/cecpq1.h>
-#endif
-
 namespace Botan {
 
 namespace TLS {

@@ -14,10 +14,6 @@
 #include <botan/tls_algos.h>
 #include <vector>
 
-#if defined(BOTAN_HAS_CECPQ1)
-  #include <botan/cecpq1.h>
-#endif
-
 namespace Botan {
 
 class X509_Certificate;
