@@ -7,11 +7,8 @@
 */
 
 #include <botan/tls_messages.h>
-// #include <botan/internal/tls_reader.h>
 #include <botan/internal/tls_handshake_io.h>
 #include <botan/internal/tls_handshake_hash.h>
-// #include <botan/internal/loadstor.h>
-// #include <botan/data_src.h>
 #include <botan/x509cert.h>
 #include <botan/internal/msg_certificate_impl_12.h>
 
