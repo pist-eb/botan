@@ -26,10 +26,10 @@ class Mock_Impl_13: public T
 {
    public:
       template <typename ... Args>
-      Mock_Impl_13(Args&& ... args)
+      explicit Mock_Impl_13(Args&& ... args)
       : T(std::forward<Args>(args) ... )
       {
-      throw std::runtime_error("Class unavailable for TLSv1.3");
+      throw std::runtime_error("Implemenation for TLSv1.3 not ready yet. You are welcome to implement it.");
       }
 };
 
@@ -37,10 +37,10 @@ class Mock_Certificate_Impl_13 : public Certificate_Impl
 {
    public:
       template <typename ... Args>
-      Mock_Certificate_Impl_13(Args&& ... args)
+      explicit Mock_Certificate_Impl_13(Args&& ... args)
       : Certificate_Impl(std::forward<Args>(args) ... )
       {
-      throw std::runtime_error("Class unavailable for TLSv1.3");
+      throw std::runtime_error("Implemenation for TLSv1.3 not ready yet. You are welcome to implement it.");
       }
 
       // from Certificate_Impl
@@ -57,10 +57,10 @@ class Mock_Certificate_Req_Impl_13 : public Certificate_Req_Impl
 {
    public:
       template <typename ... Args>
-      Mock_Certificate_Req_Impl_13(Args&& ... args)
+      explicit Mock_Certificate_Req_Impl_13(Args&& ... args)
       : Certificate_Req_Impl(std::forward<Args>(args) ... )
       {
-      throw std::runtime_error("Class unavailable for TLSv1.3");
+      throw std::runtime_error("Implemenation for TLSv1.3 not ready yet. You are welcome to implement it.");
       }
 
       // from Certificate_Req_Impl

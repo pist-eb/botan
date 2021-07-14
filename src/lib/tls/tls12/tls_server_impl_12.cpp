@@ -451,14 +451,6 @@ void Server_Impl_12::process_client_hello_msg(const Handshake_State* active_stat
 
    pending_state.set_version(negotiated_version);
 
-   // msgFactory.setVersion(negotiated_version)
-   // auto msg = msgeFactory.createMsg(2/*Handshake_Type:ServerHello*/)
-
-   // auto p = TLS_Message_Factory<Server_Hello>::create();
-
-
-
-
    const auto compression_methods = pending_state.client_hello()->compression_methods();
    if(!value_exists(compression_methods, uint8_t(0)))
       throw TLS_Exception(Alert::ILLEGAL_PARAMETER, "Client did not offer NULL compression");

@@ -33,9 +33,9 @@ class Policy;
 class Client_Hello_Impl : public Handshake_Message
    {
    public:
-      Client_Hello_Impl();
+      explicit Client_Hello_Impl();
 
-       explicit Client_Hello_Impl(Handshake_IO& io,
+      explicit Client_Hello_Impl(Handshake_IO& io,
                    Handshake_Hash& hash,
                    const Policy& policy,
                    Callbacks& cb,

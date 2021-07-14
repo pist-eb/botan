@@ -150,7 +150,7 @@ class BOTAN_UNSTABLE_API Client_Hello final : public Handshake_Message
 
       const Extensions& extensions() const;
 
-      Client_Hello(const Protocol_Version& protocol_version,
+      explicit Client_Hello(const Protocol_Version& protocol_version,
                    Handshake_IO& io,
                    Handshake_Hash& hash,
                    const Policy& policy,
@@ -160,7 +160,7 @@ class BOTAN_UNSTABLE_API Client_Hello final : public Handshake_Message
                    const Client_Hello::Settings& client_settings,
                    const std::vector<std::string>& next_protocols);
 
-      Client_Hello(const Protocol_Version& protocol_version,
+      explicit Client_Hello(const Protocol_Version& protocol_version,
                    Handshake_IO& io,
                    Handshake_Hash& hash,
                    const Policy& policy,
@@ -244,7 +244,7 @@ class BOTAN_UNSTABLE_API Server_Hello final : public Handshake_Message
 
       bool random_signals_downgrade() const;
 
-      Server_Hello(const Protocol_Version& protocol_version,
+      explicit Server_Hello(const Protocol_Version& protocol_version,
                    Handshake_IO& io,
                    Handshake_Hash& hash,
                    const Policy& policy,
@@ -255,7 +255,7 @@ class BOTAN_UNSTABLE_API Server_Hello final : public Handshake_Message
                    const Server_Hello::Settings& settings,
                    const std::string next_protocol);
 
-      Server_Hello(const Protocol_Version& protocol_version,
+      explicit Server_Hello(const Protocol_Version& protocol_version,
                    Handshake_IO& io,
                    Handshake_Hash& hash,
                    const Policy& policy,
@@ -383,13 +383,13 @@ class BOTAN_UNSTABLE_API Certificate_Req final : public Handshake_Message
 
       const std::vector<Signature_Scheme>& signature_schemes() const;
 
-      Certificate_Req(const Protocol_Version& protocol_version,
+      explicit Certificate_Req(const Protocol_Version& protocol_version,
                       Handshake_IO& io,
                       Handshake_Hash& hash,
                       const Policy& policy,
                       const std::vector<X509_DN>& allowed_cas);
 
-      Certificate_Req(const Protocol_Version& protocol_version, const std::vector<uint8_t>& buf);
+      explicit Certificate_Req(const Protocol_Version& protocol_version, const std::vector<uint8_t>& buf);
 
       ~Certificate_Req();
 
@@ -416,14 +416,14 @@ class BOTAN_UNSTABLE_API Certificate_Verify final : public Handshake_Message
                   const Handshake_State& state,
                   const Policy& policy) const;
 
-      Certificate_Verify(const Protocol_Version& protocol_version,
+      explicit Certificate_Verify(const Protocol_Version& protocol_version,
                          Handshake_IO& io,
                          Handshake_State& state,
                          const Policy& policy,
                          RandomNumberGenerator& rng,
                          const Private_Key* key);
 
-      Certificate_Verify(const Protocol_Version& protocol_version,
+      explicit Certificate_Verify(const Protocol_Version& protocol_version,
                          const std::vector<uint8_t>& buf);
       ~Certificate_Verify();
    private:
