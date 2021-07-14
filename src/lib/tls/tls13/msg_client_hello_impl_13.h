@@ -22,14 +22,14 @@ class Client_Hello_Impl_13: public Client_Hello_Impl
    {
       public:
       explicit Client_Hello_Impl_13()
-      {
-         // throw std::runtime_error("Class unavailable for TLSv1.3"); // TODO uncomment
-      }
+         {
+         throw std::runtime_error("Class unavailable for TLSv1.3");
+         }
 
       explicit Client_Hello_Impl_13(const std::vector<uint8_t>& buf) : Client_Hello_Impl(buf)
-        {
-           //throw std::runtime_error(Class unavailable for TLSv1.3");  // TODO uncomment
-        }
+         {
+         throw std::runtime_error(Class unavailable for TLSv1.3");
+         }
    };
 
 }
