@@ -39,13 +39,13 @@ class Finished_Impl_12;
 class TLS_Message_Factory
    {
    public:
-      template<typename MessageBaseType, Protocol_Version::Version_Code Version>
+      template<typename Message_Base_Type, Protocol_Version::Version_Code Version>
       struct Impl_Version_Trait{};
 
-      template <typename BaseType, Protocol_Version::Version_Code Version, typename ... Args>
-      static std::unique_ptr<BaseType> create(Args&& ... args)
+      template <typename Message_Base_Type, Protocol_Version::Version_Code Version, typename ... Args>
+      static std::unique_ptr<Message_Base_Type> create(Args&& ... args)
          {
-         return std::make_unique<typename Impl_Version_Trait<BaseType, Version>::Ver_Impl>(std::forward<Args>(args) ... );
+         return std::make_unique<typename Impl_Version_Trait<Message_Base_Type, Version>::Ver_Impl>(std::forward<Args>(args) ... );
          }
    };
 
