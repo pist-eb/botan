@@ -22,11 +22,10 @@ namespace TLS {
 /*
 * Create a new Finished message
 */
-Finished::Finished(const Protocol_Version& protocol_version,
-                   Handshake_IO& io,
+Finished::Finished(Handshake_IO& io,
                    Handshake_State& state,
                    Connection_Side side) :
-   m_impl( protocol_version == Protocol_Version::TLS_V13
+   m_impl( state.version() == Protocol_Version::TLS_V13
       ? TLS_Message_Factory::create<Finished_Impl, Protocol_Version::TLS_V13>(io, state, side)
       : TLS_Message_Factory::create<Finished_Impl, Protocol_Version::TLS_V12>(io, state, side))
    {

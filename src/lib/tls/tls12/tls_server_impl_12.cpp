@@ -685,7 +685,7 @@ void Server_Impl_12::process_finished_msg(Server_Handshake_State& pending_state,
 
       change_cipher_spec_writer(SERVER);
 
-      pending_state.server_finished(new Finished(Protocol_Version::TLS_V12, pending_state.handshake_io(), pending_state, SERVER));
+      pending_state.server_finished(new Finished(pending_state.handshake_io(), pending_state, SERVER));
       }
 
    activate_session();
@@ -807,7 +807,7 @@ void Server_Impl_12::session_resume(Server_Handshake_State& pending_state,
 
    change_cipher_spec_writer(SERVER);
 
-   pending_state.server_finished(new Finished(Protocol_Version::TLS_V12, pending_state.handshake_io(), pending_state, SERVER));
+   pending_state.server_finished(new Finished(pending_state.handshake_io(), pending_state, SERVER));
    pending_state.set_expected_next(HANDSHAKE_CCS);
    }
 

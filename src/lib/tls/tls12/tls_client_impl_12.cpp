@@ -655,7 +655,7 @@ void Client_Impl_12::process_handshake_msg(const Handshake_State* active_state,
 
       change_cipher_spec_writer(CLIENT);
 
-      state.client_finished(new Finished(Protocol_Version::TLS_V12, state.handshake_io(), state, CLIENT));
+      state.client_finished(new Finished(state.handshake_io(), state, CLIENT));
 
       if(state.server_hello()->supports_session_ticket())
          state.set_expected_next(NEW_SESSION_TICKET);
@@ -693,7 +693,7 @@ void Client_Impl_12::process_handshake_msg(const Handshake_State* active_state,
          // session resume case
          state.handshake_io().send(Change_Cipher_Spec());
          change_cipher_spec_writer(CLIENT);
-         state.client_finished(new Finished(Protocol_Version::TLS_V12, state.handshake_io(), state, CLIENT));
+         state.client_finished(new Finished(state.handshake_io(), state, CLIENT));
          }
 
       std::vector<uint8_t> session_id = state.server_hello()->session_id();

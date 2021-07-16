@@ -444,8 +444,7 @@ class BOTAN_UNSTABLE_API Finished final : public Handshake_Message
       bool verify(const Handshake_State& state,
                   Connection_Side side) const;
 
-      explicit Finished(const Protocol_Version& protocol_version,
-                        Handshake_IO& io,
+      explicit Finished(Handshake_IO& io,
                         Handshake_State& state,
                         Connection_Side side);
 
