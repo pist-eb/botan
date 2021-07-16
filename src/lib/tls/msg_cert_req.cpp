@@ -50,7 +50,7 @@ Certificate_Req::Certificate_Req(const Protocol_Version& protocol_version,
                                  const Policy& policy,
                                  const std::vector<X509_DN>& ca_certs) :
    m_impl( protocol_version == Protocol_Version::TLS_V13
-      ? TLS_Message_Factory::create<Certificate_Req_Impl, Protocol_Version::TLS_V13>()
+      ? TLS_Message_Factory::create<Certificate_Req_Impl, Protocol_Version::TLS_V13>(io, hash, policy, ca_certs)
       : TLS_Message_Factory::create<Certificate_Req_Impl, Protocol_Version::TLS_V12>(io, hash, policy, ca_certs))
    {
    }
@@ -60,7 +60,7 @@ Certificate_Req::Certificate_Req(const Protocol_Version& protocol_version,
 */
 Certificate_Req::Certificate_Req(const Protocol_Version& protocol_version, const std::vector<uint8_t>& buf) :
    m_impl( protocol_version == Protocol_Version::TLS_V13
-      ? TLS_Message_Factory::create<Certificate_Req_Impl, Protocol_Version::TLS_V13>()
+      ? TLS_Message_Factory::create<Certificate_Req_Impl, Protocol_Version::TLS_V13>(buf)
       : TLS_Message_Factory::create<Certificate_Req_Impl, Protocol_Version::TLS_V12>(buf))
    {
    }
