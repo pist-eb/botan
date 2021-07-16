@@ -541,7 +541,7 @@ void Server_Impl_12::process_client_hello_msg(const Handshake_State* active_stat
 void Server_Impl_12::process_certificate_msg(Server_Handshake_State& pending_state,
       const std::vector<uint8_t>& contents)
    {
-   pending_state.client_certs(new Certificate(Protocol_Version::TLS_V12, contents, policy()));
+   pending_state.client_certs(new Certificate(active_state()->version(), contents, policy()));
 
    // CERTIFICATE_REQUIRED would make more sense but BoGo expects handshake failure alert
    if(pending_state.client_certs()->empty() && policy().require_client_certificate_authentication())
@@ -870,7 +870,7 @@ void Server_Impl_12::session_create(Server_Handshake_State& pending_state,
       BOTAN_ASSERT(!cert_chains[algo_used].empty(),
                      "Attempting to send empty certificate chain");
 
-      pending_state.server_certs(new Certificate(Protocol_Version::TLS_V12,
+      pending_state.server_certs(new Certificate(active_state()->version(),
                                                  pending_state.handshake_io(),
                                                  pending_state.hash(),
                                                  cert_chains[algo_used]));
