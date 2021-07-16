@@ -23,13 +23,12 @@ namespace TLS {
 /*
 * Create a new Certificate Verify message
 */
-Certificate_Verify::Certificate_Verify(const Protocol_Version& protocol_version,
-                                       Handshake_IO& io,
+Certificate_Verify::Certificate_Verify(Handshake_IO& io,
                                        Handshake_State& state,
                                        const Policy& policy,
                                        RandomNumberGenerator& rng,
                                        const Private_Key* priv_key) :
-   m_impl( protocol_version == Protocol_Version::TLS_V13
+   m_impl( state.version() == Protocol_Version::TLS_V13
       ? TLS_Message_Factory::create<Certificate_Verify_Impl, Protocol_Version::TLS_V13>(io, state, policy, rng, priv_key)
       : TLS_Message_Factory::create<Certificate_Verify_Impl, Protocol_Version::TLS_V12>(io, state, policy, rng, priv_key))
    {

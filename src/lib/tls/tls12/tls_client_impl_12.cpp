@@ -642,8 +642,7 @@ void Client_Impl_12::process_handshake_msg(const Handshake_State* active_state,
                                     m_info.hostname());
 
          state.client_verify(
-            new Certificate_Verify(Protocol_Version::TLS_V12,
-                                   state.handshake_io(),
+            new Certificate_Verify(state.handshake_io(),
                                    state,
                                    policy(),
                                    rng(),

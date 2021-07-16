@@ -412,12 +412,11 @@ class BOTAN_UNSTABLE_API Certificate_Verify final : public Handshake_Message
                   const Handshake_State& state,
                   const Policy& policy) const;
 
-      explicit Certificate_Verify(const Protocol_Version& protocol_version,
-                         Handshake_IO& io,
-                         Handshake_State& state,
-                         const Policy& policy,
-                         RandomNumberGenerator& rng,
-                         const Private_Key* key);
+      explicit Certificate_Verify(Handshake_IO& io,
+                                  Handshake_State& state,
+                                  const Policy& policy,
+                                  RandomNumberGenerator& rng,
+                                  const Private_Key* key);
 
       explicit Certificate_Verify(const Protocol_Version& protocol_version,
                          const std::vector<uint8_t>& buf);
