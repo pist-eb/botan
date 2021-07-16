@@ -575,7 +575,7 @@ void Server_Impl_12::process_certificate_verify_msg(Server_Handshake_State& pend
       Handshake_Type type,
       const std::vector<uint8_t>& contents)
    {
-   pending_state.client_verify(new Certificate_Verify(Protocol_Version::TLS_V12, contents));
+   pending_state.client_verify(new Certificate_Verify(pending_state.version(), contents));
 
    const std::vector<X509_Certificate>& client_certs =
       pending_state.client_certs()->cert_chain();
@@ -629,7 +629,7 @@ void Server_Impl_12::process_finished_msg(Server_Handshake_State& pending_state,
       throw TLS_Exception(Alert::UNEXPECTED_MESSAGE,
                           "Have data remaining in buffer after Finished");
 
-   pending_state.client_finished(new Finished(Protocol_Version::TLS_V12, contents));
+   pending_state.client_finished(new Finished(pending_state.version(), contents));
 
    if(!pending_state.client_finished()->verify(pending_state, CLIENT))
       throw TLS_Exception(Alert::DECRYPT_ERROR,

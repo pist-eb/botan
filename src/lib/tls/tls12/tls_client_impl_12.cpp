@@ -440,7 +440,7 @@ void Client_Impl_12::process_handshake_msg(const Handshake_State* active_state,
       }
    else if(type == CERTIFICATE)
       {
-      state.server_certs(new Certificate(Protocol_Version::TLS_V12, contents, policy()));
+      state.server_certs(new Certificate(state.version(), contents, policy()));
 
       const std::vector<X509_Certificate>& server_certs =
          state.server_certs()->cert_chain();
@@ -558,7 +558,7 @@ void Client_Impl_12::process_handshake_msg(const Handshake_State* active_state,
    else if(type == CERTIFICATE_REQUEST)
       {
       state.set_expected_next(SERVER_HELLO_DONE);
-      state.cert_req(new Certificate_Req(Protocol_Version::TLS_V12, contents));
+      state.cert_req(new Certificate_Req(state.version(), contents));
       }
    else if(type == SERVER_HELLO_DONE)
       {
@@ -615,7 +615,7 @@ void Client_Impl_12::process_handshake_msg(const Handshake_State* active_state,
                                     "tls-client",
                                     m_info.hostname());
 
-         state.client_certs(new Certificate(Protocol_Version::TLS_V12,
+         state.client_certs(new Certificate(state.version(),
                                             state.handshake_io(),
                                             state.hash(),
                                             client_certs));
@@ -679,7 +679,7 @@ void Client_Impl_12::process_handshake_msg(const Handshake_State* active_state,
          throw TLS_Exception(Alert::UNEXPECTED_MESSAGE,
                              "Have data remaining in buffer after Finished");
 
-      state.server_finished(new Finished(Protocol_Version::TLS_V12, contents));
+      state.server_finished(new Finished(state.version(), contents));
 
       if(!state.server_finished()->verify(state, SERVER))
          throw TLS_Exception(Alert::DECRYPT_ERROR,
