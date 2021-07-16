@@ -66,7 +66,7 @@ Client_Hello::Client_Hello(Handshake_IO& io,
                            const Client_Hello::Settings& client_settings,
                            const std::vector<std::string>& next_protocols) :
    m_impl(client_settings.protocol_version() == Protocol_Version::TLS_V13
-      ? TLS_Message_Factory::create<Client_Hello_Impl, Protocol_Version::TLS_V13>()
+      ? TLS_Message_Factory::create<Client_Hello_Impl, Protocol_Version::TLS_V13>(io, hash, policy, cb, rng, reneg_info, client_settings, next_protocols)
       : TLS_Message_Factory::create<Client_Hello_Impl, Protocol_Version::TLS_V12>(io, hash, policy, cb, rng, reneg_info, client_settings, next_protocols))
    {
    }
@@ -83,7 +83,7 @@ Client_Hello::Client_Hello(Handshake_IO& io,
                            const Session& session,
                            const std::vector<std::string>& next_protocols) :
    m_impl(session.version() == Protocol_Version::TLS_V13
-      ? TLS_Message_Factory::create<Client_Hello_Impl, Protocol_Version::TLS_V13>()
+      ? TLS_Message_Factory::create<Client_Hello_Impl, Protocol_Version::TLS_V13>(io, hash, policy, cb, rng, reneg_info, session, next_protocols)
       : TLS_Message_Factory::create<Client_Hello_Impl, Protocol_Version::TLS_V12>(io, hash, policy, cb, rng, reneg_info, session, next_protocols))
    {
    }

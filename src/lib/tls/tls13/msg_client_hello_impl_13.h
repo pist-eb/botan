@@ -23,12 +23,12 @@ class Client_Hello_Impl_13: public Client_Hello_Impl
    public:
       explicit Client_Hello_Impl_13()
          {
-         throw std::runtime_error("Implemenation for TLSv1.3 not ready yet. You are welcome to implement it.");
+         // TODO throw std::runtime_error("Implemenation for TLSv1.3 not ready yet. You are welcome to implement it.");
          }
 
       explicit Client_Hello_Impl_13(const std::vector<uint8_t>& buf) : Client_Hello_Impl(buf)
          {
-         throw std::runtime_error("Implemenation for TLSv1.3 not ready yet. You are welcome to implement it.");
+         // TODO throw std::runtime_error("Implemenation for TLSv1.3 not ready yet. You are welcome to implement it.");
          }
    };
 
