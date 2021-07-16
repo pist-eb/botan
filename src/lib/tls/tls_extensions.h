@@ -30,22 +30,26 @@ class TLS_Data_Reader;
 
 // This will become an enum class in a future major release
 enum Handshake_Extension_Type {
-   TLSEXT_SERVER_NAME_INDICATION = 0,
-   TLSEXT_CERT_STATUS_REQUEST    = 5,
+   TLSEXT_SERVER_NAME_INDICATION    = 0,
+   TLSEXT_CERT_STATUS_REQUEST       = 5,
 
-   TLSEXT_CERTIFICATE_TYPES      = 9,
-   TLSEXT_SUPPORTED_GROUPS       = 10,
-   TLSEXT_EC_POINT_FORMATS       = 11,
-   TLSEXT_SIGNATURE_ALGORITHMS   = 13,
-   TLSEXT_USE_SRTP               = 14,
-   TLSEXT_ALPN                   = 16,
+   TLSEXT_CERTIFICATE_TYPES         = 9,
+   TLSEXT_SUPPORTED_GROUPS          = 10,
+   TLSEXT_EC_POINT_FORMATS          = 11,
+   TLSEXT_SIGNATURE_ALGORITHMS      = 13,
+   TLSEXT_USE_SRTP                  = 14,
+   TLSEXT_ALPN                      = 16,
 
-   TLSEXT_ENCRYPT_THEN_MAC       = 22,
-   TLSEXT_EXTENDED_MASTER_SECRET = 23,
+   TLSEXT_ENCRYPT_THEN_MAC          = 22,
+   TLSEXT_EXTENDED_MASTER_SECRET    = 23,
 
-   TLSEXT_SESSION_TICKET         = 35,
+   TLSEXT_SESSION_TICKET            = 35,
 
-   TLSEXT_SUPPORTED_VERSIONS     = 43,
+   TLSEXT_SUPPORTED_VERSIONS        = 43,
+   TLSEXT_COOKIE                    = 44,
+
+   TLSEXT_SIGNATURE_ALGORITHMS_CERT = 50,
+   TLSEXT_KEY_SHARE                 = 51,
 
    TLSEXT_SAFE_RENEGOTIATION     = 65281,
 };
@@ -431,6 +435,77 @@ class BOTAN_UNSTABLE_API Supported_Versions final : public Extension
       const std::vector<Protocol_Version> versions() const { return m_versions; }
    private:
       std::vector<Protocol_Version> m_versions;
+   };
+
+/**
+* Cookie from RFC 8446
+*/
+class BOTAN_UNSTABLE_API Cookie final : public Extension
+   {
+   public:
+      static Handshake_Extension_Type static_type()
+         { return TLSEXT_COOKIE; }
+
+      Handshake_Extension_Type type() const override { return static_type(); }
+
+      std::vector<uint8_t> serialize(Connection_Side whoami) const override;
+
+      bool empty() const override { return m_cookie.empty(); }
+
+      const std::vector<uint8_t>& get_cookie() const { return m_cookie; }
+
+      explicit Cookie(const std::vector<uint8_t>& cookie);
+
+      explicit Cookie(TLS_Data_Reader& reader,
+                      uint16_t extension_size,
+                      Connection_Side from); // TODO: is from needed?
+
+   private:
+      std::vector<uint8_t> m_cookie;
+   };
+
+/**
+* Signature_Algorithms_Cert from RFC 8446
+*/
+class BOTAN_UNSTABLE_API Signature_Algorithms_Cert final : public Extension
+   {
+   public:
+      static Handshake_Extension_Type static_type()
+         { return TLSEXT_SIGNATURE_ALGORITHMS_CERT; }
+
+      Handshake_Extension_Type type() const override { return static_type(); }
+
+      std::vector<uint8_t> serialize(Connection_Side whoami) const override;
+
+      bool empty() const override { return true; }
+
+      explicit Signature_Algorithms_Cert(TLS_Data_Reader& reader,
+                                         uint16_t extension_size,
+                                         Connection_Side from); // TODO: is from needed?
+
+   private:
+   };
+
+/**
+* Key_Share from RFC 8446
+*/
+class BOTAN_UNSTABLE_API Key_Share final : public Extension
+   {
+   public:
+      static Handshake_Extension_Type static_type()
+         { return TLSEXT_KEY_SHARE; }
+
+      Handshake_Extension_Type type() const override { return static_type(); }
+
+      std::vector<uint8_t> serialize(Connection_Side whoami) const override;
+
+      bool empty() const override { return true; }
+
+      explicit Key_Share(TLS_Data_Reader& reader,
+                         uint16_t extension_size,
+                         Connection_Side from);  // TODO: is from needed?
+
+   private:
    };
 
 /**

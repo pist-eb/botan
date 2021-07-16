@@ -56,6 +56,17 @@ std::unique_ptr<Extension> make_extension(TLS_Data_Reader& reader, uint16_t code
 
       case TLSEXT_SUPPORTED_VERSIONS:
          return std::make_unique<Supported_Versions>(reader, size, from);
+
+      case TLSEXT_COOKIE:
+         return std::make_unique<Cookie>(reader, size, from);
+
+      case TLSEXT_SIGNATURE_ALGORITHMS_CERT:
+         return std::make_unique<Signature_Algorithms_Cert>(reader, size, from);
+
+      // TODO: uncomment it. When uncommented, bogo_sim tests start failing ("Alert" test).
+      // Reason of fail should be investigated during implementing of Key_Share extension
+      // case TLSEXT_KEY_SHARE:
+      //    return std::make_unique<Key_Share>(reader, size, from);
       }
 
    return std::make_unique<Unknown_Extension>(static_cast<Handshake_Extension_Type>(code),
@@ -621,6 +632,71 @@ bool Supported_Versions::supports(Protocol_Version version) const
    return false;
    }
 
+Cookie::Cookie(const std::vector<uint8_t>& cookie) :
+   m_cookie(cookie)
+   {
+   }
+
+Cookie::Cookie(TLS_Data_Reader& reader,
+               uint16_t extension_size,
+               Connection_Side /*from*/)
+   {
+      if (extension_size == 0)
+      {
+         return;
+      }
+
+      const uint16_t len = reader.get_uint16_t();
+
+      if (len == 0)
+      {
+         throw Decoding_Error("Cookie length must be at least 1 byte");
+      }
+
+      for (auto i = 0u; i < len; ++i)
+      {
+         m_cookie.push_back(reader.get_byte());
+      }
+   }
+
+std::vector<uint8_t> Cookie::serialize(Connection_Side /*whoami*/) const
+   {
+      std::vector<uint8_t> buf;
+
+      const uint16_t len = static_cast<uint16_t>(m_cookie.size());
+
+      buf.push_back(get_byte<0>(len));
+      buf.push_back(get_byte<1>(len));
+
+      for (const auto& cookie_byte : m_cookie)
+      {
+         buf.push_back(cookie_byte);
+      }
+
+      return buf;
+   }
+
+Signature_Algorithms_Cert::Signature_Algorithms_Cert(TLS_Data_Reader& /*reader*/,
+                                                    uint16_t /*extension_size*/,
+                                                    Connection_Side /*from*/)
+   {
+   }
+
+std::vector<uint8_t> Signature_Algorithms_Cert::serialize(Connection_Side /*whoami*/) const
+   {
+      return {};
+   }
+
+Key_Share::Key_Share(TLS_Data_Reader& reader,
+                     uint16_t extension_size,
+                     Connection_Side from)
+   {
+   }
+
+std::vector<uint8_t> Key_Share::serialize(Connection_Side /*whoami*/) const
+   {
+      return {};
+   }
 }
 
 }
