@@ -928,7 +928,7 @@ void Server_Impl_12::session_create(Server_Handshake_State& pending_state,
    if(request_cert && pending_state.ciphersuite().signature_used())
       {
       pending_state.cert_req(
-         new Certificate_Req(Protocol_Version::TLS_V12,
+         new Certificate_Req(pending_state.version(),
                              pending_state.handshake_io(),
                              pending_state.hash(),
                              policy(),
