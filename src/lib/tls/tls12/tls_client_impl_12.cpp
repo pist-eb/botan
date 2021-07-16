@@ -137,8 +137,7 @@ void Client_Impl_12::send_client_hello(Handshake_State& state_base,
          if(policy().acceptable_ciphersuite(session_info->ciphersuite()) && session_version_ok)
             {
             state.client_hello(
-               new Client_Hello(Protocol_Version::TLS_V12,
-                                state.handshake_io(),
+               new Client_Hello(state.handshake_io(),
                                 state.hash(),
                                 policy(),
                                 callbacks(),
@@ -156,7 +155,6 @@ void Client_Impl_12::send_client_hello(Handshake_State& state_base,
       {
       Client_Hello::Settings client_settings(version, m_info.hostname());
       state.client_hello(new Client_Hello(
-         Protocol_Version::TLS_V12,
          state.handshake_io(),
          state.hash(),
          policy(),

@@ -25,8 +25,7 @@ namespace Botan {
 namespace TLS {
 
 // New session case
-Server_Hello::Server_Hello(const Protocol_Version& protocol_version,
-                           Handshake_IO& io,
+Server_Hello::Server_Hello(Handshake_IO& io,
                            Handshake_Hash& hash,
                            const Policy& policy,
                            Callbacks& cb,
@@ -35,15 +34,14 @@ Server_Hello::Server_Hello(const Protocol_Version& protocol_version,
                            const Client_Hello& client_hello,
                            const Server_Hello::Settings& server_settings,
                            const std::string next_protocol) :
-   m_impl(protocol_version == Protocol_Version::TLS_V13
+   m_impl(server_settings.protocol_version() == Protocol_Version::TLS_V13
       ? TLS_Message_Factory::create<Server_Hello_Impl, Protocol_Version::TLS_V13>()
       : TLS_Message_Factory::create<Server_Hello_Impl, Protocol_Version::TLS_V12>(io, hash, policy, cb, rng, reneg_info, client_hello, server_settings, next_protocol))
    {
    }
 
 // Resuming
-Server_Hello::Server_Hello(const Protocol_Version& protocol_version,
-                           Handshake_IO& io,
+Server_Hello::Server_Hello(Handshake_IO& io,
                            Handshake_Hash& hash,
                            const Policy& policy,
                            Callbacks& cb,
@@ -53,7 +51,7 @@ Server_Hello::Server_Hello(const Protocol_Version& protocol_version,
                            Session& resumed_session,
                            bool offer_session_ticket,
                            const std::string& next_protocol) :
-   m_impl(protocol_version == Protocol_Version::TLS_V13
+   m_impl(client_hello.version() == Protocol_Version::TLS_V13
       ? TLS_Message_Factory::create<Server_Hello_Impl, Protocol_Version::TLS_V13>()
       : TLS_Message_Factory::create<Server_Hello_Impl, Protocol_Version::TLS_V12>(io, hash, policy, cb, rng, reneg_info, client_hello, resumed_session, offer_session_ticket, next_protocol))
    {

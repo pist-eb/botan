@@ -57,8 +57,7 @@ std::vector<uint8_t> Hello_Request::serialize() const
 /*
 * Create a new Client Hello message
 */
-Client_Hello::Client_Hello(const Protocol_Version& protocol_version,
-                           Handshake_IO& io,
+Client_Hello::Client_Hello(Handshake_IO& io,
                            Handshake_Hash& hash,
                            const Policy& policy,
                            Callbacks& cb,
@@ -66,7 +65,7 @@ Client_Hello::Client_Hello(const Protocol_Version& protocol_version,
                            const std::vector<uint8_t>& reneg_info,
                            const Client_Hello::Settings& client_settings,
                            const std::vector<std::string>& next_protocols) :
-   m_impl(protocol_version == Protocol_Version::TLS_V13
+   m_impl(client_settings.protocol_version() == Protocol_Version::TLS_V13
       ? TLS_Message_Factory::create<Client_Hello_Impl, Protocol_Version::TLS_V13>()
       : TLS_Message_Factory::create<Client_Hello_Impl, Protocol_Version::TLS_V12>(io, hash, policy, cb, rng, reneg_info, client_settings, next_protocols))
    {
@@ -75,8 +74,7 @@ Client_Hello::Client_Hello(const Protocol_Version& protocol_version,
 /*
 * Create a new Client Hello message (session resumption case)
 */
-Client_Hello::Client_Hello(const Protocol_Version& protocol_version,
-                           Handshake_IO& io,
+Client_Hello::Client_Hello(Handshake_IO& io,
                            Handshake_Hash& hash,
                            const Policy& policy,
                            Callbacks& cb,
@@ -84,9 +82,9 @@ Client_Hello::Client_Hello(const Protocol_Version& protocol_version,
                            const std::vector<uint8_t>& reneg_info,
                            const Session& session,
                            const std::vector<std::string>& next_protocols) :
-   m_impl(protocol_version == Protocol_Version::TLS_V13
+   m_impl(session.version() == Protocol_Version::TLS_V13
       ? TLS_Message_Factory::create<Client_Hello_Impl, Protocol_Version::TLS_V13>()
-      : TLS_Message_Factory::create<Client_Hello_Impl, Protocol_Version::TLS_V12>(io, hash, policy, cb, rng,          reneg_info, session, next_protocols))
+      : TLS_Message_Factory::create<Client_Hello_Impl, Protocol_Version::TLS_V12>(io, hash, policy, cb, rng, reneg_info, session, next_protocols))
    {
    }
 

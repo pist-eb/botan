@@ -753,7 +753,6 @@ void Server_Impl_12::session_resume(Server_Handshake_State& pending_state,
        have_session_ticket_key);
 
    pending_state.server_hello(new Server_Hello(
-                                 Protocol_Version::TLS_V12,
                                  pending_state.handshake_io(),
                                  pending_state.hash(),
                                  policy(),
@@ -847,7 +846,6 @@ void Server_Impl_12::session_create(Server_Handshake_State& pending_state,
       have_session_ticket_key);
 
    pending_state.server_hello(new Server_Hello(
-                                 Protocol_Version::TLS_V12,
                                  pending_state.handshake_io(),
                                  pending_state.hash(),
                                  policy(),

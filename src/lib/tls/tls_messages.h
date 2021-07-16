@@ -150,8 +150,7 @@ class BOTAN_UNSTABLE_API Client_Hello final : public Handshake_Message
 
       const Extensions& extensions() const;
 
-      explicit Client_Hello(const Protocol_Version& protocol_version,
-                   Handshake_IO& io,
+      explicit Client_Hello(Handshake_IO& io,
                    Handshake_Hash& hash,
                    const Policy& policy,
                    Callbacks& cb,
@@ -160,8 +159,7 @@ class BOTAN_UNSTABLE_API Client_Hello final : public Handshake_Message
                    const Client_Hello::Settings& client_settings,
                    const std::vector<std::string>& next_protocols);
 
-      explicit Client_Hello(const Protocol_Version& protocol_version,
-                   Handshake_IO& io,
+      explicit Client_Hello(Handshake_IO& io,
                    Handshake_Hash& hash,
                    const Policy& policy,
                    Callbacks& cb,
@@ -244,8 +242,7 @@ class BOTAN_UNSTABLE_API Server_Hello final : public Handshake_Message
 
       bool random_signals_downgrade() const;
 
-      explicit Server_Hello(const Protocol_Version& protocol_version,
-                   Handshake_IO& io,
+      explicit Server_Hello(Handshake_IO& io,
                    Handshake_Hash& hash,
                    const Policy& policy,
                    Callbacks& cb,
@@ -255,8 +252,7 @@ class BOTAN_UNSTABLE_API Server_Hello final : public Handshake_Message
                    const Server_Hello::Settings& settings,
                    const std::string next_protocol);
 
-      explicit Server_Hello(const Protocol_Version& protocol_version,
-                   Handshake_IO& io,
+      explicit Server_Hello(Handshake_IO& io,
                    Handshake_Hash& hash,
                    const Policy& policy,
                    Callbacks& cb,
