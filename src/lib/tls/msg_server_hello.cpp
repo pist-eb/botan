@@ -56,7 +56,7 @@ Server_Hello::Server_Hello(Handshake_IO& io,
                            const std::string& next_protocol) :
    m_impl(
 #if defined(BOTAN_HAS_TLS_13)
-      client_hello.version() == Protocol_Version::TLS_V13
+      client_hello.version() == Protocol_Version::TLS_V13 ?
       TLS_Message_Factory::create<Server_Hello_Impl, Protocol_Version::TLS_V13>(io, hash, policy, cb, rng, reneg_info, client_hello, resumed_session, offer_session_ticket, next_protocol) :
 #endif
       TLS_Message_Factory::create<Server_Hello_Impl, Protocol_Version::TLS_V12>(io, hash, policy, cb, rng, reneg_info, client_hello, resumed_session, offer_session_ticket, next_protocol))
