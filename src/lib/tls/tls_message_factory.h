@@ -54,11 +54,13 @@ struct TLS_Message_Factory::Impl_Version_Trait<Server_Hello_Impl, Protocol_Versi
    using Ver_Impl = Server_Hello_Impl_12;
    };
 
+#if defined(BOTAN_HAS_TLS_13)
 template<>
 struct TLS_Message_Factory::Impl_Version_Trait<Server_Hello_Impl, Protocol_Version::TLS_V13>
    {
    using Ver_Impl = Server_Hello_Impl_12; // TODO using Ver_Impl = Server_Hello_Impl_13
    };
+#endif
 
 template<>
 struct TLS_Message_Factory::Impl_Version_Trait<Client_Hello_Impl, Protocol_Version::TLS_V12>
@@ -66,11 +68,13 @@ struct TLS_Message_Factory::Impl_Version_Trait<Client_Hello_Impl, Protocol_Versi
    using Ver_Impl = Client_Hello_Impl_12;
    };
 
+#if defined(BOTAN_HAS_TLS_13)
 template<>
 struct TLS_Message_Factory::Impl_Version_Trait<Client_Hello_Impl, Protocol_Version::TLS_V13>
    {
    using Ver_Impl = Client_Hello_Impl_12; // TODO using Ver_Impl = Client_Hello_Impl_13
    };
+#endif
 
 template<>
 struct TLS_Message_Factory::Impl_Version_Trait<Certificate_Req_Impl, Protocol_Version::TLS_V12>
@@ -78,11 +82,13 @@ struct TLS_Message_Factory::Impl_Version_Trait<Certificate_Req_Impl, Protocol_Ve
    using Ver_Impl = Certificate_Req_Impl_12;
    };
 
+#if defined(BOTAN_HAS_TLS_13)
 template<>
 struct TLS_Message_Factory::Impl_Version_Trait<Certificate_Req_Impl, Protocol_Version::TLS_V13>
    {
    using Ver_Impl = Certificate_Req_Impl_12; // TODO using Ver_Impl = Certificate_Req_Impl_13
    };
+#endif
 
 template<>
 struct TLS_Message_Factory::Impl_Version_Trait<Certificate_Verify_Impl, Protocol_Version::TLS_V12>
@@ -90,11 +96,13 @@ struct TLS_Message_Factory::Impl_Version_Trait<Certificate_Verify_Impl, Protocol
    using Ver_Impl = Certificate_Verify_Impl_12;
    };
 
+#if defined(BOTAN_HAS_TLS_13)
 template<>
 struct TLS_Message_Factory::Impl_Version_Trait<Certificate_Verify_Impl, Protocol_Version::TLS_V13>
    {
    using Ver_Impl = Certificate_Verify_Impl_12; // TODO  using Ver_Impl = Certificate_Verify_Impl_13
    };
+#endif
 
 template<>
 struct TLS_Message_Factory::Impl_Version_Trait<Certificate_Impl, Protocol_Version::TLS_V12>
@@ -102,11 +110,13 @@ struct TLS_Message_Factory::Impl_Version_Trait<Certificate_Impl, Protocol_Versio
    using Ver_Impl = Certificate_Impl_12;
    };
 
+#if defined(BOTAN_HAS_TLS_13)
 template<>
 struct TLS_Message_Factory::Impl_Version_Trait<Certificate_Impl, Protocol_Version::TLS_V13>
    {
    using Ver_Impl = Certificate_Impl_12; // TODO using Ver_Impl = Certificate_Impl_13
    };
+#endif
 
 template<>
 struct TLS_Message_Factory::Impl_Version_Trait<Finished_Impl, Protocol_Version::TLS_V12>
@@ -114,11 +124,13 @@ struct TLS_Message_Factory::Impl_Version_Trait<Finished_Impl, Protocol_Version::
    using Ver_Impl = Finished_Impl_12;
    };
 
+#if defined(BOTAN_HAS_TLS_13)
 template<>
 struct TLS_Message_Factory::Impl_Version_Trait<Finished_Impl, Protocol_Version::TLS_V13>
    {
    using Ver_Impl = Finished_Impl_12; // TODO using Ver_Impl = Finished_Impl_13
    };
+#endif
 
 }
 }
