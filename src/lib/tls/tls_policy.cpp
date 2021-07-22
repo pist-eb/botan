@@ -574,7 +574,7 @@ std::vector<std::string> Strict_Policy::allowed_key_exchange_methods() const
    }
 
 bool Strict_Policy::allow_tls12()  const { return true;  }
-bool Strict_Policy::allow_tls13()  const { return false; }
+bool Strict_Policy::allow_tls13()  const { return true; }
 bool Strict_Policy::allow_dtls12() const { return true;  }
 
 }

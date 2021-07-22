@@ -940,6 +940,15 @@ class Shim_Policy final : public Botan::TLS::Policy
          return !m_args.flag_set("dtls") && !m_args.flag_set("no-tls12") && allow_version(Botan::TLS::Protocol_Version::TLS_V12);
          }
 
+      bool allow_tls13() const override
+         {
+#if defined(BOTAN_HAS_TLS_13)
+         return !m_args.flag_set("dtls") && !m_args.flag_set("no-tls13") && allow_version(Botan::TLS::Protocol_Version::TLS_V13);
+#else
+         return false;
+#endif
+         }
+
       bool allow_dtls12() const override
          {
          return m_args.flag_set("dtls") && !m_args.flag_set("no-tls12") && allow_version(Botan::TLS::Protocol_Version::DTLS_V12);
