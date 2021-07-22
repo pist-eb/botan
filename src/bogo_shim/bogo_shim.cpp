@@ -942,11 +942,8 @@ class Shim_Policy final : public Botan::TLS::Policy
 
       bool allow_tls13() const override
          {
-#if defined(BOTAN_HAS_TLS_13)
-         return !m_args.flag_set("dtls") && !m_args.flag_set("no-tls13") && allow_version(Botan::TLS::Protocol_Version::TLS_V13);
-#else
+         //TODO: No TLS 1.3 allowed until it is implemented
          return false;
-#endif
          }
 
       bool allow_dtls12() const override
