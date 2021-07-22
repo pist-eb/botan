@@ -63,7 +63,7 @@ std::unique_ptr<Extension> make_extension(TLS_Data_Reader& reader, uint16_t code
       case TLSEXT_SIGNATURE_ALGORITHMS_CERT:
          return std::make_unique<Signature_Algorithms_Cert>(reader, size);
 
-      // TODO: uncomment it. When uncommented, bogo_sim tests start failing ("Alert" test).
+      // TODO: uncomment it. When uncommented, some bogo_sim tests start failing.
       // Reason of fail should be investigated during implementing of Key_Share extension
       // case TLSEXT_KEY_SHARE:
       //    return std::make_unique<Key_Share>(reader, size, from);
@@ -642,21 +642,22 @@ Cookie::Cookie(TLS_Data_Reader& reader,
                Connection_Side /*from*/)
    {
       if (extension_size == 0)
-      {
-         return;
-      }
+         {
+            return;
+         }
 
       const uint16_t len = reader.get_uint16_t();
 
       if (len == 0)
-      {
-         throw Decoding_Error("Cookie length must be at least 1 byte");
-      }
+         {
+            // Based on RFC 8446 4.2.2 len of the Cookie buffer must be at least 1
+            throw Decoding_Error("Cookie length must be at least 1 byte");
+         }
 
       for (auto i = 0u; i < len; ++i)
-      {
-         m_cookie.push_back(reader.get_byte());
-      }
+         {
+            m_cookie.push_back(reader.get_byte());
+         }
    }
 
 std::vector<uint8_t> Cookie::serialize(Connection_Side /*whoami*/) const
@@ -669,9 +670,9 @@ std::vector<uint8_t> Cookie::serialize(Connection_Side /*whoami*/) const
       buf.push_back(get_byte<1>(len));
 
       for (const auto& cookie_byte : m_cookie)
-      {
+         {
          buf.push_back(cookie_byte);
-      }
+         }
 
       return buf;
    }
@@ -691,15 +692,118 @@ std::vector<uint8_t> Signature_Algorithms_Cert::serialize(Connection_Side whoami
       return m_siganture_algorithms.serialize(whoami);
    }
 
+
+
+std::vector<uint8_t> Key_Share_Entry::serialize() const
+   {
+   std::vector<uint8_t> buf;
+   const auto group = static_cast<uint16_t>(m_group);
+   const auto key_exchange_len = static_cast<uint16_t>(m_key_exchange.size());
+
+   buf.reserve(sizeof(m_group) + sizeof(key_exchange_len) + key_exchange_len);
+
+   buf.push_back(get_byte<0>(group));
+   buf.push_back(get_byte<1>(group));
+
+   buf.push_back(get_byte<0>(key_exchange_len));
+   buf.push_back(get_byte<1>(key_exchange_len));
+
+   for (const auto& key_exchange_byte : m_key_exchange)
+      {
+      buf.push_back(key_exchange_byte);
+      }
+
+   return buf;
+   }
+
+Key_Share_ClientHello::Key_Share_ClientHello(TLS_Data_Reader& reader,
+                                             uint16_t /*extension_size*/)
+   {
+   while (reader.has_remaining())
+      {
+      const auto group = reader.get_uint16_t();
+      const auto client_share_len = reader.get_uint16_t();
+      std::vector<uint8_t> client_share;
+      client_share.reserve(client_share_len);
+
+      for (auto i = 0u; i < client_share_len; ++i)
+         {
+            client_share.push_back(reader.get_byte());
+         }
+
+      m_client_shares.emplace_back(static_cast<Named_Group>(group), client_share);
+      }
+   }
+
+Key_Share_ClientHello::~Key_Share_ClientHello() = default;
+
+std::vector<uint8_t> Key_Share_ClientHello::serialize() const
+   {
+   std::vector<uint8_t> buf;
+
+   const uint16_t len = static_cast<uint16_t>(m_client_shares.size());
+
+   buf.push_back(get_byte<0>(len));
+   buf.push_back(get_byte<1>(len));
+
+   for (const auto& client_shares_bytes : m_client_shares)
+      {
+         const auto tmpVect = client_shares_bytes.serialize();
+         buf.insert(buf.end(), tmpVect.begin(), tmpVect.end());
+      }
+
+   return buf;
+   }
+
+Key_Share_HelloRetryRequest::Key_Share_HelloRetryRequest(TLS_Data_Reader& reader,
+                                                         uint16_t /*extension_size*/)
+   {
+   m_selected_group = static_cast<Named_Group>(reader.get_uint16_t());
+   }
+
+Key_Share_HelloRetryRequest::~Key_Share_HelloRetryRequest() = default;
+
+std::vector<uint8_t> Key_Share_HelloRetryRequest::serialize() const
+   {
+   return { get_byte<0>(static_cast<uint16_t>(m_selected_group)),
+            get_byte<1>(static_cast<uint16_t>(m_selected_group)) };
+   }
+
 Key_Share::Key_Share(TLS_Data_Reader& reader,
                      uint16_t extension_size,
                      Connection_Side from)
    {
+
+      if (from == Connection_Side::CLIENT)
+         {
+         m_content = std::make_unique<Key_Share_ClientHello>(reader, extension_size);
+         }
+      //else
    }
 
-std::vector<uint8_t> Key_Share::serialize(Connection_Side /*whoami*/) const
+std::vector<uint8_t> Key_Share::serialize(Connection_Side whoami) const
    {
-      return {};
+      std::vector<uint8_t> buf;
+
+      if (whoami == Connection_Side::CLIENT)
+         {
+            // const uint16_t len = static_cast<uint16_t>(m_cookie.size());
+
+            // buf.push_back(get_byte<0>(len));
+            // buf.push_back(get_byte<1>(len));
+
+            // for (const auto& cookie_byte : m_cookie)
+            //    {
+            //       buf.push_back(cookie_byte);
+            //    }
+         }
+      else if (whoami == Connection_Side::SERVER)
+         {
+            // TODO: how to distinguish here ServerHello from HelloRtryRequest
+
+         }
+
+      return buf;
    }
 }
 

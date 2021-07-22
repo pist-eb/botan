@@ -438,7 +438,7 @@ class BOTAN_UNSTABLE_API Supported_Versions final : public Extension
    };
 
 /**
-* Cookie from RFC 8446
+* Cookie from RFC 8446 4.2.2
 */
 class BOTAN_UNSTABLE_API Cookie final : public Extension
    {
@@ -487,8 +487,74 @@ class BOTAN_UNSTABLE_API Signature_Algorithms_Cert final : public Extension
       const Signature_Algorithms m_siganture_algorithms; 
    };
 
+using Named_Group = Group_Params;
+
 /**
-* Key_Share from RFC 8446
+* KeyShareEntry from RFC 8446 B.3.1
+*/
+struct Key_Share_Entry
+{
+   Named_Group m_group;
+   std::vector<uint8_t> m_key_exchange;
+
+   explicit Key_Share_Entry() = default;
+
+   explicit Key_Share_Entry(Named_Group group, const std::vector<uint8_t>& key_exchange) :
+      m_group(group), m_key_exchange(key_exchange)
+   {}
+
+   std::vector<uint8_t> serialize() const;
+};
+
+struct Key_Share_Content
+   {
+      virtual std::vector<uint8_t> serialize() const = 0;
+      virtual ~Key_Share_Content() = default;
+   };
+
+struct Key_Share_ClientHello final : public Key_Share_Content
+   {
+      explicit Key_Share_ClientHello(TLS_Data_Reader& reader,
+                                     uint16_t extension_size);
+
+      ~Key_Share_ClientHello() override;
+
+      std::vector<uint8_t> serialize() const override;
+
+      std::vector<Key_Share_Entry> m_client_shares;
+   };
+
+struct Key_Share_HelloRetryRequest final : public Key_Share_Content
+   {
+      explicit Key_Share_HelloRetryRequest(TLS_Data_Reader& reader,
+                                           uint16_t extension_size);
+
+      ~Key_Share_HelloRetryRequest() override;
+
+      std::vector<uint8_t> serialize() const override;
+
+      Named_Group m_selected_group;
+   };
+
+struct Key_Share_ServerHello final : public Key_Share_Content
+   {
+      explicit Key_Share_ServerHello(TLS_Data_Reader& /*reader*/,
+                                     uint16_t /*extension_size*/)
+         {
+         }
+
+      ~Key_Share_ServerHello() override = default;
+
+      std::vector<uint8_t> serialize() const override
+         {
+         return {};
+         }
+
+      Key_Share_Entry m_server_share;
+   };
+
+/**
+* Key_Share from RFC 8446 4.2.8
 */
 class BOTAN_UNSTABLE_API Key_Share final : public Extension
    {
@@ -504,9 +570,10 @@ class BOTAN_UNSTABLE_API Key_Share final : public Extension
 
       explicit Key_Share(TLS_Data_Reader& reader,
                          uint16_t extension_size,
-                         Connection_Side from);  // TODO: is from needed?
+                         Connection_Side from);
 
    private:
+      std::unique_ptr<Key_Share_Content> m_content;
    };
 
 /**
