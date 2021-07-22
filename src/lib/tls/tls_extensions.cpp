@@ -61,7 +61,7 @@ std::unique_ptr<Extension> make_extension(TLS_Data_Reader& reader, uint16_t code
          return std::make_unique<Cookie>(reader, size, from);
 
       case TLSEXT_SIGNATURE_ALGORITHMS_CERT:
-         return std::make_unique<Signature_Algorithms_Cert>(reader, size, from);
+         return std::make_unique<Signature_Algorithms_Cert>(reader, size);
 
       // TODO: uncomment it. When uncommented, bogo_sim tests start failing ("Alert" test).
       // Reason of fail should be investigated during implementing of Key_Share extension
@@ -676,15 +676,19 @@ std::vector<uint8_t> Cookie::serialize(Connection_Side /*whoami*/) const
       return buf;
    }
 
-Signature_Algorithms_Cert::Signature_Algorithms_Cert(TLS_Data_Reader& /*reader*/,
-                                                    uint16_t /*extension_size*/,
-                                                    Connection_Side /*from*/)
+Signature_Algorithms_Cert::Signature_Algorithms_Cert(const std::vector<Signature_Scheme>& schemes)
+      : m_siganture_algorithms(schemes)
    {
    }
 
-std::vector<uint8_t> Signature_Algorithms_Cert::serialize(Connection_Side /*whoami*/) const
+Signature_Algorithms_Cert::Signature_Algorithms_Cert(TLS_Data_Reader& reader, uint16_t extension_size)
+   : m_siganture_algorithms(reader, extension_size)
    {
-      return {};
+   }
+
+std::vector<uint8_t> Signature_Algorithms_Cert::serialize(Connection_Side whoami) const
+   {
+      return m_siganture_algorithms.serialize(whoami);
    }
 
 Key_Share::Key_Share(TLS_Data_Reader& reader,

@@ -477,13 +477,14 @@ class BOTAN_UNSTABLE_API Signature_Algorithms_Cert final : public Extension
 
       std::vector<uint8_t> serialize(Connection_Side whoami) const override;
 
-      bool empty() const override { return true; }
+      bool empty() const override { return m_siganture_algorithms.empty(); }
 
-      explicit Signature_Algorithms_Cert(TLS_Data_Reader& reader,
-                                         uint16_t extension_size,
-                                         Connection_Side from); // TODO: is from needed?
+      explicit Signature_Algorithms_Cert(const std::vector<Signature_Scheme>& schemes);
+
+      Signature_Algorithms_Cert(TLS_Data_Reader& reader, uint16_t extension_size);
 
    private:
+      const Signature_Algorithms m_siganture_algorithms; 
    };
 
 /**

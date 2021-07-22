@@ -4,11 +4,11 @@
 
 [cookie]
 Buffer = 00020304
-Expected_Cookie = 0304
+Expected_Content = 0304
 Exception =
 
 Buffer = 000401020304
-Expected_Cookie = 01020304
+Expected_Content = 01020304
 Exception =
 
 Buffer = 00000304

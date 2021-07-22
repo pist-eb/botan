@@ -233,9 +233,9 @@ class TLS_Extension_Parsing_Test final : public Text_Based_Test
    {
    public:
       TLS_Extension_Parsing_Test()
-         : Text_Based_Test("tls_extensions", "Buffer,Protocol,Ciphersuite,AdditionalData,Name,Expected_Versions,Expected_Cookie,Exception") {}
+         : Text_Based_Test("tls_extensions", "Buffer,Protocol,Ciphersuite,AdditionalData,Name,Expected_Content,Exception") {}
 
-      Test::Result run_one_test(const std::string& algo, const VarMap& vars) override
+      Test::Result run_one_test(const std::string& extension, const VarMap& vars) override
          {
          const std::vector<uint8_t> buffer      = vars.get_req_bin("Buffer");
          const std::vector<uint8_t> protocol    = vars.get_opt_bin("Protocol");
@@ -244,13 +244,13 @@ class TLS_Extension_Parsing_Test final : public Text_Based_Test
          const std::string expected_name        = vars.get_opt_str("Name", "");
          const bool is_positive_test            = exception.empty();
 
-         Test::Result result(algo + " parsing");
+         Test::Result result(extension + " parsing");
 
          if(is_positive_test)
             {
             try
                {
-               if(algo == "supported_version")
+               if(extension == "supported_version")
                   {
                      const std::string expected_buffer = Botan::hex_encode(buffer);
                      Botan::TLS::TLS_Data_Reader tls_data_reader("ClientHello", buffer);
@@ -258,29 +258,32 @@ class TLS_Extension_Parsing_Test final : public Text_Based_Test
                         Botan::TLS::Connection_Side::CLIENT);
                      const auto serialized_buffer = supported_versions.serialize(Botan::TLS::Connection_Side::CLIENT);
 
-                     const std::vector<std::vector<uint8_t>> expected_versions = vars.get_req_bin_list("Expected_Versions");
+                     const std::vector<std::vector<uint8_t>> expected_versions = vars.get_req_bin_list("Expected_Content");
                      for (const auto& expected_version : expected_versions)
                      {
-                        result.confirm("Expected_Versions",
+                        result.confirm("Expected_Content",
                            supported_versions.supports(Botan::TLS::Protocol_Version(expected_version[0], expected_version[1])));
                      }
 
                      result.test_eq("supported_version test 1", Botan::hex_encode(serialized_buffer), expected_buffer);
                   }
-               else if (algo == "cookie")
+               else if(extension == "signature_algorithms_cert") {
+                     result.test_eq("signature_algorithms_cert extension test", true, true);
+                  }
+               else if (extension == "cookie")
                   {
                   Botan::TLS::TLS_Data_Reader tls_data_reader("HelloRetryRequest", buffer);
                   Botan::TLS::Cookie cookie(tls_data_reader, buffer.size(),
                         Botan::TLS::Connection_Side::SERVER);
 
                   const auto serialized_buffer = cookie.serialize(Botan::TLS::Connection_Side::SERVER);
-                  const auto expected_cookie = vars.get_req_bin("Expected_Cookie");
+                  const auto expected_cookie = vars.get_req_bin("Expected_Content");
 
                   result.test_eq("Cookie extension test", Botan::hex_encode(expected_cookie), Botan::hex_encode(cookie.get_cookie()));
                   }
                else
                   {
-                  throw Test_Error("Unknown message type " + algo + " in TLS parsing tests");
+                  throw Test_Error("Unknown extension type " + extension + " in TLS parsing tests");
                   }
                result.test_success("Correct parsing");
                }

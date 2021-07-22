@@ -12,12 +12,12 @@
 [supported_version]
 # correct, with session ticket and renegotiation info
 Buffer = 020304
-Expected_Versions = 0304
+Expected_Content = 0304
 Exception =
 
 # test2
 Buffer = 0403040303
-Expected_Versions = 0304, 0303
+Expected_Content = 0304, 0303
 Exception =
 
 
