@@ -303,7 +303,14 @@ bool Policy::allow_client_initiated_renegotiation() const { return false; }
 bool Policy::allow_server_initiated_renegotiation() const { return false; }
 bool Policy::allow_insecure_renegotiation() const { return false; }
 bool Policy::allow_tls12()  const { return true; }
-bool Policy::allow_tls13() const { return false; }
+bool Policy::allow_tls13() const 
+   {
+#if defined(BOTAN_HAS_TLS_13)
+   return true;
+#else
+   return false;
+#endif
+   }
 bool Policy::allow_dtls12() const { return true; }
 bool Policy::include_time_in_hello_random() const { return true; }
 bool Policy::hide_unknown_users() const { return false; }
