@@ -42,7 +42,9 @@ Client::Client(Callbacks& callbacks,
    m_impl(
 #if defined(BOTAN_HAS_TLS_13)
       offer_version == Protocol_Version::TLS_V13 ?
-      TLS_Endpoint_Factory::create<Client_Impl, Protocol_Version::TLS_V13>() :
+      TLS_Endpoint_Factory::create<Client_Impl, Protocol_Version::TLS_V13>(
+         callbacks, session_manager, creds, policy,
+         rng, info, offer_version, next_protocols, io_buf_sz) :
 #endif
       TLS_Endpoint_Factory::create<Client_Impl, Protocol_Version::TLS_V12>(
          callbacks, session_manager, creds, policy,

@@ -11,7 +11,22 @@ namespace Botan {
 
 namespace TLS {
 
-Channel_Impl_13::Channel_Impl_13() = default;
+Channel_Impl_13::Channel_Impl_13(Callbacks& callbacks,
+                                 Session_Manager& session_manager,
+                                 RandomNumberGenerator& rng,
+                                 const Policy& policy,
+                                 bool is_server,
+                                 size_t reserved_io_buffer_size) :
+   m_callbacks(callbacks),
+   m_session_manager(session_manager),
+   m_rng(rng),
+   m_policy(policy),
+   m_is_server(is_server),
+   m_has_been_closed(false)
+   {
+   m_writebuf.reserve(reserved_io_buffer_size);
+   m_readbuf.reserve(reserved_io_buffer_size);
+   }
 
 Channel_Impl_13::~Channel_Impl_13() = default;
 
@@ -46,12 +61,12 @@ void Channel_Impl_13::send_alert(const Alert& alert)
 
 bool Channel_Impl_13::is_active() const
    {
-   return false;
+   return !is_closed();
    }
 
 bool Channel_Impl_13::is_closed() const
    {
-   return true;
+   return m_has_been_closed;
    }
 
 std::vector<X509_Certificate> Channel_Impl_13::peer_cert_chain() const

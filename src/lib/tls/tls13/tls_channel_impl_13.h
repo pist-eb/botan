@@ -20,7 +20,25 @@ namespace TLS {
 class Channel_Impl_13 : public Channel_Impl
    {
    public:
-      explicit Channel_Impl_13();
+      /**
+      * Set up a new TLS 1.3 session
+      *
+      * @param callbacks contains a set of callback function references
+      *        required by the TLS endpoint.
+      * @param session_manager manages session state
+      * @param rng a random number generator
+      * @param policy specifies other connection policy information
+      * @param is_server whether this is a server session or not
+      * @param io_buf_sz This many bytes of memory will
+      *        be preallocated for the read and write buffers. Smaller
+      *        values just mean reallocations and copies are more likely.
+      */
+      explicit Channel_Impl_13(Callbacks& callbacks,
+                               Session_Manager& session_manager,
+                               RandomNumberGenerator& rng,
+                               const Policy& policy,
+                               bool is_server,
+                               size_t io_buf_sz = Botan::TLS::Channel::IO_BUF_DEFAULT_SIZE);
 
       explicit Channel_Impl_13(const Channel_Impl_13&) = delete;
 
@@ -120,6 +138,23 @@ class Channel_Impl_13 : public Channel_Impl
 
    protected:
       Handshake_State& create_handshake_state(Protocol_Version version) override;
+
+   private:
+      /* callbacks */
+      Callbacks& m_callbacks;
+
+      /* external state */
+      Session_Manager& m_session_manager;
+      RandomNumberGenerator& m_rng;
+      const Policy& m_policy;
+
+      const bool m_is_server;
+
+      /* I/O buffers */
+      secure_vector<uint8_t> m_writebuf;
+      secure_vector<uint8_t> m_readbuf;
+
+      bool m_has_been_closed;
    };
 
 }
