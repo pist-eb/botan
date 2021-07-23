@@ -3,7 +3,7 @@
 #     - Signature_algorithms_cert content (vector of Signature_Scheme)
 
 [signature_algorithms_cert]
-# correct extension content with only one siganture scheme 
+# correct extension content with only one signature scheme
 Buffer = 00020401
 Expected_Content = 0401
 Exception =
@@ -15,7 +15,7 @@ Exception =
 
 # incorrect extension missing content
 Buffer = 000E0401
-Exception = "Bad encoding on signature algorithms extension""
+Exception = "Bad encoding on signature algorithms extension"
 
 # incorrect extension content size 0
 Buffer = 00000304
