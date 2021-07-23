@@ -475,6 +475,8 @@ class BOTAN_UNSTABLE_API Signature_Algorithms_Cert final : public Extension
 
       Handshake_Extension_Type type() const override { return static_type(); }
 
+      const std::vector<Signature_Scheme>& supported_schemes() const { return m_siganture_algorithms.supported_schemes(); }
+
       std::vector<uint8_t> serialize(Connection_Side whoami) const override;
 
       bool empty() const override { return m_siganture_algorithms.empty(); }

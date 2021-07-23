@@ -267,8 +267,29 @@ class TLS_Extension_Parsing_Test final : public Text_Based_Test
 
                      result.test_eq("supported_version test 1", Botan::hex_encode(serialized_buffer), expected_buffer);
                   }
-               else if(extension == "signature_algorithms_cert") {
-                     result.test_eq("signature_algorithms_cert extension test", true, true);
+               else if(extension == "signature_algorithms_cert")
+                  {
+                     Botan::TLS::TLS_Data_Reader tls_data_reader("ClientHello", buffer);
+                     Botan::TLS::Signature_Algorithms_Cert sig_algo_cert (tls_data_reader, buffer.size());
+
+                     const auto serialized_buffer = sig_algo_cert.serialize(Botan::TLS::Connection_Side::CLIENT);
+                     const auto expected_content = vars.get_req_bin("Expected_Content");
+
+                     result.confirm("signature_algorithms_cert extension - size check",
+                        sig_algo_cert.supported_schemes().size() * 2 == expected_content.size());
+
+                     auto offset = 0u;
+                     for (const auto& sig_scheme : sig_algo_cert.supported_schemes()) {
+
+                        const auto expected_sig_scheme = Botan::make_uint16(expected_content.at(offset), expected_content.at(offset+1));
+                        
+                        result.confirm("signature_algorithms_cert extension - sig scheme check",
+                           static_cast<Botan::TLS::Signature_Scheme>(expected_sig_scheme) == sig_scheme);
+                        
+                        offset += 2;
+                     }
+
+                     result.test_eq("signature_algorithms_cert extension - serialization test", serialized_buffer, buffer);
                   }
                else if (extension == "cookie")
                   {
