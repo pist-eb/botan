@@ -14,6 +14,10 @@ namespace Botan {
 
 namespace TLS {
 
+class Connection_Sequence_Numbers;
+class Connection_Cipher_State;
+class Handshake_State;
+
 /**
 * Generic interface for TLSv.12 endpoint
 */
@@ -139,6 +143,27 @@ class Channel_Impl_13 : public Channel_Impl
    protected:
       Handshake_State& create_handshake_state(Protocol_Version version) override;
 
+      Callbacks& callbacks() const { return m_callbacks; }
+      Session_Manager& session_manager() { return m_session_manager; }
+      RandomNumberGenerator& rng() { return m_rng; }
+      const Policy& policy() const { return m_policy; }
+
+   private:
+      const Handshake_State* handshake_state() const { return m_handshake_state.get(); }
+
+      void send_record(uint8_t record_type, const std::vector<uint8_t>& record);
+
+      void send_record_array(uint16_t epoch, uint8_t record_type,
+                             const uint8_t input[], size_t length);
+
+      void write_record(Connection_Cipher_State* cipher_state,
+                        uint16_t epoch, uint8_t type, const uint8_t input[], size_t length);
+
+      Connection_Sequence_Numbers& sequence_numbers() const;
+
+      std::shared_ptr<Connection_Cipher_State> read_cipher_state_epoch(uint16_t epoch) const;
+      std::shared_ptr<Connection_Cipher_State> write_cipher_state_epoch(uint16_t epoch) const;
+
    private:
       /* callbacks */
       Callbacks& m_callbacks;
@@ -147,6 +172,16 @@ class Channel_Impl_13 : public Channel_Impl
       Session_Manager& m_session_manager;
       RandomNumberGenerator& m_rng;
       const Policy& m_policy;
+
+      /* sequence number state */
+      std::unique_ptr<Connection_Sequence_Numbers> m_sequence_numbers;
+
+      /* handshake state */
+      std::unique_ptr<Handshake_State> m_handshake_state;
+
+      /* cipher states for each epoch */
+      std::map<uint16_t, std::shared_ptr<Connection_Cipher_State>> m_write_cipher_states;
+      std::map<uint16_t, std::shared_ptr<Connection_Cipher_State>> m_read_cipher_states;
 
       const bool m_is_server;
 
