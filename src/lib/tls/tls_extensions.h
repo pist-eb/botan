@@ -24,8 +24,8 @@ namespace Botan {
 
 namespace TLS {
 
+class Key_Share_Content;
 class Policy;
-
 class TLS_Data_Reader;
 
 // This will become an enum class in a future major release
@@ -486,7 +486,7 @@ class BOTAN_UNSTABLE_API Signature_Algorithms_Cert final : public Extension
       Signature_Algorithms_Cert(TLS_Data_Reader& reader, uint16_t extension_size);
 
    private:
-      const Signature_Algorithms m_siganture_algorithms; 
+      const Signature_Algorithms m_siganture_algorithms;
    };
 
 using Named_Group = Group_Params;
@@ -494,65 +494,22 @@ using Named_Group = Group_Params;
 /**
 * KeyShareEntry from RFC 8446 B.3.1
 */
-struct Key_Share_Entry
-{
-   Named_Group m_group;
-   std::vector<uint8_t> m_key_exchange;
-
-   explicit Key_Share_Entry() = default;
-
-   explicit Key_Share_Entry(Named_Group group, const std::vector<uint8_t>& key_exchange) :
-      m_group(group), m_key_exchange(key_exchange)
-   {}
-
-   std::vector<uint8_t> serialize() const;
-};
-
-struct Key_Share_Content
+class Key_Share_Entry
    {
-      virtual std::vector<uint8_t> serialize() const = 0;
-      virtual ~Key_Share_Content() = default;
-   };
+   public:
+      explicit Key_Share_Entry() = default;
 
-struct Key_Share_ClientHello final : public Key_Share_Content
-   {
-      explicit Key_Share_ClientHello(TLS_Data_Reader& reader,
-                                     uint16_t extension_size);
+      explicit Key_Share_Entry(Named_Group group, const std::vector<uint8_t>& key_exchange) :
+         m_group(group), m_key_exchange(key_exchange)
+      {}
 
-      ~Key_Share_ClientHello() override;
+      bool empty() const;
+      size_t size() const;
+      std::vector<uint8_t> serialize() const;
 
-      std::vector<uint8_t> serialize() const override;
-
-      std::vector<Key_Share_Entry> m_client_shares;
-   };
-
-struct Key_Share_HelloRetryRequest final : public Key_Share_Content
-   {
-      explicit Key_Share_HelloRetryRequest(TLS_Data_Reader& reader,
-                                           uint16_t extension_size);
-
-      ~Key_Share_HelloRetryRequest() override;
-
-      std::vector<uint8_t> serialize() const override;
-
-      Named_Group m_selected_group;
-   };
-
-struct Key_Share_ServerHello final : public Key_Share_Content
-   {
-      explicit Key_Share_ServerHello(TLS_Data_Reader& /*reader*/,
-                                     uint16_t /*extension_size*/)
-         {
-         }
-
-      ~Key_Share_ServerHello() override = default;
-
-      std::vector<uint8_t> serialize() const override
-         {
-         return {};
-         }
-
-      Key_Share_Entry m_server_share;
+   private:
+      Named_Group m_group;
+      std::vector<uint8_t> m_key_exchange;
    };
 
 /**
@@ -568,11 +525,20 @@ class BOTAN_UNSTABLE_API Key_Share final : public Extension
 
       std::vector<uint8_t> serialize(Connection_Side whoami) const override;
 
-      bool empty() const override { return true; }
+      bool empty() const override;
 
       explicit Key_Share(TLS_Data_Reader& reader,
                          uint16_t extension_size,
                          Connection_Side from);
+
+      // constuctor used for ClientHello msg
+      explicit Key_Share(const std::vector<Key_Share_Entry>& client_shares);
+
+      // constuctor used for ServerHello msg
+      explicit Key_Share(const Key_Share_Entry& server_share);
+
+      // constuctor used for HelloRetryRequest msg
+      explicit Key_Share(Named_Group selected_group);
 
    private:
       std::unique_ptr<Key_Share_Content> m_content;
