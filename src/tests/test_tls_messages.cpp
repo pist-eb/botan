@@ -280,7 +280,7 @@ class TLS_Extension_Parsing_Test final : public Text_Based_Test
 
                      std::vector<Botan::TLS::Named_Group> named_groupes;
                      std::merge(dh_groups.begin(), dh_groups.end(), ec_groups.begin(), ec_groups.end(), std::back_inserter(named_groupes));
-                     
+
                      result.confirm("supported_groups extension - size check", (named_groupes.size() * 2) == expected_content.size());
 
                      for(auto i = 0u; i < expected_content.size(); i+=2) {
@@ -310,10 +310,10 @@ class TLS_Extension_Parsing_Test final : public Text_Based_Test
                      for (const auto& sig_scheme : sig_algo_cert.supported_schemes()) {
 
                         const auto expected_sig_scheme = Botan::make_uint16(expected_content.at(offset), expected_content.at(offset+1));
-                        
+
                         result.confirm("signature_algorithms_cert extension - sig scheme check",
                            static_cast<Botan::TLS::Signature_Scheme>(expected_sig_scheme) == sig_scheme);
-                        
+
                         offset += 2;
                      }
 
@@ -329,6 +329,36 @@ class TLS_Extension_Parsing_Test final : public Text_Based_Test
                   const auto expected_cookie = vars.get_req_bin("Expected_Content");
 
                   result.test_eq("Cookie extension test", Botan::hex_encode(expected_cookie), Botan::hex_encode(cookie.get_cookie()));
+                  }
+               else if (extension == "key_share_HRR")
+                  {
+                  Botan::TLS::TLS_Data_Reader tls_data_reader("HelloRetryRequest", buffer);
+                  Botan::TLS::Key_Share_HelloRetryRequest key_share(tls_data_reader, buffer.size());
+
+                  const auto serialized_buffer = key_share.serialize();
+                  const auto expected_key_share = vars.get_req_bin("Expected_Content");
+
+                  result.test_eq("key_share_HRR test", Botan::hex_encode(serialized_buffer), Botan::hex_encode(expected_key_share));
+                  }
+               else if (extension == "key_share_SH")
+                  {
+                  Botan::TLS::TLS_Data_Reader tls_data_reader("ServerHello", buffer);
+                  Botan::TLS::Key_Share key_share(tls_data_reader, buffer.size(), Botan::TLS::Connection_Side::SERVER);
+
+                  const auto serialized_buffer = key_share.serialize(Botan::TLS::Connection_Side::CLIENT);
+                  const auto expected_key_share = vars.get_req_bin("Expected_Content");
+
+                  result.test_eq("key_share_SH test", Botan::hex_encode(serialized_buffer), Botan::hex_encode(expected_key_share));
+                  }
+               else if (extension == "key_share_CH")
+                  {
+                  Botan::TLS::TLS_Data_Reader tls_data_reader("ClientHello", buffer);
+                  Botan::TLS::Key_Share key_share(tls_data_reader, buffer.size(), Botan::TLS::Connection_Side::CLIENT);
+
+                  const auto serialized_buffer = key_share.serialize(Botan::TLS::Connection_Side::SERVER);
+                  const auto expected_key_share = vars.get_req_bin("Expected_Content");
+
+                  result.test_eq("key_share_CH test", Botan::hex_encode(serialized_buffer), Botan::hex_encode(expected_key_share));
                   }
                else
                   {

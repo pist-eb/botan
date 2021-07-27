@@ -1,0 +1,13 @@
+# KeyShareClientHello (variant of KeyShare extension) consists of:
+#     - Client Key Share Length (2 bytes)
+#     - vector of KeyShareEntry:
+#           - Group (2 bytes)
+#           - Key Exchange Length (2 bytes)
+#           - Key Exchange (vector of bytes[Key Exchange Length])
+
+[key_share_CH]
+# correct extension content, one KeyShareEntry
+Buffer = 0024001d00203d5d78dc1ec22555c34347869078ba092d75d93093f38a58d419595d171d0a3b
+Expected_Content = 0024001d00203d5d78dc1ec22555c34347869078ba092d75d93093f38a58d419595d171d0a3b
+Exception =
+

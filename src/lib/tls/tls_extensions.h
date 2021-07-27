@@ -499,17 +499,79 @@ class Key_Share_Entry
    public:
       explicit Key_Share_Entry() = default;
 
-      explicit Key_Share_Entry(Named_Group group, const std::vector<uint8_t>& key_exchange) :
-         m_group(group), m_key_exchange(key_exchange)
-      {}
+      explicit Key_Share_Entry(Named_Group group, const std::vector<uint8_t>& key_exchange);
 
       bool empty() const;
+
       size_t size() const;
+
       std::vector<uint8_t> serialize() const;
 
    private:
       Named_Group m_group;
       std::vector<uint8_t> m_key_exchange;
+   };
+
+class Key_Share_Content
+   {
+   public:
+      virtual std::vector<uint8_t> serialize() const = 0;
+      virtual bool empty() const = 0;
+      virtual ~Key_Share_Content() = default;
+   };
+
+class Key_Share_ClientHello final : public Key_Share_Content
+   {
+   public:
+      explicit Key_Share_ClientHello(TLS_Data_Reader& reader,
+                                     uint16_t extension_size);
+
+      explicit Key_Share_ClientHello(const std::vector<Key_Share_Entry>& client_shares);
+
+      ~Key_Share_ClientHello() override;
+
+      std::vector<uint8_t> serialize() const override;
+
+      bool empty() const override;
+
+   private:
+      std::vector<Key_Share_Entry> m_client_shares;
+   };
+
+class Key_Share_ServerHello final : public Key_Share_Content
+   {
+   public:
+      explicit Key_Share_ServerHello(TLS_Data_Reader& reader,
+                                     uint16_t extension_size);
+
+      explicit Key_Share_ServerHello(const Key_Share_Entry& server_share);
+
+      ~Key_Share_ServerHello() override;
+
+      std::vector<uint8_t> serialize() const override;
+
+      bool empty() const override;
+
+   private:
+      Key_Share_Entry m_server_share;
+   };
+
+class Key_Share_HelloRetryRequest final : public Key_Share_Content
+   {
+   public:
+      explicit Key_Share_HelloRetryRequest(TLS_Data_Reader& reader,
+                                           uint16_t extension_size);
+
+      explicit Key_Share_HelloRetryRequest(Named_Group selected_group);
+
+      ~Key_Share_HelloRetryRequest() override;
+
+      std::vector<uint8_t> serialize() const override;
+
+      bool empty() const override;
+
+   private:
+      Named_Group m_selected_group;
    };
 
 /**

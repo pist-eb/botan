@@ -657,6 +657,11 @@ Cookie::Cookie(TLS_Data_Reader& reader,
       throw Decoding_Error("Cookie length must be at least 1 byte");
       }
 
+   if (len > reader.remaining_bytes())
+      {
+      throw Decoding_Error("Not enough bytes in the buffer to decode Cookie");
+      }
+
    for (auto i = 0u; i < len; ++i)
       {
       m_cookie.push_back(reader.get_byte());
@@ -695,69 +700,14 @@ std::vector<uint8_t> Signature_Algorithms_Cert::serialize(Connection_Side whoami
       return m_siganture_algorithms.serialize(whoami);
    }
 
-// Hiding internal classes needed by Key_Share extension in cpp file
-class Key_Share_Content
+Key_Share_Entry::Key_Share_Entry(Named_Group group, const std::vector<uint8_t>& key_exchange) :
+   m_group(group), m_key_exchange(key_exchange)
    {
-   public:
-      virtual std::vector<uint8_t> serialize() const = 0;
-      virtual bool empty() const = 0;
-      virtual ~Key_Share_Content() = default;
-   };
-
-struct Key_Share_ClientHello final : public Key_Share_Content
-   {
-   public:
-      explicit Key_Share_ClientHello(TLS_Data_Reader& reader,
-                                     uint16_t extension_size);
-
-      explicit Key_Share_ClientHello(const std::vector<Key_Share_Entry>& client_shares);
-
-      ~Key_Share_ClientHello() override;
-
-      std::vector<uint8_t> serialize() const override;
-
-      bool empty() const override;
-
-   private:
-      std::vector<Key_Share_Entry> m_client_shares;
-   };
-
-class Key_Share_HelloRetryRequest final : public Key_Share_Content
-   {
-   public:
-      explicit Key_Share_HelloRetryRequest(TLS_Data_Reader& reader,
-                                           uint16_t extension_size);
-
-      explicit Key_Share_HelloRetryRequest(Named_Group selected_group);
-
-      ~Key_Share_HelloRetryRequest() override;
-
-      std::vector<uint8_t> serialize() const override;
-
-      bool empty() const override;
-
-   private:
-      Named_Group m_selected_group;
-   };
-
-class Key_Share_ServerHello final : public Key_Share_Content
-   {
-   public:
-      explicit Key_Share_ServerHello(TLS_Data_Reader& reader,
-                                     uint16_t extension_size);
-
-      explicit Key_Share_ServerHello(const Key_Share_Entry& server_share);
-
-      ~Key_Share_ServerHello() override;
-
-      std::vector<uint8_t> serialize() const override;
-
-      bool empty() const override;
-
-   private:
-      Key_Share_Entry m_server_share;
-   };
-
+      if (m_key_exchange.empty())
+      {
+      throw Decoding_Error("Size of key_exchange in KeyShareEntry must be at least 1 byte.");
+      }
+   }
 
 bool Key_Share_Entry::empty() const
    {
@@ -801,6 +751,11 @@ Key_Share_ClientHello::Key_Share_ClientHello(TLS_Data_Reader& reader,
       {
       const auto group = reader.get_uint16_t();
       const auto key_exchange_length = reader.get_uint16_t();
+
+      if (key_exchange_length > reader.remaining_bytes())
+         {
+         throw Decoding_Error("Not enough bytes in the buffer to decode KeyShare (ClientHello) extension");
+         }
 
       std::vector<uint8_t> client_share;
       client_share.reserve(key_exchange_length);
@@ -858,9 +813,16 @@ bool Key_Share_ClientHello::empty() const
 Key_Share_HelloRetryRequest::Key_Share_HelloRetryRequest(TLS_Data_Reader& reader,
                                                          uint16_t extension_size)
    {
-   if (extension_size != 2)
+   constexpr auto sizeof_uint16_t = sizeof(uint16_t);
+
+   if (extension_size != sizeof_uint16_t)
       {
       throw Decoding_Error("Size of KeyShare extension in HelloRetryRequest must be 2 bytes");
+      }
+
+   if (reader.remaining_bytes() < sizeof_uint16_t)
+      {
+      throw Decoding_Error("Not enough bytes in the buffer to decode KeyShare (HelloRetryRequest) extension");
       }
 
    m_selected_group = static_cast<Named_Group>(reader.get_uint16_t());
@@ -886,18 +848,18 @@ bool Key_Share_HelloRetryRequest::empty() const
    }
 
 Key_Share_ServerHello::Key_Share_ServerHello(TLS_Data_Reader& reader,
-                                             uint16_t extension_size)
+                                             uint16_t /*extension_size*/)
    {
-   if (extension_size > reader.remaining_bytes())
-      {
-      throw Decoding_Error("Not enough bytes in the buffer to deserialize KeyShare extension");
-      }
-
    const auto group = reader.get_uint16_t();
    const auto key_exchange_length = reader.get_uint16_t();
 
    std::vector<uint8_t> server_share;
    server_share.reserve(key_exchange_length);
+
+   if (key_exchange_length > reader.remaining_bytes())
+      {
+      throw Decoding_Error("Not enough bytes in the buffer to decode KeyShare (ServerHello) extension");
+      }
 
    for (auto i = 0u; i < key_exchange_length; ++i)
       {
