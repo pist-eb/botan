@@ -33,10 +33,16 @@ enum Connection_Side { CLIENT = 1, SERVER = 2 };
 
 // This will become an enum class in a future major release
 enum Record_Type {
+#if defined(BOTAN_HAS_TLS_13)
+   INVALID            = 0,  // RFC 8446
+#endif
    CHANGE_CIPHER_SPEC = 20,
    ALERT              = 21,
    HANDSHAKE          = 22,
    APPLICATION_DATA   = 23,
+#if defined(BOTAN_HAS_TLS_13)
+   HEARTBEAT          = 24, // RFC 6520
+#endif
 
    NO_RECORD          = 256
 };
