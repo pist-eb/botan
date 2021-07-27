@@ -267,6 +267,34 @@ class TLS_Extension_Parsing_Test final : public Text_Based_Test
 
                      result.test_eq("supported_version test 1", Botan::hex_encode(serialized_buffer), expected_buffer);
                   }
+               else if(extension == "supported_groups")
+                  {
+                     Botan::TLS::TLS_Data_Reader tls_data_reader("ClientHello", buffer);
+                     Botan::TLS::Supported_Groups supp_groups_ext (tls_data_reader, buffer.size());
+
+                     const auto serialized_buffer = supp_groups_ext.serialize(Botan::TLS::Connection_Side::CLIENT);
+                     const auto expected_content = vars.get_req_bin("Expected_Content");
+
+                     const auto dh_groups = supp_groups_ext.dh_groups();
+                     const auto ec_groups = supp_groups_ext.ec_groups();
+
+                     std::vector<Botan::TLS::Named_Group> named_groupes;
+                     std::merge(dh_groups.begin(), dh_groups.end(), ec_groups.begin(), ec_groups.end(), std::back_inserter(named_groupes));
+                     
+                     result.confirm("supported_groups extension - size check", (named_groupes.size() * 2) == expected_content.size());
+
+                     for(auto i = 0u; i < expected_content.size(); i+=2) {
+
+                        const auto expected_named_group = Botan::make_uint16(expected_content.at(i), expected_content.at(i+1));
+
+                        result.confirm("signature_algorithms_cert extension - named group check",
+                           std::any_of(named_groupes.cbegin(), named_groupes.cend(), [&expected_named_group](const Botan::TLS::Named_Group& named_group){
+                              return static_cast<Botan::TLS::Named_Group>(expected_named_group) == named_group;
+                           }));
+                     }
+
+                     result.test_eq("supported_groups extension - serialization test", serialized_buffer, buffer);
+                  }
                else if(extension == "signature_algorithms_cert")
                   {
                      Botan::TLS::TLS_Data_Reader tls_data_reader("ClientHello", buffer);
