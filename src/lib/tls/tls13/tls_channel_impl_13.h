@@ -164,6 +164,8 @@ class Channel_Impl_13 : public Channel_Impl
       std::shared_ptr<Connection_Cipher_State> read_cipher_state_epoch(uint16_t epoch) const;
       std::shared_ptr<Connection_Cipher_State> write_cipher_state_epoch(uint16_t epoch) const;
 
+      void process_alert(const secure_vector<uint8_t>& record);
+
    private:
       /* callbacks */
       Callbacks& m_callbacks;
@@ -188,6 +190,7 @@ class Channel_Impl_13 : public Channel_Impl
       /* I/O buffers */
       secure_vector<uint8_t> m_writebuf;
       secure_vector<uint8_t> m_readbuf;
+      secure_vector<uint8_t> m_record_buf;
 
       bool m_has_been_closed;
    };

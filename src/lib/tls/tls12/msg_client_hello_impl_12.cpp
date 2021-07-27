@@ -137,7 +137,7 @@ Client_Hello_Impl_12::Client_Hello_Impl_12(Handshake_IO& io,
 Client_Hello_Impl_12::Client_Hello_Impl_12(const std::vector<uint8_t>& buf) :
    Client_Hello_Impl(buf)
    {
-   // Common implementation is enough, as received Client_Hello shall be read correctly independent on the version
+   // Common implementation is enough, as received Client_Hello shall be read correctly independent of the version
    }
 
 }

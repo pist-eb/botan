@@ -41,6 +41,14 @@ Client_Hello_Impl_13::Client_Hello_Impl_13(Handshake_IO& io,
    // Always use TLS 1.2 as a legacy version
    m_version = Protocol_Version::TLS_V12;
 
+   //TODO: Hardcoded TLS 1.3 ciphersuites, to be added via the policy
+   m_suites.push_back(0x1301);   // TLS_AES_128_GCM_SHA256
+   m_suites.push_back(0x1302);   // TLS_AES_256_GCM_SHA384
+   m_suites.push_back(0x1303);   // TLS_CHACHA20_POLY1305_SHA256
+
+   //TODO: Compatibility mode, does not need to be random
+   m_session_id = make_hello_random(rng, policy);
+
    /*
    * Place all empty extensions in front to avoid a bug in some systems
    * which reject hellos when the last extension in the list is empty.
@@ -67,8 +75,7 @@ Client_Hello_Impl_13::Client_Hello_Impl_13(Handshake_IO& io,
                            const std::vector<std::string>& next_protocols) :
    Client_Hello_Impl(io, hash, policy, cb, rng, reneg_info, session, next_protocols)
    {
-   // Always use TLS 1.2 as a legacy version
-   m_version = Protocol_Version::TLS_V12;
+   //TODO: session resumption checks
 
    /*
    * Place all empty extensions in front to avoid a bug in some systems
@@ -86,7 +93,7 @@ Client_Hello_Impl_13::Client_Hello_Impl_13(Handshake_IO& io,
 Client_Hello_Impl_13::Client_Hello_Impl_13(const std::vector<uint8_t>& buf) :
    Client_Hello_Impl(buf)
    {
-   // Common implementation is enough, as received Client_Hello shall be read correctly independent on the version
+   // Common implementation is enough, as received Client_Hello shall be read correctly independent of the version
    }
 
 }
