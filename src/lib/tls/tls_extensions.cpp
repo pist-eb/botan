@@ -572,6 +572,7 @@ std::vector<uint8_t> Supported_Versions::serialize(Connection_Side whoami) const
    return buf;
    }
 
+
 Supported_Versions::Supported_Versions(Protocol_Version offer, const Policy& policy)
    {
    if(offer.is_datagram_protocol())
@@ -581,6 +582,10 @@ Supported_Versions::Supported_Versions(Protocol_Version offer, const Policy& pol
       }
    else
       {
+#if defined(BOTAN_HAS_TLS_13)
+      if(offer >= Protocol_Version::TLS_V13 && policy.allow_tls13())
+         m_versions.push_back(Protocol_Version::TLS_V13);
+#endif
       if(offer >= Protocol_Version::TLS_V12 && policy.allow_tls12())
          m_versions.push_back(Protocol_Version::TLS_V12);
       }

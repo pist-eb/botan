@@ -96,7 +96,7 @@ class TLS_Client final : public Command, public Botan::TLS::Callbacks
          const std::vector<std::string> protocols_to_offer = Command::split_on(next_protos, ',');
 
          Botan::TLS::Protocol_Version version =
-            use_tcp ? Botan::TLS::Protocol_Version::TLS_V12 : Botan::TLS::Protocol_Version::DTLS_V12;
+            use_tcp ? Botan::TLS::Protocol_Version::TLS_V13 : Botan::TLS::Protocol_Version::DTLS_V12;
 
          if(!policy)
             {

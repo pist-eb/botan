@@ -27,6 +27,10 @@ Channel_Impl_13::Channel_Impl_13(Callbacks& callbacks,
    m_is_server(is_server),
    m_has_been_closed(false)
    {
+   /* epoch 0 is plaintext, thus null cipher state */
+   m_write_cipher_states[0] = nullptr;
+   m_read_cipher_states[0] = nullptr;
+
    m_writebuf.reserve(reserved_io_buffer_size);
    m_readbuf.reserve(reserved_io_buffer_size);
    }

@@ -72,7 +72,7 @@ struct TLS_Message_Factory::Impl_Version_Trait<Client_Hello_Impl, Protocol_Versi
 template<>
 struct TLS_Message_Factory::Impl_Version_Trait<Client_Hello_Impl, Protocol_Version::TLS_V13>
    {
-   using Ver_Impl = Client_Hello_Impl_12; // TODO using Ver_Impl = Client_Hello_Impl_13
+   using Ver_Impl = Client_Hello_Impl_13;
    };
 #endif
 
