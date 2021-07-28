@@ -15,12 +15,12 @@ Exception =
 
 # incorrect extension wrong length
 Buffer = 00040017
-Exception = "Inconsistent length field in supported groups list"
+Exception = Inconsistent length field in supported groups list
 
 # incorrect extension content size 0
 Buffer = 00000017
-Exception = "Inconsistent length field in supported groups list"
+Exception = Inconsistent length field in supported groups list
 
 # incorrect extension odd bytes number
 Buffer = 0003001700
-Exception = "Supported groups list of strange size"
+Exception = Supported groups list of strange size

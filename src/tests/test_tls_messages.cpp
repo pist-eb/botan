@@ -374,7 +374,7 @@ class TLS_Extension_Parsing_Test final : public Text_Based_Test
          else
             {
             }
-         //result.confirm("test string", false, true);
+
          return result;
          }
 

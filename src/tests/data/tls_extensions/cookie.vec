@@ -12,4 +12,4 @@ Expected_Content = 01020304
 Exception =
 
 Buffer = 00000304
-Exception = "Cookie length must be bigger than 0"
+Exception = Cookie length must be bigger than 0

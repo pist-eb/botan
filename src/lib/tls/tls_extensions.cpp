@@ -11,10 +11,6 @@
 #include <botan/tls_exceptn.h>
 #include <botan/tls_policy.h>
 
-//TODO: to be removed
-#include <iostream>
-#include <botan/hex.h>
-
 
 namespace Botan {
 
@@ -818,11 +814,6 @@ Key_Share_HelloRetryRequest::Key_Share_HelloRetryRequest(TLS_Data_Reader& reader
    if (extension_size != sizeof_uint16_t)
       {
       throw Decoding_Error("Size of KeyShare extension in HelloRetryRequest must be 2 bytes");
-      }
-
-   if (reader.remaining_bytes() < sizeof_uint16_t)
-      {
-      throw Decoding_Error("Not enough bytes in the buffer to decode KeyShare (HelloRetryRequest) extension");
       }
 
    m_selected_group = static_cast<Named_Group>(reader.get_uint16_t());

@@ -9,4 +9,4 @@ Exception =
 
 # incorrect extension content (3 bytes instead of 2)
 Buffer = 001877
-Exception = "Size of KeyShare extension in HelloRetryRequest must be 2 bytes"
+Exception = Size of KeyShare extension in HelloRetryRequest must be 2 bytes
