@@ -465,8 +465,7 @@ class BOTAN_UNSTABLE_API Cookie final : public Extension
       explicit Cookie(const std::vector<uint8_t>& cookie);
 
       explicit Cookie(TLS_Data_Reader& reader,
-                      uint16_t extension_size,
-                      Connection_Side from); // TODO: is from needed?
+                      uint16_t extension_size);
 
    private:
       std::vector<uint8_t> m_cookie;

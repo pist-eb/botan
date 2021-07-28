@@ -13,3 +13,6 @@ Exception =
 
 Buffer = 00000304
 Exception = Cookie length must be bigger than 0
+
+Buffer = 000203
+Exception = Not enough bytes in the buffer to decode Cookie

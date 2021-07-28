@@ -60,7 +60,7 @@ std::unique_ptr<Extension> make_extension(TLS_Data_Reader& reader, uint16_t code
 
 #if defined(BOTAN_HAS_TLS_13)
       case TLSEXT_COOKIE:
-         return std::make_unique<Cookie>(reader, size, from);
+         return std::make_unique<Cookie>(reader, size);
 
       case TLSEXT_SIGNATURE_ALGORITHMS_CERT:
          return std::make_unique<Signature_Algorithms_Cert>(reader, size);
@@ -640,8 +640,7 @@ Cookie::Cookie(const std::vector<uint8_t>& cookie) :
    }
 
 Cookie::Cookie(TLS_Data_Reader& reader,
-               uint16_t extension_size,
-               Connection_Side /*from*/)
+               uint16_t extension_size)
    {
    if (extension_size == 0)
       {

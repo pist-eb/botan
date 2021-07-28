@@ -324,8 +324,7 @@ class TLS_Extension_Parsing_Test final : public Text_Based_Test
                else if (extension == "cookie")
                   {
                   Botan::TLS::TLS_Data_Reader tls_data_reader("HelloRetryRequest", buffer);
-                  Botan::TLS::Cookie cookie(tls_data_reader, buffer.size(),
-                        Botan::TLS::Connection_Side::SERVER);
+                  Botan::TLS::Cookie cookie(tls_data_reader, buffer.size());
 
                   const auto serialized_buffer = cookie.serialize(Botan::TLS::Connection_Side::SERVER);
                   const auto expected_cookie = vars.get_req_bin("Expected_Content");
