@@ -11,7 +11,6 @@
 #include <botan/tls_exceptn.h>
 #include <botan/tls_policy.h>
 
-
 namespace Botan {
 
 namespace TLS {
@@ -58,6 +57,7 @@ std::unique_ptr<Extension> make_extension(TLS_Data_Reader& reader, uint16_t code
       case TLSEXT_SUPPORTED_VERSIONS:
          return std::make_unique<Supported_Versions>(reader, size, from);
 
+#if defined(BOTAN_HAS_TLS_13)
       case TLSEXT_COOKIE:
          return std::make_unique<Cookie>(reader, size, from);
 
@@ -66,6 +66,7 @@ std::unique_ptr<Extension> make_extension(TLS_Data_Reader& reader, uint16_t code
 
       case TLSEXT_KEY_SHARE:
          return std::make_unique<Key_Share>(reader, size, from);
+#endif
       }
 
    return std::make_unique<Unknown_Extension>(static_cast<Handshake_Extension_Type>(code),
@@ -631,6 +632,7 @@ bool Supported_Versions::supports(Protocol_Version version) const
    return false;
    }
 
+#if defined(BOTAN_HAS_TLS_13)
 Cookie::Cookie(const std::vector<uint8_t>& cookie) :
    m_cookie(cookie)
    {
@@ -923,6 +925,7 @@ bool Key_Share::empty() const
    {
    return (m_content == nullptr) or m_content->empty();
    }
+#endif
 }
 
 }

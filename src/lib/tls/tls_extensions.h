@@ -24,7 +24,9 @@ namespace Botan {
 
 namespace TLS {
 
+#if defined(BOTAN_HAS_TLS_13)
 class Key_Share_Content;
+#endif
 class Policy;
 class TLS_Data_Reader;
 
@@ -46,10 +48,12 @@ enum Handshake_Extension_Type {
    TLSEXT_SESSION_TICKET            = 35,
 
    TLSEXT_SUPPORTED_VERSIONS        = 43,
+#if defined(BOTAN_HAS_TLS_13)
    TLSEXT_COOKIE                    = 44,
 
    TLSEXT_SIGNATURE_ALGORITHMS_CERT = 50,
    TLSEXT_KEY_SHARE                 = 51,
+#endif
 
    TLSEXT_SAFE_RENEGOTIATION     = 65281,
 };
@@ -437,6 +441,9 @@ class BOTAN_UNSTABLE_API Supported_Versions final : public Extension
       std::vector<Protocol_Version> m_versions;
    };
 
+using Named_Group = Group_Params;
+
+#if defined(BOTAN_HAS_TLS_13)
 /**
 * Cookie from RFC 8446 4.2.2
 */
@@ -488,8 +495,6 @@ class BOTAN_UNSTABLE_API Signature_Algorithms_Cert final : public Extension
    private:
       const Signature_Algorithms m_siganture_algorithms;
    };
-
-using Named_Group = Group_Params;
 
 /**
 * KeyShareEntry from RFC 8446 B.3.1
@@ -605,6 +610,7 @@ class BOTAN_UNSTABLE_API Key_Share final : public Extension
    private:
       std::unique_ptr<Key_Share_Content> m_content;
    };
+#endif
 
 /**
 * Unknown extensions are deserialized as this type

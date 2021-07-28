@@ -16,10 +16,10 @@
    #include <botan/tls_messages.h>
    #include <botan/tls_alert.h>
    #include <botan/internal/loadstor.h>
+#if defined(BOTAN_HAS_TLS_13)
    #include <botan/internal/tls_reader.h>
 #endif
-
-#include <iostream>
+#endif
 
 namespace Botan_Tests {
 
@@ -229,6 +229,7 @@ class TLS_Message_Parsing_Test final : public Text_Based_Test
 
 BOTAN_REGISTER_TEST("tls", "tls_messages", TLS_Message_Parsing_Test);
 
+#if defined(BOTAN_HAS_TLS_13)
 class TLS_Extension_Parsing_Test final : public Text_Based_Test
    {
    public:
@@ -389,6 +390,7 @@ class TLS_Extension_Parsing_Test final : public Text_Based_Test
    };
 
 BOTAN_REGISTER_TEST("tls_extensions", "tls_extensions", TLS_Extension_Parsing_Test);
+#endif
 
 #endif
 
