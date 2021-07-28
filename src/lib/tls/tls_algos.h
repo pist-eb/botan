@@ -129,13 +129,16 @@ Group_Params group_param_from_string(const std::string& group_name);
 bool group_param_is_dh(Group_Params group);
 
 enum class Kex_Algo {
-   IMPLICIT, // To support TLS 1.3 ciphersuites, which does not carry the Kex algo info
    STATIC_RSA,
    DH,
    ECDH,
    CECPQ1,
    PSK,
    ECDHE_PSK,
+
+   // To support TLS 1.3 ciphersuites, which do not determine the kex algo
+   //TODO: Maybe better name can be used here?
+   IMPLICIT = 0x10000
 };
 
 std::string BOTAN_TEST_API kex_method_to_string(Kex_Algo method);

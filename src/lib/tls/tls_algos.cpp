@@ -42,6 +42,8 @@ std::string kex_method_to_string(Kex_Algo method)
          return "PSK";
       case Kex_Algo::ECDHE_PSK:
          return "ECDHE_PSK";
+      case Kex_Algo::IMPLICIT:
+         return "IMPLICIT";
       }
 
    throw Invalid_State("kex_method_to_string unknown enum value");
@@ -66,6 +68,9 @@ Kex_Algo kex_method_from_string(const std::string& str)
 
    if(str == "ECDHE_PSK")
       return Kex_Algo::ECDHE_PSK;
+
+   if(str == "IMPLICIT")
+      return Kex_Algo::IMPLICIT;
 
    throw Invalid_Argument("Unknown kex method " + str);
    }
