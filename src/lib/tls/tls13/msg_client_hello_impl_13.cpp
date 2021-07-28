@@ -55,6 +55,10 @@ Client_Hello_Impl_13::Client_Hello_Impl_13(Handshake_IO& io,
    */
    m_extensions.add(new Extended_Master_Secret);
 
+   m_extensions.add(new Supported_Groups(policy.key_exchange_groups()));
+
+   m_extensions.add(new Signature_Algorithms(policy.acceptable_signature_schemes()));
+
    m_extensions.add(new Supported_Versions(client_settings.protocol_version(), policy));
 
    cb.tls_modify_extensions(m_extensions, CLIENT);
@@ -82,6 +86,10 @@ Client_Hello_Impl_13::Client_Hello_Impl_13(Handshake_IO& io,
    * which reject hellos when the last extension in the list is empty.
    */
    m_extensions.add(new Extended_Master_Secret);
+
+   m_extensions.add(new Supported_Groups(policy.key_exchange_groups()));
+
+   m_extensions.add(new Signature_Algorithms(policy.acceptable_signature_schemes()));
 
    m_extensions.add(new Supported_Versions(session.version(), policy));
 
