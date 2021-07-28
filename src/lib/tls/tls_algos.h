@@ -129,6 +129,7 @@ Group_Params group_param_from_string(const std::string& group_name);
 bool group_param_is_dh(Group_Params group);
 
 enum class Kex_Algo {
+   IMPLICIT, // To support TLS 1.3 ciphersuites, which does not carry the Kex algo info
    STATIC_RSA,
    DH,
    ECDH,
