@@ -3,6 +3,7 @@
 * (C) 2011,2012,2016,2018,2019 Jack Lloyd
 * (C) 2016 Juraj Somorovsky
 * (C) 2016 Matthias Gierlings
+* (C) 2021 Elektrobit Automotive GmbH
 *
 * Botan is released under the Simplified BSD License (see license.txt)
 */
