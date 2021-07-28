@@ -1,5 +1,6 @@
 /*
 * (C) 2016 Juraj Somorovsky
+* (C) 2021 Elektrobit Automotive GmbH
 *
 * Botan is released under the Simplified BSD License (see license.txt)
 */
