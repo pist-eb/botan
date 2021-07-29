@@ -815,7 +815,8 @@ Key_Share_HelloRetryRequest::Key_Share_HelloRetryRequest(TLS_Data_Reader& reader
 
    if (extension_size != sizeof_uint16_t)
       {
-      throw Decoding_Error("Size of KeyShare extension in HelloRetryRequest must be 2 bytes");
+      throw Decoding_Error("Size of KeyShare extension in HelloRetryRequest must be " +
+         std::to_string(sizeof_uint16_t) + " bytes");
       }
 
    m_selected_group = static_cast<Named_Group>(reader.get_uint16_t());
