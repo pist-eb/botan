@@ -40,11 +40,6 @@ Client_Hello_Impl_12::Client_Hello_Impl_12(Handshake_IO& io,
                            const std::vector<std::string>& next_protocols) :
    Client_Hello_Impl(io, hash, policy, cb, rng, reneg_info, client_settings, next_protocols)
    {
-   /*
-   * Place all empty extensions in front to avoid a bug in some systems
-   * which reject hellos when the last extension in the list is empty.
-   */
-   m_extensions.add(new Extended_Master_Secret);
    m_extensions.add(new Session_Ticket());
 
    if(policy.negotiate_encrypt_then_mac())
@@ -97,13 +92,6 @@ Client_Hello_Impl_12::Client_Hello_Impl_12(Handshake_IO& io,
    {
    if(!value_exists(m_suites, session.ciphersuite_code()))
       m_suites.push_back(session.ciphersuite_code());
-
-   /*
-   We always add the EMS extension, even if not used in the original session.
-   If the server understands it and follows the RFC it should reject our resume
-   attempt and upgrade us to a new session with the EMS protection.
-   */
-   m_extensions.add(new Extended_Master_Secret);
 
    m_extensions.add(new Renegotiation_Extension(reneg_info));
    m_extensions.add(new Server_Name_Indicator(session.server_info().hostname()));

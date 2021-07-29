@@ -79,11 +79,22 @@ Client_Hello_Impl::Client_Hello_Impl(Handshake_IO& io,
    m_suites(policy.ciphersuite_list(m_version)),
    m_comp_methods(1)
    {
-   BOTAN_UNUSED(io, hash, cb);
+   BOTAN_UNUSED(io, hash, cb, reneg_info, next_protocols);
 
    if(!policy.acceptable_protocol_version(m_version))
       throw Internal_Error("Offering " + m_version.to_string() +
                            " but our own policy does not accept it");
+
+   /*
+   * Place all empty extensions in front to avoid a bug in some systems
+   * which reject hellos when the last extension in the list is empty.
+   */
+
+   /*
+   * Used by default independent of protocol version.
+   * RFC 8446: Appendix D.
+   */
+   m_extensions.add(new Extended_Master_Secret);
    }
 
 /*
@@ -103,11 +114,21 @@ Client_Hello_Impl::Client_Hello_Impl(Handshake_IO& io,
    m_suites(policy.ciphersuite_list(m_version)),
    m_comp_methods(1)
    {
-   BOTAN_UNUSED(io, hash, cb);
+   BOTAN_UNUSED(io, hash, cb, reneg_info, next_protocols);
 
    if(!policy.acceptable_protocol_version(m_version))
       throw Internal_Error("Offering " + m_version.to_string() +
                            " but our own policy does not accept it");
+
+   /*
+   * We always add the EMS extension, even if not used in the original session.
+   * If the server understands it and follows the RFC it should reject our resume
+   * attempt and upgrade us to a new session with the EMS protection.
+   * 
+   * Used by default independent of protocol version.
+   * RFC 8446: Appendix D.
+   */
+   m_extensions.add(new Extended_Master_Secret);
    }
 
 /*
