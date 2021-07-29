@@ -98,12 +98,7 @@ std::vector<std::string> Policy::allowed_key_exchange_methods() const
       "ECDH",
       "DH",
       //"RSA",
-#if defined(BOTAN_HAS_TLS_13)
-      //TODO: How to enable TLS 1.3 cipher suites, which do not have an info about kex algo?
-      "IMPLICIT"
-#else
       //"IMPLICIT"
-#endif
       };
    }
 
@@ -113,12 +108,7 @@ std::vector<std::string> Policy::allowed_signature_methods() const
       "ECDSA",
       "RSA",
       //"DSA",
-#if defined(BOTAN_HAS_TLS_13)
-      //TODO: How to enable TLS 1.3 cipher suites, which do not have an info about signature method?
-      "IMPLICIT"
-#else
       //"IMPLICIT"
-#endif
       };
    }
 
