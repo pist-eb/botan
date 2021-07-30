@@ -5,20 +5,10 @@
 * Botan is released under the Simplified BSD License (see license.txt)
 */
 
-#include <botan/tls_messages.h>
-#include <botan/tls_alert.h>
-#include <botan/tls_exceptn.h>
 #include <botan/tls_callbacks.h>
-#include <botan/tls_policy.h>
-#include <botan/tls_session.h>
-#include <botan/rng.h>
-#include <botan/hash.h>
 
-#include <botan/internal/tls_reader.h>
-#include <botan/internal/tls_session_key.h>
 #include <botan/internal/tls_handshake_io.h>
 #include <botan/internal/tls_handshake_hash.h>
-#include <botan/internal/stl_util.h>
 #include <botan/internal/msg_client_hello_impl_13.h>
 
 namespace Botan {
@@ -48,6 +38,8 @@ Client_Hello_Impl_13::Client_Hello_Impl_13(Handshake_IO& io,
 
    m_extensions.add(new Signature_Algorithms(policy.acceptable_signature_schemes()));
 
+   //TODO: Mandatory Key Share extension to be added
+
    m_extensions.add(new Supported_Versions(client_settings.protocol_version(), policy));
 
    cb.tls_modify_extensions(m_extensions, CLIENT);
@@ -76,6 +68,8 @@ Client_Hello_Impl_13::Client_Hello_Impl_13(Handshake_IO& io,
    m_extensions.add(new Supported_Groups(policy.key_exchange_groups()));
 
    m_extensions.add(new Signature_Algorithms(policy.acceptable_signature_schemes()));
+
+   //TODO: Mandatory Key Share extension to be added
 
    m_extensions.add(new Supported_Versions(session.version(), policy));
 

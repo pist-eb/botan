@@ -179,6 +179,9 @@ class Channel_Impl_13 : public Channel_Impl
       std::unique_ptr<Connection_Sequence_Numbers> m_sequence_numbers;
 
       /* handshake state */
+      //TODO: Deciding whether single handshake_state is fine as pending/active is no longer
+      // representing real state of handshake. Either single handshake state can be used, or
+      // 4: plain / early_data / handshake_traffic / application_data_traffic
       std::unique_ptr<Handshake_State> m_handshake_state;
 
       /* cipher states for each epoch */
