@@ -1074,7 +1074,8 @@ std::vector<uint16_t> Shim_Policy::ciphersuite_list(Botan::TLS::Protocol_Version
          const auto suite = *i;
 
          //TODO: Dummy way of skipping TLS 1.3 cipher suites
-         if(suite.kex_method() == Botan::TLS::Kex_Algo::IMPLICIT)
+         if(suite.kex_method() == Botan::TLS::Kex_Algo::UNDEFINED &&
+            suite.auth_method() == Botan::TLS::Auth_Method::UNDEFINED)
             continue;
 
          // Can we use it?

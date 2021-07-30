@@ -98,7 +98,8 @@ std::vector<std::string> Policy::allowed_key_exchange_methods() const
       "ECDH",
       "DH",
       //"RSA",
-      //"IMPLICIT"
+      //"IMPLICIT",
+      //TODO: allow TLS 1.3 ciphers with UNDEFINED kex algo
       };
    }
 
@@ -108,7 +109,8 @@ std::vector<std::string> Policy::allowed_signature_methods() const
       "ECDSA",
       "RSA",
       //"DSA",
-      //"IMPLICIT"
+      //"IMPLICIT",
+      //TODO: allow TLS 1.3 ciphers with UNDEFINED sig meth
       };
    }
 

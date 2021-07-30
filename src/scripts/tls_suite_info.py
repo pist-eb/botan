@@ -22,13 +22,16 @@ def to_ciphersuite_info(code, name):
 
     with_substr = '_WITH_'
     if with_substr in name:
+        # TLS 1.2 or earlier cipher suites
         (sig_and_kex,cipher_and_mac) = name.split(with_substr)
     else:
+        # TLS 1.3 cipher suites, no sig_and_kex
         cipher_and_mac = name
 
     if sig_and_kex == '':
-        sig_algo = 'IMPLICIT'
-        kex_algo = 'IMPLICIT'
+        # UNDEFINED means that the information is not coded in the cipher suite
+        sig_algo = 'UNDEFINED'
+        kex_algo = 'UNDEFINED'
     elif sig_and_kex == 'RSA':
         sig_algo = 'IMPLICIT'
         kex_algo = 'RSA'
@@ -78,6 +81,7 @@ def to_ciphersuite_info(code, name):
         }
 
     tls_to_botan_names = {
+        'UNDEFINED': 'UNDEFINED',
         'IMPLICIT': 'IMPLICIT',
 
         'anon': 'ANONYMOUS',
